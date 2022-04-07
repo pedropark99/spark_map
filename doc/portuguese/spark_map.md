@@ -134,5 +134,16 @@ matches('^Score')
 {'fun': '__matches', 'val': '^Score'}
 ```
 
+Isso significa que você poderia **implementar o seu próprio algoritmo de mapeamento**, e, fornecer à `spark_map()` um `dict` contendo o nome da função que contém esse algoritmo e, o valor que deve ser repassado para essa função (os elementos `fun` e `val`). Contudo, vale destacar que, se você tentar utilizar uma função que não existe (isto é, uma função que ainda não foi definida), você terá como resultado um `KeyError`. 
+
+Repare no exemplo abaixo, em que tento utilizar uma função chamada `some_mapping_function()` com o valor `'some_value'` para mapear as colunas. Pelo fato de `spark_map()` não encontrar nenhuma função chamada `some_mapping_function()` definida em minha sessão, um `KeyError` acaba sendo levantado. Portanto, se você enfrentar esse erro ao utilizar `spark_map()`, investigue se você definiu corretamente o seu mapeamento e a função que você deseja utilizar.
+
+```python
+spark_map(students, {'fun': 'some_mapping_function', 'val': 'some_value'}, F.sum)
+```
+
+```python
+KeyError: 'some_mapping_function'
+```
 
 

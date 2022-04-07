@@ -173,3 +173,8 @@ def build_mapping(mapping, cols: list, schema: StructType):
   
   return selected_cols
 
+
+# COMMAND ----------
+
+tb = spark.table('lima.vweventtracks')
+spark_map(tb, {'fun': 'other_method', 'val': 'some_value'}, F.sum)
