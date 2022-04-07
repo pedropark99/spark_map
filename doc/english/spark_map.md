@@ -12,5 +12,5 @@ spark_map(tb, at_position(3,4,5), F.mean)
 ## Arguments
 
 - `table`: a spark DataFrame or a grouped DataFrame (i.e. `pyspark.sql.DataFrame` or `pyspark.sql.GroupedData`);
-- `mapping`: a `dict` containing the mapping configuration that defines the columns where you want to apply the `function` (this mapping is defined by one of the many mapping functions, see **"Building the mapping"** section below);
+- `mapping`: a `dict` containing the mapping that defines the columns where you want to apply the `function` (this mapping is defined by one of the many mapping functions, see **"Building the mapping"** section below);
 - `function`: the function that you want to apply on each column defined in the `mapping`;
