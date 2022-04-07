@@ -1,10 +1,13 @@
+# Databricks notebook source
+# DBTITLE 1,Libraries and imports
 import pyspark.sql.functions as F
 from pyspark.sql import DataFrame, GroupedData
 from pyspark.sql.types import *
 import re
 
+# COMMAND ----------
 
-
+# DBTITLE 1,The `spark_map()` function
 
 def spark_map(table, mapping, function):
   """
@@ -37,12 +40,9 @@ def spark_map(table, mapping, function):
   
   return result
 
+# COMMAND ----------
 
-
-
-
-
-
+# DBTITLE 1,Functions used to define the column mapping
 
 
 def check_string_type(x, mapping_function: str):
@@ -172,11 +172,4 @@ def build_mapping(mapping, cols: list, schema: StructType):
     raise KeyError(message)
   
   return selected_cols
-
-
-
-
-
-
-
 
