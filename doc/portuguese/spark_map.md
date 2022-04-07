@@ -73,13 +73,38 @@ Selected columns by `spark_map()`: Heigth, Score1, Score2
 ## Argumentos
 
 - `table`: um Spark DataFrame ou um DataFrame agrupado (i.e. `pyspark.sql.DataFrame` ou `pyspark.sql.GroupedData`);
-- `mapping`: um `dict` contendo o mapeamento que define as colunas onde você deseja aplicar `function` (este mapeamento é construído por uma das muitas funções de mapeamento disponíveis, veja a seção **"Construindo o mapeamento"** abaixo);
+- `mapping`: o mapeamento que define as colunas onde você deseja aplicar `function` (veja a seção **"Construindo o mapeamento"** abaixo);
 - `function`: a função que você deseja aplicar em cada coluna definida no `mapping`;
+
+
+## Você define o cálculo e `spark_map()` distribui ele
+
+Tudo que `spark_map()` faz é aplicar uma função qualquer sobre um conjunto de colunas de seu DataFrame. E essa função pode ser qualquer função, desde que seja uma função agregadora (isto é, uma função que pode ser utilizada dentro dos métodos `pyspark.sql.DataFrame.agg()` e `pyspark.sql.GroupedData.agg()`). Desde que sua função atenda esse requisito, você pode definir a fórmula de cálculo que quiser, e, utilizar `spark_map()` para distribuir esse cálculo ao longo de várias colunas.
+
+Como exemplo, suponha você precisasse utilizar um pouco de inferência para testar se a média dos vários Scores dos estudantes se distancia significativamente de 6:
+
+```python
+def t_test(x, value_test = 6):
+  return ( F.mean(x) - F.lit(value_test) ) / ( F.stddev(x) / F.sqrt(F.count(x)) )
+
+results = spark_map(students, starts_with("Score"), t_test)
+results.show(truncate = False)
+```
+
+```
+Selected columns by `spark_map()`: Score1, Score2, Score3, Score4
+
++-----------------+------------------+-----------------+----------------+
+|           Score1|            Score2|           Score3|          Score4|
++-----------------+------------------+-----------------+----------------+
+|3.464101615137754|2.7116307227332026|4.338609156373122|4.47213595499958|
++-----------------+------------------+-----------------+----------------+
+```
 
 
 ## Construindo o mapeamento
 
-Você precisa fornecer um mapeamento (ou *mapping*) para a função `spark_map()`. Esse mapeamento define quais são as colunas que `spark_map()` deve aplicar a função fornecida no argumento `function`. Você pode construir esse mapeamento através das funções de mapeamento, que são as seguintes:
+Você precisa fornecer um mapeamento (ou *mapping*) para a função `spark_map()`. Esse mapeamento define quais são as colunas que `spark_map()` deve aplicar a função fornecida no argumento `function`. Você pode construir esse *mapping* utilizando uma das funções de mapeamento, que são as seguintes:
 
 - `at_position()`: mapeia as colunas que estão em certas posições (1° coluna, 2° coluna, 3° coluna, etc.);
 - `starts_with()`: mapeia as colunas cujo nome começa por uma *string* específica;
@@ -87,6 +112,8 @@ Você precisa fornecer um mapeamento (ou *mapping*) para a função `spark_map()
 - `matches()`: mapeia as colunas cujo nome se encaixa em uma expressão regular;
 - `are_of_type()`: mapeia as colunas que pertencem a um tipo de dado específico (*string*, *integer*, *double*, etc.);
 - `all_of()`: mapeia todas as colunas que estão inclusas dentro de uma lista específica;
+
+Como um primeiro exemplo, você pode utilizar a função `at_position()` sempre que você deseja selecionar as colunas por posição. Portanto, se você deseja
 
 
 
