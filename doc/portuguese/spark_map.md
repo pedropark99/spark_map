@@ -81,7 +81,7 @@ Selected columns by `spark_map()`: Heigth, Score1, Score2
 
 Tudo que `spark_map()` faz é aplicar uma função qualquer sobre um conjunto de colunas de seu DataFrame. E essa função pode ser qualquer função, desde que seja uma função agregadora (isto é, uma função que pode ser utilizada dentro dos métodos `pyspark.sql.DataFrame.agg()` e `pyspark.sql.GroupedData.agg()`). Desde que sua função atenda esse requisito, você pode definir a fórmula de cálculo que quiser, e, utilizar `spark_map()` para distribuir esse cálculo ao longo de várias colunas.
 
-Como exemplo, suponha você precisasse utilizar um pouco de inferência para testar se a média dos vários Scores dos estudantes se distancia significativamente de 6:
+Como exemplo, suponha você precisasse utilizar um pouco de inferência para testar se a média dos vários Scores dos estudantes se distancia significativamente de 6, através da estatística produzida por um teste *t*:
 
 ```python
 def t_test(x, value_test = 6):
@@ -116,7 +116,23 @@ Você precisa fornecer um mapeamento (ou *mapping*) para a função `spark_map()
 Como um primeiro exemplo, você pode utilizar a função `at_position()` sempre que você deseja selecionar as colunas por posição. Portanto, se você deseja
 
 
+No fundo, o mapeamento é apenas uma pequena descrição contendo o algoritmo que deve ser utilizado para selecionar as colunas e o valor que será repassado a este algoritmo. Como exemplo, o resultado da expressão `at_position(3, 4, 5)` é um pequeno `dict`, contendo dois elementos (`fun` e `val`). O elemento `fun` define a função/algoritmo a ser utilizado para selecionar a coluna, e o elemento `val` guarda o valor que será repassado para essa função/algoritmo.
 
+```python
+at_position(3, 4, 5)
+```
+```python
+{'fun': '__at_position', 'val': (3, 4, 5)}
+```
+
+O resultado da expressão `matches('^Score')` é bastante similar. Porém, diferente do exemplo anterior que utiliza uma função interna chamada `__at_position`, dessa vez, o algoritmo a ser utilizado é o que está armazenado em uma função chamada `__matches`, e `'^Score'` é o valor que essa função vai utilizar.
+
+```python
+matches('^Score')
+```
+```python
+{'fun': '__matches', 'val': '^Score'}
+```
 
 
 
