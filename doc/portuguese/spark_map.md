@@ -146,4 +146,12 @@ spark_map(students, {'fun': 'some_mapping_function', 'val': 'some_value'}, F.sum
 KeyError: 'some_mapping_function'
 ```
 
+Por outro lado, caso a função que você esteja utilizando em seu mapeamento, não encontre nenhuma coluna em seu DataFrame, `spark_map()` também vai levantar um `KeyError`, porém, com a mensagem clara de que nenhuma coluna foi encontrada utilizando o mapeamento que você definiu. Como exemplo, eu poderia reproduzir esse erro, ao tentar mapear no DataFrame `students`, todas as colunas que começam pela *string* `'april'`. Um `KeyError` é levantado nesse caso pois não existe nenhuma coluna na tabela `students`, cujo nome começe pela palavra "april".
+
+```python
+spark_map(students, starts_with('april'), F.sum)
+```
+```python
+KeyError: `spark_map()` did not found any column that matches your mapping!
+```
 
