@@ -1,0 +1,73 @@
+
+# Construindo o mapeamento
+
+Você precisa fornecer um mapeamento (ou *mapping*) para a função `spark_map()`. Esse mapeamento define quais são as colunas que `spark_map()` deve aplicar a função fornecida no argumento `function`. Você pode construir esse *mapping* utilizando uma das funções de mapeamento, que são as seguintes:
+
+- `at_position()`: mapeia as colunas que estão em certas posições (1° coluna, 2° coluna, 3° coluna, etc.);
+- `starts_with()`: mapeia as colunas cujo nome começa por uma *string* específica;
+- `ends_with()`: mapeia as colunas cujo nome termina por uma *string* específica;
+- `matches()`: mapeia as colunas cujo nome se encaixa em uma expressão regular;
+- `are_of_type()`: mapeia as colunas que pertencem a um tipo de dado específico (*string*, *integer*, *double*, etc.);
+- `all_of()`: mapeia todas as colunas que estão inclusas dentro de uma lista específica;
+
+Como um primeiro exemplo, você pode utilizar a função `at_position()` sempre que você deseja selecionar as colunas por posição. Portanto, se você deseja selecionar a primeira, segunda, terceira, quarta colunas, você fornece os respectivos índices dessas colunas à função `at_position()`. 
+
+Por outro lado, você talvez precise utilizar um outro método para mapear as colunas que você está interessado. Por exemplo, o DataFrame `students` possui 4 colunas de Scores (`Score1`, `Score2`, `Score3` e `Score4`). Temos duas formas óbvias de mapear todas essas colunas. Uma forma é utilizando a função `starts_with()`, e outra, através da função `matches()`. Ambas as opções abaixo trazem os mesmos resultados.
+
+```python
+spark_map(students, starts_with("Score"), F.sum).show(truncate = False)
+```
+
+```python
+spark_map(students, matches("[0-9]$"), F.sum).show(truncate = False)
+```
+
+
+No fundo, o mapeamento é apenas uma pequena descrição contendo o algoritmo que deve ser utilizado para selecionar as colunas e o valor que será repassado a este algoritmo. Como exemplo, o resultado da expressão `at_position(3, 4, 5)` é um pequeno `dict`, contendo dois elementos (`fun` e `val`). O elemento `fun` define a função/algoritmo a ser utilizado para selecionar as colunas, e o elemento `val` guarda o valor que será repassado para essa função/algoritmo.
+
+```python
+at_position(3, 4, 5)
+```
+```python
+{'fun': '__at_position', 'val': (3, 4, 5)}
+```
+
+O resultado da expressão `matches('^Score')` é bastante similar. Porém, diferente do exemplo anterior que utiliza uma função interna chamada `__at_position`, dessa vez, o algoritmo a ser utilizado é o que está armazenado em uma função chamada `__matches`, e `'^Score'` é o valor que essa função vai utilizar.
+
+```python
+matches('^Score')
+```
+```python
+{'fun': '__matches', 'val': '^Score'}
+```
+
+## Criando o seu próprio método de mapeamento
+
+Isso significa que você poderia **implementar o seu próprio algoritmo de mapeamento**, e, fornecer à `spark_map()` um `dict` contendo o nome da função que contém esse algoritmo e, o valor que deve ser repassado para essa função (os elementos `fun` e `val`). 
+
+
+## Tome cuidado ao utilizar funções de mapeamento personalizadas
+
+Contudo, vale destacar que, se você tentar utilizar em seu mapeamento uma função que não existe (isto é, uma função que ainda não foi definida em sua sessão), você terá como resultado um `KeyError`. 
+
+Repare no exemplo abaixo, em que tento utilizar uma função chamada `some_mapping_function()` com o valor `'some_value'` para mapear as colunas. Pelo fato de `spark_map()` não encontrar nenhuma função chamada `some_mapping_function()` definida em minha sessão, um `KeyError` acaba sendo levantado. Portanto, se você enfrentar esse erro ao utilizar `spark_map()`, investigue se você definiu corretamente a função que você deseja utilizar em seu mapeamento.
+
+```python
+spark_map(students, {'fun': 'some_mapping_function', 'val': 'some_value'}, F.sum)
+```
+
+```python
+KeyError: 'some_mapping_function'
+```
+
+## Caso o seu mapeamento não encontre nenhuma coluna
+
+Por outro lado, `spark_map()` também vai levantar um `KeyError`, caso a função que você esteja utilizando em seu mapeamento não encontre nenhuma coluna em seu DataFrame. Porém, nesse caso, `spark_map()` emite uma mensagem clara de que nenhuma coluna foi encontrada utilizando o mapeamento que você definiu. Como exemplo, poderíamos reproduzir esse erro, ao tentar mapear no DataFrame `students`, todas as colunas que começam pela *string* `'april'`. Um `KeyError` é levantado nesse caso pois não existe nenhuma coluna na tabela `students`, cujo nome começe pela palavra "april".
+
+```python
+spark_map(students, starts_with('april'), F.sum)
+```
+```python
+KeyError: `spark_map()` did not found any column that matches your mapping!
+```
+
