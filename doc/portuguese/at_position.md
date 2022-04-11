@@ -9,7 +9,7 @@ Mapear as colunas de seu Spark DataFrame baseado em seus índices numéricos (1�
 - `*indexes`: os índices das colunas (separados por vírgulas);
 - `zero_index`: valor booleano (`True` ou `False`) indicando se os índices fornecidos em `*indexes` são baseados em zero ou não (leia a seção de **"Detalhes"** abaixo). Por padrão, esse argumento é setado para `False`;
 
-## Detalhes e exemplo
+## Detalhes e exemplos
 
 Portanto, `at_position()` é utilizada para definir quais são as colunas sobre as quais `spark_map()` vai aplicar a função fornecida. Para utilizar essa função, você fornece os índices numéricos, separados por vírgulas, que representam as colunas que você deseja mapear em `spark_map()`. 
 

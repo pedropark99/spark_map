@@ -60,7 +60,7 @@ def check_string_type(x, mapping_function: str):
   if isinstance(x, str):
     return(True)
   else:
-    raise TypeError(f"Input of `{mapping_function}` needs to be a string (data of type `str`).")
+    raise TypeError(f"Input of `{mapping_function}` needs to be a string (data of type `str`). Not a {type(x)}.")
       
     
     
@@ -202,4 +202,4 @@ def build_mapping(mapping, cols: list, schema: StructType):
 
 # COMMAND ----------
 
-at_position(4, 5, 6, zero_index = False)
+are_of_type("string")
