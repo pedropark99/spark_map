@@ -72,8 +72,7 @@ def matches(regex: str):
   check_string_type(regex, "matches()")
   return {'fun': "__matches", 'val': regex} 
   
-def at_position(*args, zero_index = True):
-  indexes = args
+def at_position(*indexes, zero_index = False):
   if zero_index == False:
     indexes = [i - 1 for i in indexes]
   return {'fun': "__at_position", 'val': indexes}
