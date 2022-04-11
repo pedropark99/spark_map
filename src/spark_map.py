@@ -5,6 +5,17 @@ from pyspark.sql import DataFrame, GroupedData
 from pyspark.sql.types import *
 import re
 
+# REPRODUCIBILITY WARNING:
+# This source is developed inside Databricks platform, as a Databricks notebook. In every 
+# session of a Databricks notebook, the platform automaticaly allocate a variable called `spark`
+# which holds all the information of the Spark Session. Having this information in mind,
+# you may have problems regarding the Spark Session definition, while running this source.
+# If such problem happen, try to define a variable `spark` with your Spark Session, like this:
+# ```
+# from pyspark.sql import SparkSession
+# spark = SparkSession.builder.getOrCreate()
+# ```
+
 # COMMAND ----------
 
 # DBTITLE 1,The `spark_map()` function
