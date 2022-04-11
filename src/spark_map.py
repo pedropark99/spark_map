@@ -71,15 +71,25 @@ def all_of(list_cols: list):
 def matches(regex: str):
   check_string_type(regex, "matches()")
   return {'fun': "__matches", 'val': regex} 
+
   
 def at_position(*indexes, zero_index = False):
   if len(indexes) == 0:
     raise ValueError("You did not provided any index for `at_position()` to search")
   if isinstance(indexes[0], list):
-    raise ValueError("Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.")
+    raise ValueError("Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.")  
   if zero_index == False:
     indexes = [i - 1 for i in indexes]
+  
+  # Check if any of the indexes are negative:
+  negative = [index < 0 for index in indexes]
+  if any(negative):
+    raise ValueError("One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?")
+    
+  # Transform to `set` to avoid duplicates indexes
+  indexes = tuple(set(indexes))
   return {'fun': "__at_position", 'val': indexes}
+
 
 def starts_with(text: str):
   check_string_type(text, "starts_with()")
@@ -189,3 +199,7 @@ def build_mapping(mapping, cols: list, schema: StructType):
 
 
 
+
+# COMMAND ----------
+
+at_position(4, 5, 6, zero_index = False)
