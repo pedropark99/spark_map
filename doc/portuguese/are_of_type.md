@@ -27,3 +27,5 @@ are_of_type("str")
 ```python
 ValueError: You must choose one of the following values: 'string', 'int', 'double', 'date', 'datetime'
 ```
+
+No fundo, `are_of_type()` utiliza o schema de seu Spark DataFrame

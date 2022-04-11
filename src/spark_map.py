@@ -79,7 +79,7 @@ def at_position(*indexes, zero_index = False):
   if isinstance(indexes[0], list):
     raise ValueError("Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.")  
   if zero_index == False:
-    indexes = [i - 1 for i in indexes]
+    indexes = [index - 1 for index in indexes]
   
   # Check if any of the indexes are negative:
   negative = [index < 0 for index in indexes]
