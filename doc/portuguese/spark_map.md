@@ -6,7 +6,7 @@ Com `spark_map()` você é capaz de aplicar uma função sobre múltiplas coluna
 ## Argumentos
 
 - `table`: um Spark DataFrame ou um DataFrame agrupado (i.e. `pyspark.sql.DataFrame` ou `pyspark.sql.GroupedData`);
-- `mapping`: o mapeamento que define as colunas onde você deseja aplicar `function` (leia o artigo [**"Construindo o mapeamento"**](https://www.google.com/));
+- `mapping`: o mapeamento que define as colunas onde você deseja aplicar `function` (leia o artigo [**"Construindo o mapeamento"**](https://github.com/pedropark99/spark_map/blob/main/doc/portuguese/artigos/construindo-mapeamento.md));
 - `function`: a função que você deseja aplicar em cada coluna definida no `mapping`;
 
 
