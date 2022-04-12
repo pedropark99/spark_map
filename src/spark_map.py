@@ -156,8 +156,8 @@ def __starts_with(text: str, cols: list, schema: StructType):
 
   
 def __matches(regex: str, cols: list, schema: StructType):
-  reg = re.compile(regex)
-  selected_cols = [col for col in cols if reg.match(col)]
+  regex = re.compile(regex)
+  selected_cols = [col for col in cols if re.match(regex, col)]
   return selected_cols
   
   
@@ -199,7 +199,3 @@ def build_mapping(mapping, cols: list, schema: StructType):
 
 
 
-
-# COMMAND ----------
-
-are_of_type("string")

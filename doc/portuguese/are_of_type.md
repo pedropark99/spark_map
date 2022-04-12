@@ -28,4 +28,26 @@ are_of_type("str")
 ValueError: You must choose one of the following values: 'string', 'int', 'double', 'date', 'datetime'
 ```
 
-No fundo, `are_of_type()` utiliza o schema de seu Spark DataFrame
+No fundo, `are_of_type()` utiliza o schema de seu Spark DataFrame para determinar quais colunas pertencem ao tipo de dado que você determinou. Repare no exemplo abaixo, que a coluna chamada `"date"` é mapeada por `spark_map()`, mesmo que essa coluna seja claramente uma coluna de datas. Tal fato ocorre, pois Spark está interpretando essa coluna pelo tipo `pyspark.sql.types.StringType()`, e não `pyspark.sql.types.DateType()`.
+
+```python
+dados = [
+  ("2022-03-01", "Luke", 36981),
+  ("2022-02-15", "Anne", 31000),
+  ("2022-03-12", "Bishop", 31281)
+]
+
+sales = spark.createDataFrame(dados, ['date', 'name', 'value'])
+
+spark_map(sales, are_of_type("string"), F.max).show()
+```
+
+```
+Selected columns by `spark_map()`: date, name
+
++----------+----+
+|      date|name|
++----------+----+
+|2022-03-12|Luke|
++----------+----+
+```

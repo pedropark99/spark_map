@@ -15,14 +15,28 @@ Portanto, `at_position()` é utilizada para definir quais são as colunas sobre 
 
 O argumento `zero_index` é opcional, e determina se os índices das colunas fornecidos serão baseados em um sistema de índices iniciado em zero, ou, em um sistema inciado em um. A linguagem Python utiliza um sistema de índices iniciado em zero, logo, o valor 0 representa o primeiro valor de um objeto, enquanto 1, o segundo valor de um objeto, e assim por diante. 
 
-Em contrapartida, o argumento `zero_index` é configurado por padrão para `False`. Por causa disso, a função `at_position()` trabalha sempre inicialmente com um sistema de índices iniciado em um. Logo, na expressão `at_position(3, 4, 5)`, a função `at_position()` vai mapear a 3°, 4° e 5° colunas de seu Spark DataFrame. Porém, caso você queira sobrepor esse comportamento, e, utilizar o sistema de índices padrão do Python (iniciado em zero), basta configurar esse argumento para `True`. No exemplo abaixo, `at_position()` vai mapear a 3°, 4° e 5° colunas de seu DataFrame.
+Em contrapartida, o argumento `zero_index` é configurado por padrão para `False`. Por causa disso, a função `at_position()` trabalha sempre inicialmente com um sistema de índices iniciado em um. Logo, na expressão `at_position(3, 4, 5)`, a função `at_position()` vai mapear a 3°, 4° e 5° colunas de seu Spark DataFrame. Porém, caso você queira sobrepor esse comportamento, e, utilizar o sistema de índices padrão do Python (iniciado em zero), basta configurar esse argumento para `True`. No exemplo abaixo, `at_position()` vai mapear a 2°, 3° e 4° coluna do DataFrame `sales`.
 
 ```python
-at_position(4, 5, 6, zero_index = True)
+dados = [
+  (2022, 1, 12300, 41000, 36981),
+  (2022, 2, 19120, 21300, 31000),
+  (2022, 3, 18380, 11500, 31281)
+]
+
+sales = spark.createDataFrame(dados, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])
+
+spark_map(sales, at_position(1, 2, 3, zero_index = True), F.mean).show()
 ```
 
-```python
-{'fun': '__at_position', 'val': (4, 5, 6)}
+```
+Selected columns by `spark_map()`: month, france_Sales, brazil_sales
+
++-----+------------+------------+
+|month|france_Sales|brazil_sales|
++-----+------------+------------+
+|  2.0|     16600.0|     24600.0|
++-----+------------+------------+
 ```
 
 Ao fornecer um índice zero, você sempre deve configurar o argumento `zero_index` para `True`. Quando o argumento `zero_index` está setado para `False`, `at_position()` vai automaticamente subtrair 1 de todos os índices. Logo, um índice igual a zero, se torna um índice igual a -1, e índices negativos não são permitidos por `at_position()`. Veja o exemplo abaixo:
