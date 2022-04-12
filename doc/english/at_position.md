@@ -2,7 +2,7 @@
 
 ## Description
 
-Map the columns of your Spark DataFrame based on their numeric indexes (1st, 2nd, 3rd column, etc.). This function is one of several existing mapping functions (read the article [**"Building the mapping"**](https://github.com/pedropark99/spark_map/blob/main/doc/portuguese/artigos/construindo- mapping.md)).
+Map the columns of your Spark DataFrame based on their numeric indexes (1st, 2nd, 3rd column, etc.). This function is one of several existing mapping functions (read the article [**"Building the mapping"**](https://github.com/pedropark99/spark_map/blob/main/doc/english/articles/building-mapping.md)).
 
 ## Arguments
 

@@ -2,7 +2,7 @@
 
 ## Description
 
-Map all columns of your Spark DataFrame that fit a certain data type (string, double, integer, etc.). This function is one of several existing mapping functions (read the article [**"Building the mapping"**](https://github.com/pedropark99/spark_map/blob/main/doc/portuguese/artigos/construindo- mapping.md)).
+Map all columns of your Spark DataFrame that fit a certain data type (string, double, integer, etc.). This function is one of several existing mapping functions (read the article [**"Building the mapping"**](https://github.com/pedropark99/spark_map/blob/main/doc/english/articles/building-mapping.md)).
 
 ## Arguments
 
