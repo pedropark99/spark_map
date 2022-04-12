@@ -46,7 +46,7 @@ spark_map(sales, are_of_type("string"), F.max).show()
 Selected columns by `spark_map()`: date, name
 
 +----------+----+
-| date     |name|
+|      date|name|
 +----------+----+
 |2022-03-12|Luke|
 +----------+----+

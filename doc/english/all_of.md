@@ -37,7 +37,7 @@ Selected columns by `spark_map()`: sales_france, sales_brazil
 +------------+------------+
 |sales_france|sales_brazil|
 +------------+------------+
-| 16600.0    | 24600.0    |
+|     16600.0|     24600.0|
 +------------+------------+
 ```
 
@@ -47,6 +47,6 @@ However, it is worth noting that `spark_map()` **must find at least one of the c
 spark_map(sales, all_of(['sales_italy']), F.mean).show()
 ```
 
-```
+```python
 KeyError: '`spark_map()` did not find any column that matches your mapping!'
 ```

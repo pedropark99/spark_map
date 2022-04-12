@@ -30,8 +30,8 @@ spark_map(sales, ends_with('Sales'), F.mean).show()
 Selected columns by `spark_map()`: france_Sales, russia_Sales
 
 +------------+------------------+
-|france_Sales| russia_Sales     |
+|france_Sales|      russia_Sales|
 +------------+------------------+
-| 16600.0    |33087.333333333336|
+|     16600.0|33087.333333333336|
 +------------+------------------+
 ```

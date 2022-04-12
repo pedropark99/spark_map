@@ -35,7 +35,7 @@ Selected columns by `spark_map()`: month, france_Sales, brazil_sales
 +-----+------------+------------+
 |month|france_Sales|brazil_sales|
 +-----+------------+------------+
-| 2.0 | 16600.0    | 24600.0    |
+|  2.0|     16600.0|     24600.0|
 +-----+------------+------------+
 ```
 
@@ -46,7 +46,7 @@ at_position(0, 2, 4)
 ```
 
 ```python
-ValueError: 'One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?'
+ValueError: One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?
 ```
 
 Furthermore, any duplicate index is automatically eliminated by `at_position()`. See the example below in which the indexes 1 and 4 are repeated during the call to `at_position()`, but they are automatically eliminated in the function result.
@@ -65,7 +65,7 @@ Furthermore, the indexes given to `at_position()` must not be inside a list, if 
 at_position([4, 5, 6])
 ```
 ```python
-ValueError: 'Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1st and 3rd columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`'.
+ValueError: Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.
 ```
 
 Column indexes are a required argument. So, if you don't provide any index, `at_position()` will necessarily raise a `ValueError`, as shown below:
@@ -75,5 +75,5 @@ Column indexes are a required argument. So, if you don't provide any index, `at_
 at_position(zero_index = True)
 ```
 ```python
-ValueError: 'You did not provided any index for `at_position()` to search'.
+ValueError: You did not provided any index for `at_position()` to search
 ```

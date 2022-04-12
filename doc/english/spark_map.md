@@ -34,16 +34,16 @@ students.show(truncate = False)
 ```
 
 ```
-+---------+-------+---+------+------+------+------ +------+---------+----------+
-|StudentID|Name |Age|Height|Score1|Score2|Score3|Score4|Course |Department|
-+---------+-------+---+------+------+------+------ +------+---------+----------+
-|12114 |Anne |21 |1.56 |8 |9 |10 |9 |Economics|SC |
-|13007 |Adrian |23 |1.82 |6 |6 |8 |7 |Economics|SC |
-|10045 |George |29 |1.77 |10 |9 |10 |7 |Law |SC |
-|12459 |Adeline|26 |1.61 |8 |6 |7 |7 |Law |SC |
-|10190 |Mayla |22 |1.67 |7 |7 |7 |9 |Design |AR |
-|11552 |Daniel |24 |1.75 |9 |9 |10 |9 |Design |AR |
-+---------+-------+---+------+------+------+------ +------+---------+----------+
++---------+-------+---+------+------+------+------+------+---------+----------+
+|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|
++---------+-------+---+------+------+------+------+------+---------+----------+
+|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |
+|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |
+|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |
+|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |
+|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |
+|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |
++---------+-------+---+------+------+------+------+------+---------+----------+
 ```
 
 Suppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame `students`. The `spark_map()` function allows you to perform this calculation in an extremely simple and clear way, as shown below:
@@ -53,13 +53,13 @@ import pyspark.sql.functions as F
 spark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)
 ```
 ```
-Selected columns by `spark_map()`: Height, Score1, Score2
+Selected columns by `spark_map()`: Age, Height, Score1
 
-+------------------+------+-----------------+
-|Height |Score1|Score2 |
-+------------------+------+-----------------+
-|1.6966666666666665|8.0 |7.666666666666667|
-+------------------+------+-----------------+
++------------------+------------------+------+
+|Age               |Height            |Score1|
++------------------+------------------+------+
+|24.166666666666668|1.6966666666666665|8.0   |
++------------------+------------------+------+
 ```
 
 If you want your calculation to be applied by group, just provide the grouped table to `spark_map()`. For example, suppose you wanted to calculate the same averages as in the example above, but within each department:
@@ -71,14 +71,14 @@ spark_map(by_department, at_position(3, 4, 5), F.mean).show()
 ```
 
 ```
-Selected columns by `spark_map()`: Height, Score1, Score2
+Selected columns by `spark_map()`: Age, Height, Score1
 
-+----------+------------------+------+------+
-|Department| Height|Score1|Score2|
-+----------+------------------+------+------+
-| AR| 1.71| 8.0| 8.0|
-| SC|1.69000000000000002| 8.0| 7.5|
-+----------+------------------+------+------+
++----------+-----+------------------+------+
+|Department|  Age|            Height|Score1|
++----------+-----+------------------+------+
+|        SC|24.75|1.6900000000000002|   8.0|
+|        AR| 23.0|              1.71|   8.0|
++----------+-----+------------------+------+
 ```
 
 
@@ -99,8 +99,9 @@ results.show(truncate = False)
 ```
 Selected columns by `spark_map()`: Score1, Score2, Score3, Score4
 
-+-----------------+------------------+------------ -----+----------------+
-| Score1| Score2| Score3| Score4|
-+-----------------+------------------+------------ -----+----------------+
++-----------------+------------------+-----------------+----------------+
+|Score1           |Score2            |Score3           |Score4          |
++-----------------+------------------+-----------------+----------------+
 |3.464101615137754|2.7116307227332026|4.338609156373122|4.47213595499958|
-+-----------------+------------------+------------ -----+----------
++-----------------+------------------+-----------------+----------------+
+```

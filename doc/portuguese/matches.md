@@ -39,6 +39,9 @@ Para investigar o que está ocorrendo de errado nesse caso, é útil separarmos 
 nome = 'pop_male_1990'
 print(re.match(r'male', nome))
 ```
+```python
+None
+```
 
 Ao testar várias combinações e investigar mais a fundo o problema, você eventualmente pode entender que a expressão `'male'` está errada pois ela representa um *"match"* exato com o texto `'male'`. Ou seja, com essa expressão, `re.match()` é capaz de encontrar apenas o texto `'male'` e nada mais. Podemos corrigir esse problema, ao permitirmos que um número arbitrário de caracteres seja encontrado ao redor do texto `'male'`. Para isso, contornamos `'male'` com a mini-expressão `'(.+)'`, como demonstrado abaixo:
 

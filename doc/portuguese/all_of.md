@@ -47,6 +47,6 @@ Contudo, vale destacar que, `spark_map()` **precisa encontrar pelo menos uma das
 spark_map(sales, all_of(['sales_italy']), F.mean).show()
 ```
 
-```
+```python
 KeyError: '`spark_map()` did not found any column that matches your mapping!'
 ```

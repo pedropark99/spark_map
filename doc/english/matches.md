@@ -30,7 +30,7 @@ pop = spark.createDataFrame(
 spark_map(pop, matches(r'male'), F.max).show()
 ```
 ```python
-KeyError: '`spark_map()` did not find any column that matches your mapping!'
+KeyError: '`spark_map()` did not found any column that matches your mapping!'
 ```
 
 To investigate what is going wrong in this case, it is useful to separate the name of a column that should have been found and apply `re.match()` in isolation to that column. Note below that the result of the expression `re.match(r'male', name)` is `None`. This means that the regular expression `'male'` does not generate a match with the text `pop_male_1990`.
@@ -39,6 +39,10 @@ To investigate what is going wrong in this case, it is useful to separate the na
 name = 'pop_male_1990'
 print(re.match(r'male', name))
 ```
+```python
+None
+```
+
 
 By testing various combinations and delving deeper into the problem, you may eventually find that the expression `'male'` is wrong as it represents an **exact match** with the text `'male'`. That is, with this expression, `re.match()` is able to find only the text `'male'` and nothing else. We can fix this problem by allowing an arbitrary number of characters to be found around the text `'male'`. For this, we circumvent `'male'` with the mini-expression `'(.+)'`, as shown below:
 
@@ -46,6 +50,9 @@ By testing various combinations and delving deeper into the problem, you may eve
 ```python
 name = 'pop_male_1990'
 print(re.match(r'(.+)male(.+)', name))
+```
+```python
+<re.Match object; span=(0, 13), match='pop_male_1990'>
 ```
 
 Now that we've tested this new regular expression in `re.match()` we can return to the `matches()` function. Notice below that this time all the expected columns are found.
@@ -58,9 +65,9 @@ spark_map(pop, matches(r'(.+)male(.+)'), F.max).show()
 ```
 Selected columns by `spark_map()`: pop_male_1990, pop_male_2000, pop_male_2010, pop_female_1990, pop_female_2000, pop_female_2010
 
-+-------------+-------------+-------------+------- --------+---------------+---------------+
-|pop_male_1990|pop_male_2000|pop_male_2010|pop_female_1990 |pop_female_2000|pop_female_2010|
-+-------------+-------------+-------------+------- --------+---------------+---------------+
-| 74077777    | 86581634    | 96536269    | 78703457       | 88208705      | 99177368      |
-+-------------+-------------+-------------+------- --------+---------------+---------------+
++-------------+-------------+-------------+---------------+---------------+---------------+
+|pop_male_1990|pop_male_2000|pop_male_2010|pop_female_1990|pop_female_2000|pop_female_2010|
++-------------+-------------+-------------+---------------+---------------+---------------+
+|     74077777|     86581634|     96536269|       78703457|       88208705|       99177368|
++-------------+-------------+-------------+---------------+---------------+---------------+
 ```
