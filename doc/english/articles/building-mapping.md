@@ -58,7 +58,43 @@ matches('^Score')
 
 ## Creating your own mapping method
 
-This means that you could **implement your own mapping algorithm**, and, give `spark_map()` a `dict` containing the name of the function that contains that algorithm, and the value that should be passed to that function (the `fun` and `val` elements).
+This means that you could **implement your own mapping algorithm**, and, give `spark_map()` a `dict` containing the name of the function that contains that algorithm, and the value that should be passed to that function (the `fun` and `val` elements). Every mapping function should have three arguments: 1) an arbitrary value for the algorithm; 2) the column names of the spark DataFrame as a list of strings (basically, the result of `pyspark.sql.DataFrame.columns`); 3) the schema of the spark DataFrame (this is an object of class `StructType`, or, basically, the result of `pyspark.sql.DataFrame.schema`). 
+
+Your mapping function should always have these three arguments, even if it does not use all of them. For example, the function below maps the column that is in a specific position at the alphabetic order. This `alphabetic_order()` function uses only the `index` and `cols` arguments, even if it receives three arguments. Other requirement is the return value of your mapping function. It should always return a list of strings that contains the names of the columns that were mapped by the function.
+
+```python
+def alphabetic_order(index, cols: list, schema: StructType):
+    cols.sort()
+    return cols[index]
+```
+
+To demonstrate this function, lets take the `sales.sales_per_country` spark DataFrame as an example. The list of columns from this DataFrame are exposed below:
+
+```python
+sales = spark.table('sales.sales_per_country')
+print(sales.columns)
+```
+
+```python
+['year', 'month', 'country', 'idstore', 'totalsales']
+```
+
+Now, using the `alphabetic_order()` inside `spark_map()`:
+
+```python
+spark_map(sales, {'fun' = 'alphabetic_order', 'val' = 2}, F.max)
+```
+
+```
+Selected columns by `spark_map()`: idstore
+
++--------+
+| idstore|
++--------+
+|    2300|
++--------+
+```
+
 
 
 ## Take care when using custom mapping functions

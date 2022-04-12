@@ -43,7 +43,42 @@ matches('^Score')
 
 ## Criando o seu próprio método de mapeamento
 
-Isso significa que você poderia **implementar o seu próprio algoritmo de mapeamento**, e, fornecer à `spark_map()` um `dict` contendo o nome da função que contém esse algoritmo e, o valor que deve ser repassado para essa função (os elementos `fun` e `val`). 
+Isso significa que você poderia **implementar o seu próprio algoritmo de mapeamento**, e, fornecer à `spark_map()` um `dict` contendo o nome da função que contém esse algoritmo e, o valor que deve ser repassado para essa função (os elementos `fun` e `val`). Toda função de mapeamento deve ter três argumentos: 1) um valor arbitrário para o algoritmo; 2) os nomes das colunas do Spark DataFrame como uma lista de strings (basicamente, o resultado de `pyspark.sql.DataFrame.columns`); 3) o esquema (ou *schema*) do Spark DataFrame (este é um objeto da classe `StructType`, ou, basicamente, o resultado de `pyspark.sql.DataFrame.schema`).
+
+Sua função de mapeamento deve sempre ter esses três argumentos, mesmo que ela não use todos eles. Por exemplo, a função abaixo mapeia a coluna que está em uma posição específica na ordem alfabética. Esta função `alphabetic_order()` usa apenas os argumentos `index` e `cols`, mesmo que ela receba três argumentos. Outro requisito é o valor de retorno de sua função de mapeamento. Sua função de mapeamento deve sempre retornar uma lista de *strings*, a qual contém os nomes das colunas que foram mapeadas pela função.
+
+``` python
+def alphabetic_order(index, cols: list, schema: StructType):
+    cols.sort()
+    return cols[index]
+```
+
+Para demonstrar essa função, vamos usar o DataFrame spark `sales.sales_per_country` como exemplo. A lista de colunas deste DataFrame está exposta abaixo:
+
+```python
+sales = spark.table('sales.sales_per_country')
+print(sales.columns)
+```
+
+```python
+['year', 'month', 'country', 'idstore', 'totalsales']
+```
+
+Agora, usando o `alphabetic_order()` dentro de `spark_map()`:
+
+```python
+spark_map(sales, {'fun' = 'alphabetic_order', 'val' = 2}, F.max)
+```
+
+```
+Selected columns by `spark_map()`: idstore
+
++--------+
+| idstore|
++--------+
+|    2300|
++--------+
+```
 
 
 ## Tome cuidado ao utilizar funções de mapeamento personalizadas
