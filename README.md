@@ -1,6 +1,6 @@
 # `spark_map()`
 ## Overview
-This repository store a Pyspark implementation of `map()` function for spark DataFrames. With `spark_map()` you are able to apply a function over multiple columns of a Spark DataFrame. 
+This repository store a Pyspark implementation of `map()` function for spark DataFrames. With `spark_map()` you are able to apply a function over multiple columns of a Spark DataFrame. In other words, with `spark_map()`, you can avoid building long `.agg()` expressions that basically applies the same Pyspark function over multiple columns.
 
 ## Documentation
 Documentation of `spark_map()` and its partners, are available as Markdown files (`.md`) in [english](https://github.com/pedropark99/spark_map/tree/main/doc/english) and in [portuguese](https://github.com/pedropark99/spark_map/tree/main/doc/portuguese).
