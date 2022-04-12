@@ -67,7 +67,7 @@ print(sales.columns)
 Agora, usando o `alphabetic_order()` dentro de `spark_map()`:
 
 ```python
-spark_map(sales, {'fun' = 'alphabetic_order', 'val' = 2}, F.max)
+spark_map(sales, {'fun' = 'alphabetic_order', 'val' = 1}, F.max)
 ```
 
 ```
