@@ -224,7 +224,7 @@ def build_mapping(mapping, cols: list, schema: StructType):
 
 # COMMAND ----------
 
-def spark_across(table, mapping, function):
+def spark_across(table, mapping, function, **kwargs):
   
   if isinstance(table, GroupedData):
     cols = table._df.columns
@@ -236,14 +236,18 @@ def spark_across(table, mapping, function):
   mapping = build_mapping(mapping, cols, schema)
   message = f"Selected columns by `spark_across()`: {', '.join(mapping)}\n"
   print(message)
-  
   for col in mapping:
-    table = table.withColumn(col, function(col))
+    table = table.withColumn(col, function(col, **kwargs))
   
   return table
 
 # COMMAND ----------
 
-tb = spark.table('lima.job_bmg_eventtracks')
+from datetime import date
+tb = spark.table('lima.job_bmg_eventtracks')\
+  .filter(
+    (F.col('Data') >= date(2022,3,1)) &
+    (F.col('Data') <= date(2022,3,31))
+  )
 
-spark_across(tb, are_of_type('string'), F.length).display()
+spark_across(tb, are_of_type('date'), F.add_months, months = 2).display()
