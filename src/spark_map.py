@@ -224,6 +224,26 @@ def build_mapping(mapping, cols: list, schema: StructType):
 
 # COMMAND ----------
 
+def spark_across(table, mapping, function):
+  
+  if isinstance(table, GroupedData):
+    cols = table._df.columns
+    schema = list(table._df.schema)
+  if isinstance(table, DataFrame):
+    cols = table.columns
+    schema = list(table.schema)
+  
+  mapping = build_mapping(mapping, cols, schema)
+  message = f"Selected columns by `spark_across()`: {', '.join(mapping)}\n"
+  print(message)
+  
+  for col in mapping:
+    table = table.withColumn(col, function(col))
+  
+  return table
+
+# COMMAND ----------
+
 tb = spark.table('lima.job_bmg_eventtracks')
 
 spark_across(tb, are_of_type('string'), F.length).display()
