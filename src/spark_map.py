@@ -227,31 +227,3 @@ def spark_across(table, mapping, function, **kwargs):
     table = table.withColumn(col, function(col, **kwargs))
   
   return table
-
-# COMMAND ----------
-
-from datetime import date
-tb = spark.table('lima.job_bmg_eventtracks')\
-  .filter(
-    (F.col('Data') >= date(2022,3,1)) &
-    (F.col('Data') <= date(2022,3,31))
-  )
-
-spark_across(tb, are_of_type('date'), F.add_months).display()
-
-# COMMAND ----------
-
-def __ends_with(text: str, cols: list, schema: StructType):
-  selected_cols = list()
-  for col in cols:
-    if col.endswith(text):
-        selected_cols.append(col)
-  
-  return selected_cols
-
-
-__ends_with("ry", tb.columns, tb.schema)
-
-# COMMAND ----------
-
-'Teste'.endswith('e')
