@@ -147,32 +147,19 @@ def __at_position(indexes, cols: list, schema: StructType):
   return selected_cols
   
 def __ends_with(text: str, cols: list, schema: StructType):
-  length_text = len(text)
-  lengths = [len(col) for col in cols]
-  
   selected_cols = list()
-  for n, col in zip(lengths, cols):
-    if length_text <= n:
-      start = n - length_text
-      end = n
-      if col[start:end] == text:
+  for col in cols:
+    if col.endswith(text):
         selected_cols.append(col)
+  
   return selected_cols
 
 
 def __starts_with(text: str, cols: list, schema: StructType):
-  length_text = len(text)
-  lengths = [len(col) for col in cols]
-  
   selected_cols = list()
-  for n, col in zip(lengths, cols):
-    if length_text < n:
-      end = 0 + length_text
-      if col[0:end] == text:
+  for col in cols:
+    if col.startswith(text):
         selected_cols.append(col)
-    
-    if (length_text == n) & (col == text):
-      selected_cols.append(col)
       
   return selected_cols
 
@@ -250,4 +237,21 @@ tb = spark.table('lima.job_bmg_eventtracks')\
     (F.col('Data') <= date(2022,3,31))
   )
 
-spark_across(tb, are_of_type('date'), F.add_months, months = 2).display()
+spark_across(tb, are_of_type('date'), F.add_months).display()
+
+# COMMAND ----------
+
+def __ends_with(text: str, cols: list, schema: StructType):
+  selected_cols = list()
+  for col in cols:
+    if col.endswith(text):
+        selected_cols.append(col)
+  
+  return selected_cols
+
+
+__ends_with("ry", tb.columns, tb.schema)
+
+# COMMAND ----------
+
+'Teste'.endswith('e')
