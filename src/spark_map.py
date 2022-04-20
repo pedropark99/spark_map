@@ -54,7 +54,7 @@ def spark_map(table, mapping, function):
 # COMMAND ----------
 
 # DBTITLE 1,The `spark_across()` function
-def spark_across(table, mapping, function):
+def spark_across(table, mapping, function, **kwargs):
   
   if isinstance(table, GroupedData):
     cols = table._df.columns
@@ -64,14 +64,12 @@ def spark_across(table, mapping, function):
     schema = list(table.schema)
   
   mapping = build_mapping(mapping, cols, schema)
-  message = f"Selected columns by `spark_map()`: {', '.join(mapping)}\n"
+  message = f"Selected columns by `spark_across()`: {', '.join(mapping)}\n"
   print(message)
-  
-  result = table
   for col in mapping:
-    result = table.withColumn(col, function(col))
+    table = table.withColumn(col, function(col, **kwargs))
   
-  return result
+  return table
 
 # COMMAND ----------
 
@@ -208,22 +206,3 @@ def build_mapping(mapping, cols: list, schema: StructType):
 
 
 
-
-# COMMAND ----------
-
-def spark_across(table, mapping, function, **kwargs):
-  
-  if isinstance(table, GroupedData):
-    cols = table._df.columns
-    schema = list(table._df.schema)
-  if isinstance(table, DataFrame):
-    cols = table.columns
-    schema = list(table.schema)
-  
-  mapping = build_mapping(mapping, cols, schema)
-  message = f"Selected columns by `spark_across()`: {', '.join(mapping)}\n"
-  print(message)
-  for col in mapping:
-    table = table.withColumn(col, function(col, **kwargs))
-  
-  return table
