@@ -1,7 +1,7 @@
 # `spark_across()`
 ## Descrição
 
-Com `spark_across()` você é capaz de aplicar uma função sobre múltiplas colunas de um Spark DataFrame. Em resumo, `spark_across()` recebe um Spark DataFrame como *input* e retorna um novo Spark DataFrame como *output*. Enquanto `spark_map()` aplica a função sobre as várias colunas através do método `.agg()`, `spark_across()` aplica essa função através do método `.withColumn()`. Portanto, se o resultado de `spark_map()` é um novo DataFrame agregado, o resultado de `spark_across()` é um novo DataFrame com o mesmo número de linhas e colunas que o DataFrame de *input*, porém, com as colunas mapeadas transformadas pela função que você definiu.
+Com `spark_across()` você é capaz de aplicar uma função sobre múltiplas colunas de um Spark DataFrame. Em resumo, `spark_across()` recebe um Spark DataFrame como *input* e retorna um novo Spark DataFrame como *output*. Enquanto `spark_map()` utiliza o método `.agg()` para aplicar a sua função sobre as várias colunas, `spark_across()` aplica essa função através do método `.withColumn()`. Portanto, se o resultado de `spark_map()` é um novo DataFrame agregado, o resultado de `spark_across()` é um novo DataFrame com o mesmo número de linhas e colunas que o DataFrame de *input*, porém, com as colunas mapeadas transformadas pela função que você definiu.
 
 ## Argumentos
 
@@ -82,7 +82,7 @@ Selected columns by `spark_map()`: Heigth, Score1, Score2
 ```
 
 
-## Você define o cálculo e `spark_map()` distribui ele
+## Você define o cálculo e `spark_across()` distribui ele
 
 Tudo que `spark_map()` faz é aplicar uma função qualquer sobre um conjunto de colunas de seu DataFrame. E essa função pode ser qualquer função, desde que seja uma função agregadora (isto é, uma função que pode ser utilizada dentro dos métodos `pyspark.sql.DataFrame.agg()` e `pyspark.sql.GroupedData.agg()`). Desde que sua função atenda esse requisito, você pode definir a fórmula de cálculo que quiser, e, utilizar `spark_map()` para distribuir esse cálculo ao longo de várias colunas.
 
