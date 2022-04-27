@@ -1,3 +1,5 @@
+from pyspark.sql.types import *
+
 ## Helper function to check data type of input
 def check_string_type(x, mapping_function: str):
   if isinstance(x, str):
@@ -16,44 +18,44 @@ class Mapping:
     
     #### INSTANTIATION METHOD ==========================================================
     def __init__(self):
-      self.selected_cols = []
+      self.mapped_cols = []
     
     
     #### PUBLIC METHODS FOR THE CLASS ==================================================
   
-    def __all_of(self, list_cols: list, cols: list, schema: StructType):
+    def all_of(self, list_cols: list, cols: list, schema: StructType):
       selected_cols = [col for col in list_cols if col in cols]
-      self.selected_cols = selected_cols
+      self.mapped_cols = selected_cols
 
-    def __at_position(self, indexes, cols: list, schema: StructType):
+    def at_position(self, indexes, cols: list, schema: StructType):
       selected_cols = [cols[i] for i in indexes]
-      self.selected_cols = selected_cols
+      self.mapped_cols = selected_cols
 
-    def __ends_with(self, text: str, cols: list, schema: StructType):
+    def ends_with(self, text: str, cols: list, schema: StructType):
       selected_cols = list()
       for col in cols:
         if col.endswith(text):
             selected_cols.append(col)
 
-      self.selected_cols = selected_cols
+      self.mapped_cols = selected_cols
 
 
-    def __starts_with(self, text: str, cols: list, schema: StructType):
+    def starts_with(self, text: str, cols: list, schema: StructType):
       selected_cols = list()
       for col in cols:
         if col.startswith(text):
             selected_cols.append(col)
 
-      self.selected_cols = selected_cols
+      self.mapped_cols = selected_cols
 
 
-    def __matches(self, regex: str, cols: list, schema: StructType):
+    def matches(self, regex: str, cols: list, schema: StructType):
       regex = re.compile(regex)
       selected_cols = [col for col in cols if re.match(regex, col)]
-      self.selected_cols = selected_cols
+      self.mapped_cols = selected_cols
 
 
-    def __are_of_type(self, str_type: str, cols: list, schema: StructType):
+    def are_of_type(self, str_type: str, cols: list, schema: StructType):
       valid_types = {
         'int' : IntegerType(), 'double' : DoubleType(), 
         'string' : StringType(), 'date' : DateType(), 'datetime' : TimestampType()
@@ -69,7 +71,7 @@ class Mapping:
         if field.dataType == target_type:
           selected_cols.append(name)
 
-      self.selected_cols = selected_cols
+      self.mapped_cols = selected_cols
 
 
 

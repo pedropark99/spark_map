@@ -5,6 +5,8 @@ from pyspark.sql import DataFrame, GroupedData
 from pyspark.sql.types import *
 import re
 
+from mapping import Mapping
+
 # REPRODUCIBILITY WARNING:
 # This source is developed inside Databricks platform, as a Databricks notebook. In every 
 # session of a Databricks notebook, the platform automaticaly allocate a variable called `spark`
@@ -86,11 +88,11 @@ def check_string_type(x, mapping_function: str):
     
     
 def all_of(list_cols: list):
-  return {'fun': '__all_of', 'val': list_cols}
+  return {'fun': 'all_of', 'val': list_cols}
     
 def matches(regex: str):
   check_string_type(regex, "matches()")
-  return {'fun': "__matches", 'val': regex} 
+  return {'fun': "matches", 'val': regex} 
 
   
 def at_position(*indexes, zero_index = False):
@@ -108,7 +110,7 @@ def at_position(*indexes, zero_index = False):
     
   # Transform to `set` to avoid duplicates indexes
   indexes = tuple(set(indexes))
-  return {'fun': "__at_position", 'val': indexes}
+  return {'fun': "at_position", 'val': indexes}
 
 
 def starts_with(text: str):
@@ -117,7 +119,7 @@ def starts_with(text: str):
 
 def ends_with(text: str):
   check_string_type(text, "ends_with()")
-  return {'fun': "__ends_with", 'val': text}
+  return {'fun': "ends_with", 'val': text}
 
 def are_of_type(arg_type: str):
   check_string_type(arg_type, "are_of_type()")
@@ -127,76 +129,31 @@ def are_of_type(arg_type: str):
     types = ', '.join(types)
     message = f'You must choose one of the following values: {types}'
     raise ValueError(message)
-  return {'fun': "__are_of_type", 'val': arg_type}
-  
-  
-  
+  return {'fun': "are_of_type", 'val': arg_type}
   
   
 
-  
-  
-def __all_of(list_cols: list, cols: list, schema: StructType):
-  selected_cols = [col for col in list_cols if col in cols]
-  return selected_cols
-  
-def __at_position(indexes, cols: list, schema: StructType):
-  selected_cols = [cols[i] for i in indexes]
-  return selected_cols
-  
-def __ends_with(text: str, cols: list, schema: StructType):
-  selected_cols = list()
-  for col in cols:
-    if col.endswith(text):
-        selected_cols.append(col)
-  
-  return selected_cols
 
-
-def __starts_with(text: str, cols: list, schema: StructType):
-  selected_cols = list()
-  for col in cols:
-    if col.startswith(text):
-        selected_cols.append(col)
-      
-  return selected_cols
-
-  
-def __matches(regex: str, cols: list, schema: StructType):
-  regex = re.compile(regex)
-  selected_cols = [col for col in cols if re.match(regex, col)]
-  return selected_cols
-  
-  
-def __are_of_type(str_type: str, cols: list, schema: StructType):
-  valid_types = {
-    'int' : IntegerType(), 'double' : DoubleType(), 
-    'string' : StringType(), 'date' : DateType(), 'datetime' : TimestampType()
-  }
-  
-  if str_type not in valid_types:
-    valid_keys = ", ".join(list(valid_types.keys()))
-    raise KeyError(f"You must choose one of the following key types: {valid_keys}")
-    
-  target_type = valid_types[str_type]
-  selected_cols = list()
-  for name, field in zip(cols, schema):
-    if field.dataType == target_type:
-      selected_cols.append(name)
-      
-  return selected_cols
-  
-  
   
   
   
   
 def build_mapping(mapping, cols: list, schema: StructType):
   mapping_function = mapping['fun']
-  mapping_function = globals()[mapping_function]
-  
   value = mapping['val']
-  selected_cols = mapping_function(value, cols, schema)
+  if isinstance(mapping_function, str):
+    ### If mapping['fun'] is a string, is 
+    ### very likely a name for a default mapping method
+    ### so lets look for it, inside the methods of Mapping class
+    print("Looking for default mapping method inside Mapping class")
+    m = Mapping()
+    method_to_call = getattr(m, mapping_function)
+    method_to_call(value, tb.columns, tb.schema)
+    selected_cols = m.mapped_cols
+  else:
+    ### If is not a string, a function is expected
+    ### instead
+    selected_cols = mapping_function(value, tb.columns, tb.schema)
   
   if len(selected_cols) == 0:
     message = "`spark_map()` did not found any column that matches your mapping!"
