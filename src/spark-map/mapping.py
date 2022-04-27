@@ -6,11 +6,15 @@ def check_string_type(x, mapping_function: str):
     raise TypeError(f"Input of `{mapping_function}` needs to be a string (data of type `str`). Not a {type(x)}.")
 
 
-### Lets use a class to store available mapping methods
-
+    
+### ====================================================================================
+### We use the Mapping class to store the default available mapping methods
+### If the user wants to use a custom mapping method, he should provide its own
+### methods. These custom methods will not have anything in commom with this class;
+### ====================================================================================
 class Mapping:
     
-    #### PUBLIC MEMBERS (OR DATA) ======================================================
+    #### INSTANTIATION METHOD ==========================================================
     def __init__(self):
       self.selected_cols = []
     
