@@ -6,11 +6,12 @@ build-backend = "setuptools.build_meta"
 name = "spark_map"
 version = "0.2.1"
 authors = [
-  { name="Pedro Faria", email="pedropark99@gmail.com" },
+  { name="Pedro Faria", email="pedropark99@gmail.com" }
 ]
 description = "Pyspark implementation of `map()` function for spark DataFrames"
 readme = "README.md"
 requires-python = ">=3.7"
+license = { file = "LICENSE.txt" }
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -18,5 +19,4 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/pedropark99/spark_map"
-"Bug Tracker" = "https://github.com/pedropark99/spark_map/issues"
+Homepage = "https://github.com/pedropark99/spark_map"
