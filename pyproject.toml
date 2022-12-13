@@ -18,5 +18,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+    "pyspark"
+]
+
 [project.urls]
 Homepage = "https://github.com/pedropark99/spark_map"
