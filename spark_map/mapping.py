@@ -57,7 +57,7 @@ class Mapping:
       valid_types = {
         'int' : IntegerType(), 'double' : DoubleType(), 
         'string' : StringType(), 'date' : DateType(),
-        'datetime' : TimestampType()
+        'datetime' : TimestampType(), 'long': LongType()
       }
 
       if str_type not in valid_types:
