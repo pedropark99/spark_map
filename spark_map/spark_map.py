@@ -1,5 +1,3 @@
-# Databricks notebook source
-# DBTITLE 1,Libraries and imports
 import pyspark.sql.functions as F
 from pyspark.sql import DataFrame, GroupedData
 from pyspark.sql.types import *
@@ -7,32 +5,19 @@ import re
 
 from mapping import Mapping
 
-# REPRODUCIBILITY WARNING:
-# This source is developed inside Databricks platform, as a Databricks notebook. In every 
-# session of a Databricks notebook, the platform automaticaly allocate a variable called `spark`
-# which holds all the information of the Spark Session. Having this information in mind,
-# you may have problems regarding the Spark Session definition, while running this source.
-# If such problem happen, try to define a variable `spark` with your Spark Session, like this:
-# ```
-# from pyspark.sql import SparkSession
-# spark = SparkSession.builder.getOrCreate()
-# ```
 
-# COMMAND ----------
-
-# DBTITLE 1,The `spark_map()` function
 
 def spark_map(table, mapping, function):
   """
-  With `spark_map()`, you can apply a function to a set of columns in a spark DataFrame.
+  With `spark_map()`, you can apply a aggregate function to a set of columns in a spark DataFrame.
   It receives a spark DataFrame as input, and returns a new aggregated spark DataFrame as output.
-  For example, to apply the `mean()` function, to the third, fourth and fifth columns, you do:
+  For example, to apply the `mean()` function, to the third, fourth and fifth columns, you do: 
   
-  ```
-  import pyspark.sql.functions as F
-  tb = spark.table('lima.vweventtracks')
-  spark_map(tb, at_position(3,4,5), F.mean)
-  ```
+  Example
+  --------
+  >>> import pyspark.sql.functions as F
+  >>> tb = spark.table('sales.sales_by_day')
+  >>> spark_map(tb, at_position(3,4,5), F.mean)
   """
   if isinstance(table, GroupedData):
     cols = table._df.columns
@@ -53,11 +38,23 @@ def spark_map(table, mapping, function):
   
   return result
 
-# COMMAND ----------
 
-# DBTITLE 1,The `spark_across()` function
+
+
+
+
 def spark_across(table, mapping, function, **kwargs):
-  
+  """
+  With `spark_across()` you can apply a function across multiple columns of a spark DataFrame.
+  While `spark_map()` calculates aggregates in a set of columns, `spark_across()` uses
+  `withColumn()` to apply a function over each row of a set of columns.
+
+  Example
+  --------
+  >>> import pyspark.sql.functions as F
+  >>> tb = spark.table('sales.sales_by_day')
+  >>> spark_across(tb, at_position(3,4,5), F.cast, 'double')
+  """
   if isinstance(table, GroupedData):
     cols = table._df.columns
     schema = list(table._df.schema)
@@ -73,9 +70,12 @@ def spark_across(table, mapping, function, **kwargs):
   
   return table
 
-# COMMAND ----------
 
-# DBTITLE 1,Functions used to define the column mapping
+
+
+
+
+
 
 
 def check_string_type(x, mapping_function: str):
@@ -142,17 +142,15 @@ def build_mapping(mapping, cols: list, schema: StructType):
   mapping_function = mapping['fun']
   value = mapping['val']
   if isinstance(mapping_function, str):
-    ### If mapping['fun'] is a string, is 
-    ### very likely a name for a default mapping method
-    ### so lets look for it, inside the methods of Mapping class
-    print("Looking for default mapping method inside Mapping class")
+    ### If mapping['fun'] is a string, look for a default mapping method
+    ### inside the methods the `Mapping` class
+    print("Looking for default mapping method inside the `Mapping` class")
     m = Mapping()
     method_to_call = getattr(m, mapping_function)
     method_to_call(value, tb.columns, tb.schema)
     selected_cols = m.mapped_cols
   else:
-    ### If is not a string, a function is expected
-    ### instead
+    ### If is not a string, a function is expected instead
     selected_cols = mapping_function(value, tb.columns, tb.schema)
   
   if len(selected_cols) == 0:

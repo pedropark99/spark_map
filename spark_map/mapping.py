@@ -1,4 +1,5 @@
-from pyspark.sql.types import *
+from pyspark.sql.types import StructType
+from pyspark.sql.types import TimestampType, StringType, DateType, IntegerType, LongType, DoubleType
 
 ## Helper function to check data type of input
 def check_string_type(x, mapping_function: str):
@@ -16,12 +17,10 @@ def check_string_type(x, mapping_function: str):
 ### ====================================================================================
 class Mapping:
     
-    #### INSTANTIATION METHOD ==========================================================
     def __init__(self):
       self.mapped_cols = []
     
     
-    #### PUBLIC METHODS FOR THE CLASS ==================================================
   
     def all_of(self, list_cols: list, cols: list, schema: StructType):
       selected_cols = [col for col in list_cols if col in cols]
@@ -38,7 +37,6 @@ class Mapping:
             selected_cols.append(col)
 
       self.mapped_cols = selected_cols
-
 
     def starts_with(self, text: str, cols: list, schema: StructType):
       selected_cols = list()
@@ -58,7 +56,8 @@ class Mapping:
     def are_of_type(self, str_type: str, cols: list, schema: StructType):
       valid_types = {
         'int' : IntegerType(), 'double' : DoubleType(), 
-        'string' : StringType(), 'date' : DateType(), 'datetime' : TimestampType()
+        'string' : StringType(), 'date' : DateType(),
+        'datetime' : TimestampType()
       }
 
       if str_type not in valid_types:
