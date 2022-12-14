@@ -19,12 +19,8 @@ def spark_map(table, mapping, function):
   >>> tb = spark.table('sales.sales_by_day')
   >>> spark_map(tb, at_position(3,4,5), F.mean)
   """
-  if isinstance(table, GroupedData):
-    cols = table._df.columns
-    schema = list(table._df.schema)
-  if isinstance(table, DataFrame):
-    cols = table.columns
-    schema = list(table.schema)
+  cols = get_columns(table)
+  schema = get_schema(table)
   
   mapping = build_mapping(mapping, cols, schema)
   message = f"Selected columns by `spark_map()`: {', '.join(mapping)}\n"
@@ -42,7 +38,6 @@ def spark_map(table, mapping, function):
 
 
 
-
 def spark_across(table, mapping, function, **kwargs):
   """
   With `spark_across()` you can apply a function across multiple columns of a spark DataFrame.
@@ -55,12 +50,8 @@ def spark_across(table, mapping, function, **kwargs):
   >>> tb = spark.table('sales.sales_by_day')
   >>> spark_across(tb, at_position(3,4,5), F.cast, 'double')
   """
-  if isinstance(table, GroupedData):
-    cols = table._df.columns
-    schema = list(table._df.schema)
-  if isinstance(table, DataFrame):
-    cols = table.columns
-    schema = list(table.schema)
+  cols = get_columns(table)
+  schema = get_schema(table)
   
   mapping = build_mapping(mapping, cols, schema)
   message = f"Selected columns by `spark_across()`: {', '.join(mapping)}\n"
@@ -72,6 +63,23 @@ def spark_across(table, mapping, function, **kwargs):
 
 
 
+
+def get_columns(table:DataFrame):
+  if isinstance(table, GroupedData):
+    cols = table._df.columns
+  if isinstance(table, DataFrame):
+    cols = table.columns
+
+  return cols
+
+
+def get_schema(table:DataFrame):
+  if isinstance(table, GroupedData):
+    schema = list(table._df.schema)
+  if isinstance(table, DataFrame):
+    schema = list(table.schema)
+
+  return schema
 
 
 
