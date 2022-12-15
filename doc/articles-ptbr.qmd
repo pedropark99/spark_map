@@ -1,0 +1,9 @@
+---
+title: Artigos
+listing:
+    contents: "portuguese/artigos/*.qmd"
+    type: default
+---
+
+Nesta página, temos uma lista de todos os artigos (isto é, documentações longas) sobre o pacote `spark_map`.
+

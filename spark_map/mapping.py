@@ -1,5 +1,6 @@
 from pyspark.sql.types import StructType
 from pyspark.sql.types import TimestampType, StringType, DateType, IntegerType, LongType, DoubleType
+import re
 
 ## Helper function to check data type of input
 def check_string_type(x, mapping_function: str):

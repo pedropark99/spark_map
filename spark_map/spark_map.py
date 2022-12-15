@@ -123,7 +123,7 @@ def at_position(*indexes, zero_index = False):
 
 def starts_with(text: str):
   check_string_type(text, "starts_with()")
-  return {'fun': "__starts_with", 'val': text}
+  return {'fun': "starts_with", 'val': text}
 
 def ends_with(text: str):
   check_string_type(text, "ends_with()")
@@ -155,11 +155,11 @@ def build_mapping(mapping, cols: list, schema: StructType):
     print("Looking for default mapping method inside the `Mapping` class")
     m = Mapping()
     method_to_call = getattr(m, mapping_function)
-    method_to_call(value, tb.columns, tb.schema)
+    method_to_call(value, cols, schema)
     selected_cols = m.mapped_cols
   else:
     ### If is not a string, a function is expected instead
-    selected_cols = mapping_function(value, tb.columns, tb.schema)
+    selected_cols = mapping_function(value, cols, schema)
   
   if len(selected_cols) == 0:
     message = "`spark_map()` did not found any column that matches your mapping!"

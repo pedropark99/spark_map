@@ -1,0 +1,143 @@
+---
+title: Construindo o mapeamento
+execute:
+  eval: false
+---
+
+Você precisa fornecer um mapeamento (ou *mapping*) para a função `spark_map()`. Esse mapeamento define quais são as colunas que `spark_map()` deve aplicar a função fornecida no argumento `function`. Você pode construir esse *mapping* utilizando uma das funções padrão de mapeamento, que são as seguintes:
+
+- `at_position()`: mapeia as colunas que estão em certas posições (1° coluna, 2° coluna, 3° coluna, etc.);
+- `starts_with()`: mapeia as colunas cujo nome começa por uma *string* específica;
+- `ends_with()`: mapeia as colunas cujo nome termina por uma *string* específica;
+- `matches()`: mapeia as colunas cujo nome se encaixa em uma expressão regular;
+- `are_of_type()`: mapeia as colunas que pertencem a um tipo de dado específico (*string*, *integer*, *double*, etc.);
+- `all_of()`: mapeia todas as colunas que estão inclusas dentro de uma lista específica;
+
+Como um primeiro exemplo, você pode utilizar a função `at_position()` sempre que você deseja selecionar as colunas por posição. Portanto, se você deseja selecionar a primeira, segunda, terceira e quarta coluna, você fornece os respectivos índices dessas colunas à função `at_position()`. 
+
+Por outro lado, você talvez precise utilizar um outro método para mapear as colunas que você está interessado. Por exemplo, o DataFrame `students` possui 4 colunas de Scores (`Score1`, `Score2`, `Score3` e `Score4`), e temos duas formas óbvias de mapearmos todas essas colunas. Uma forma é utilizando a função `starts_with()`, e outra, através da função `matches()`. Ambas as opções abaixo trazem os mesmos resultados.
+
+```{python}
+d = [
+  (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),
+  (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),
+  (10045, 'George', 29, 1.77, 10, 9, 10, 7, 'Law', 'SC'),
+  (12459, 'Adeline', 26, 1.61, 8, 6, 7, 7, 'Law', 'SC'),
+  (10190, 'Mayla', 22, 1.67, 7, 7, 7, 9, 'Design', 'AR'),
+  (11552, 'Daniel', 24, 1.75, 9, 9, 10, 9, 'Design', 'AR')
+]
+
+columns = [
+  'StudentID', 'Name', 'Age', 'Heigth', 'Score1',
+  'Score2', 'Score3', 'Score4', 'Course', 'Department'
+] 
+
+students = spark.createDataFrame(d, columns)
+
+spark_map(students, starts_with("Score"), F.sum).show(truncate = False)
+```
+
+```{python}
+spark_map(students, matches("[0-9]$"), F.sum).show(truncate = False)
+```
+
+
+## A classe `Mapping`
+
+No fundo, o mapeamento é apenas uma pequena descrição contendo o algoritmo que deve ser utilizado para encontrar as colunas e o valor que será repassado a este algoritmo. Como exemplo, o resultado da expressão `at_position(3, 4, 5)` é um pequeno `dict`, contendo dois elementos (`fun` e `val`). O elemento `fun` define o nome do método/algoritmo a ser utilizado para encontrar as colunas, e o elemento `val` guarda o valor que será repassado para esse método/algoritmo.
+
+```{python}
+at_position(3, 4, 5)
+```
+
+```{python}
+{'fun': 'at_position', 'val': (3, 4, 5)}
+```
+
+Como um outro exemplo, o resultado da expressão `matches('^Score')` é bastante similar. Porém, diferente do exemplo anterior que utiliza o método `at_position`, dessa vez, o método a ser utilizado é chamado `matches`, e `'^Score'` é o valor que será repassado para esse método.
+
+```{python}
+matches('^Score')
+```
+
+```{python}
+{'fun': 'matches', 'val': '^Score'}
+```
+
+Portanto, sempre que você utiliza uma dessas funções de mapeamento padrão, um `dict` será gerado contendo o nome do método a ser utilizado para calcular o mapeamento, e, o valor de input que será repassado para esse método. Ao receber esse `dict`, `spark_map()` ou `spark_across()` vão automaticamente pesquisar pelo algoritmo a ser utilizado dentro da classe `Mapping`, e vai executar esse algoritmo. Portanto, todos os métodos/algoritmos pré-definidos de mapeamento no pacote `spark_map` estão armazenados dentro dessa classe `Mapping`.
+
+
+## Criando o seu próprio método de mapeamento
+
+Apesar de bastante úteis, você talvez queira **implementar o seu próprio algoritmo de mapeamento**, e você pode fazer isso com facilidade. Basta fornecer à `spark_map()` ou `spak_across` uma `dict` semelhate às `dict`'s produzidas pelas funções padrão de mapeamento. Isto é, uma `dict` contendo um item chamado `fun` e outro chamado `val`. 
+
+O item `val` continua recebendo o valor/objeto que você deseja repassar para o seu algoritmo/método de mapeamento. Porém, dessa vez, o item `fun` deve conter uma função, e não o nome de um método/algoritmo dentro de uma string. Ou seja, sempre que `spark_map()` ou `spark_across()` recebem uma string neste item `fun`, essas funções pressupõe que você está tentando utilizar um dos métodos padrãos de mapeamento, e por isso, eles iniciam uma busca pelos métodos da classe `Mapping`.
+
+Em contrapartida, se essas funções recebem uma função nesse item `fun`, então `spark_map()` ou `spark_across()` vão executar diretamente essa função que está no item `fun`, inserindo o valor que você forneceu no item `val` no primeiro argumento dessa função.
+
+Porém, esse processo tem algumas condições importantes. Toda função de mapeamento deve sempre receber três argumentos obrigatórios: 1) `value`: um valor arbitrário para o algoritmo^[Fica a cargo de você definir o tipo desse valor de input, como ele deve estar formatado, etc.] (que corresponde ao valor repassado no item `val`); 2) `cols`: os nomes das colunas do Spark DataFrame como uma lista de strings^[Isso é uma lista de strings, ou, de forma mais precisa, o resultado do método `columns` de um objeto de classe `pyspark.sql.dataframe.DataFrame`.]; 3) `schema`: o esquema (ou *schema*) do Spark DataFrame^[Este é um objeto da classe `StructType`, ou, basicamente, o resultado do método `schema` de um objeto de classe `pyspark.sql.dataframe.DataFrame`.]. Sua função de mapeamento deve sempre ter esses três argumentos, **mesmo que ela não use todos eles**
+
+Portanto, o argumento `value` de toda função de mapeamento vai receber sempre como input o valor que você repassou ao item `val` do `dict` inicial. Quanto aos outros dois argumentos `cols` e `schema`, eles vão ser automaticamente preenchidos por `spark_map()` ou `spark_across()`. Em outras palavras, `spark_map()` ou `spark_across()` vão automaticamente coletar os valores desses argumentos por você.
+
+Como exemplo, a função abaixo mapeia a coluna que está em uma posição específica na ordem alfabética. Esta função `alphabetic_order()` usa apenas os argumentos `index` e `cols`, mesmo que ela receba três argumentos. Em outras palavras, o argumento `schema` está ali apenas para satisfazer as condições de `spark_map()` e `spark_across()`.
+
+```{python}
+def alphabetic_order(index, cols: list, schema: StructType):
+    cols.sort()
+    return cols[index]
+```
+
+Um outro requisito que ainda não comentamos é o valor de retorno de sua função de mapeamento. Sua função de mapeamento deve sempre retornar uma lista de *strings*, a qual contém os nomes das colunas que foram mapeadas pela função. Caso a sua função de mapeamento não encontre nenhuma coluna durante a sua pesquisa, ela deve retornar uma lista vazia (i.e. `[]`).
+
+Como demonstração, vamos aplicar essa função `alphabetic_order()`. Para isso, vamos usar o DataFrame spark `sales.sales_per_country` como exemplo. A lista de colunas deste DataFrame está exposta abaixo:
+
+```{python}
+sales = spark.table('sales.sales_per_country')
+print(sales.columns)
+```
+
+```{python}
+['year', 'month', 'country', 'idstore', 'totalsales']
+```
+
+Agora, usando o `alphabetic_order()` dentro de `spark_map()`:
+
+```{python}
+spark_map(sales, {'fun' = 'alphabetic_order', 'val' = 1}, F.max)
+```
+
+```
+Selected columns by `spark_map()`: idstore
+
++--------+
+| idstore|
++--------+
+|    2300|
++--------+
+```
+
+<!--
+## Tome cuidado ao utilizar funções de mapeamento personalizadas
+
+Contudo, vale destacar que, se você tentar utilizar em seu mapeamento uma função que não existe (isto é, uma função que ainda não foi definida em sua sessão), você terá como resultado um `KeyError`. Repare no exemplo abaixo, em que tento utilizar uma função chamada `some_mapping_function()` com o valor `'some_value'` para mapear as colunas. Pelo fato de `spark_map()` não encontrar nenhuma função chamada `some_mapping_function()` definida em minha sessão, um `KeyError` acaba sendo levantado. Portanto, se você enfrentar esse erro ao utilizar `spark_map()`, investigue se você definiu corretamente a função que você deseja utilizar em seu mapeamento.
+
+```{python}
+spark_map(students, {'fun': 'some_mapping_function', 'val': 'some_value'}, F.sum)
+```
+
+```{python}
+KeyError: 'some_mapping_function'
+```
+-->
+
+## Caso o seu mapeamento não encontre nenhuma coluna
+
+Por outro lado, `spark_map()` também vai levantar um `KeyError`, caso a função que você esteja utilizando em seu mapeamento não encontre nenhuma coluna em seu DataFrame. Porém, nesse caso, `spark_map()` emite uma mensagem clara de que nenhuma coluna foi encontrada utilizando o mapeamento que você definiu. Como exemplo, poderíamos reproduzir esse erro, ao tentar mapear no DataFrame `students`, todas as colunas que começam pela *string* `'april'`. Um `KeyError` é levantado nesse caso pois não existe nenhuma coluna na tabela `students`, cujo nome começe pela palavra "april".
+
+```{python}
+spark_map(students, starts_with('april'), F.sum)
+```
+```{python}
+KeyError: `spark_map()` did not found any column that matches your mapping!
+```
+

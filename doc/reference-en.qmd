@@ -1,0 +1,10 @@
+---
+title: "Function reference"
+listing:
+    contents: "english/*.qmd"
+    type: default
+---
+
+Here, we have a list of all documented functions in the `spark_map` package.
+
+

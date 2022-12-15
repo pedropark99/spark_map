@@ -1,11 +1,32 @@
-# `spark_map()`
+---
+title: "Introducing `spark_map`"
+execute: 
+  eval: false
+---
+
 ## Overview
-This repository store a Pyspark implementation of `map()` function for spark DataFrames. With `spark_map()` you are able to apply a function over multiple columns of a Spark DataFrame. In other words, with `spark_map()`, you can avoid building long `.agg()` expressions that basically applies the same Pyspark function over multiple columns.
+
+`spark_map` is a python package that contains an implementation of `map()` function for Apache Spark DataFrames, using `pyspark`. In other wrods, the `spark_map` package offers tools to apply a function over multiple columns of a Spark DataFrame. The package offers two main functions to do that, which are `spark_map()` and `spark_across`.
+
+Both of these functions perform the same work, which is to apply a function over a set of columns of a Spark DataFrame. But the difference between them, is that `spark_map()` uses the `agg()` method of Spark DataFrame's to apply the function, while `spark_across()` uses the `withColumn()` method to do so.
+
+## Installation
+
+To get the latest version of `spark_map` at PyPI, use:
+
+```
+pip install spark_map
+```
 
 ## Documentation
-Documentation of `spark_map()` and its partners, are available as Markdown files (`.md`) in [english](https://github.com/pedropark99/spark_map/tree/main/doc/english) and in [portuguese](https://github.com/pedropark99/spark_map/tree/main/doc/portuguese).
 
-## A simple example
+The full documentation for `spark_map` package is available in this website. To access it, just use the `Function Reference` and `Articles` menus, located at the top navigation bar of this page. All documentation is available both in [english](reference-en.qmd) and in [portuguese](reference-ptbr.qmd).
+
+
+
+
+## A simple example of use
+
 As an example, consider the `students` DataFrame below:
 
 ```{python}
@@ -43,8 +64,10 @@ students.show(truncate = False)
 Suppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The `spark_map()` function allows you to perform this calculation in an extremely simple and clear way, as shown below:
 
 ```{python}
-import pyspark.sql.functions as F
-spark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)
+from pyspark.sql.functions import mean
+from spark_map import spark_map, at_position
+
+spark_map(students, at_position(3, 4, 5), mean).show(truncate = False)
 ```
 
 ```
@@ -61,9 +84,8 @@ Selected columns by `spark_map()`: Age, Height, Score1
 If you want your calculation to be applied by group, just provide the grouped table to `spark_map()`. For example, suppose you wanted to calculate the same averages as in the example above, but within each department:
 
 ```{python}
-import pyspark.sql.functions as F
 by_department = students.groupBy('Department')
-spark_map(by_department, at_position(3, 4, 5), F.mean).show()
+spark_map(by_department, at_position(3, 4, 5), mean).show()
 ```
 
 ```
