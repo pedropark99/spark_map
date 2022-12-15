@@ -8,7 +8,7 @@ Documentation of `spark_map()` and its partners, are available as Markdown files
 ## A simple example
 As an example, consider the `students` DataFrame below:
 
-```{python}
+```python
 d = [
   (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),
   (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),
@@ -42,7 +42,7 @@ students.show(truncate = False)
 
 Suppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The `spark_map()` function allows you to perform this calculation in an extremely simple and clear way, as shown below:
 
-```{python}
+```python
 import pyspark.sql.functions as F
 spark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)
 ```
@@ -60,7 +60,7 @@ Selected columns by `spark_map()`: Age, Height, Score1
 
 If you want your calculation to be applied by group, just provide the grouped table to `spark_map()`. For example, suppose you wanted to calculate the same averages as in the example above, but within each department:
 
-```{python}
+```python
 import pyspark.sql.functions as F
 by_department = students.groupBy('Department')
 spark_map(by_department, at_position(3, 4, 5), F.mean).show()
