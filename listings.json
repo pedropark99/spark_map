@@ -1,0 +1,38 @@
+[
+  {
+    "listing": "/articles-en.html",
+    "items": [
+      "/english/articles/building-mapping.html"
+    ]
+  },
+  {
+    "listing": "/articles-ptbr.html",
+    "items": [
+      "/portuguese/artigos/construindo-mapeamento.html"
+    ]
+  },
+  {
+    "listing": "/reference-en.html",
+    "items": [
+      "/english/all_of.html",
+      "/english/are_of_type.html",
+      "/english/at_position.html",
+      "/english/ends_with.html",
+      "/english/matches.html",
+      "/english/spark_map.html",
+      "/english/starts_with.html"
+    ]
+  },
+  {
+    "listing": "/reference-ptbr.html",
+    "items": [
+      "/portuguese/all_of.html",
+      "/portuguese/are_of_type.html",
+      "/portuguese/at_position.html",
+      "/portuguese/ends_with.html",
+      "/portuguese/matches.html",
+      "/portuguese/spark_map.html",
+      "/portuguese/starts_with.html"
+    ]
+  }
+]
