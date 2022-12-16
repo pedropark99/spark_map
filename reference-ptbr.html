@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.269">
+<meta name="generator" content="quarto-1.2.258">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,9 +70,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-author','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-description"],
+      searchColumns: ["listing-title","listing-author"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -183,135 +183,91 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1671135427334" data-listing-reading-time-sort="1.5">
-<div class="body">
-<a href="./portuguese/all_of.html">
-<h3 class="no-anchor listing-title">
-<code>all_of()</code>
-</h3>
-<div class="listing-subtitle">
+<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
+<div class="listing-actions-group">
+   <div class="input-group input-group-sm quarto-listing-sort">
+     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
+     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
+       <option value="" disabled="" selected="" hidden="">Order By</option>
+       <option value="index" data-direction="asc">Default</option>
+         <option value="listing-title-sort" data-direction="asc">
+          Title
+        </option>
+         <option value="listing-author" data-direction="asc">
+          Author
+        </option>
+     </select>
+  </div>
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
+</div>
 
-</div>
-<div class="listing-description">
-Mapear todas as colunas de seu Spark DataFrame cujo nome esteja incluso em uma lista de strings. Essa função é uma das várias funções de mapeamento existentes (leia o artigo <strong>“Construindo o…</strong>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./portuguese/all_of.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1671135425894" data-listing-reading-time-sort="1.29">
-<div class="body">
-<a href="./portuguese/are_of_type.html">
-<h3 class="no-anchor listing-title">
-<code>are_of_type()</code>
-</h3>
-<div class="listing-subtitle">
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+<th>
+<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
+</th>
+<th>
+<a class="sort" data-sort="listing-author" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Author</a>
+</th>
+</tr>
+</thead>
+<tbody class="list">
+<tr data-index="0" data-listing-file-modified-sort="1671147975989" data-listing-reading-time-sort="1.5" data-listing-title-sort="`all_of()`" data-listing-filename-sort="all_of.qmd">
+<td class="listing-title">
+<a href="./portuguese/all_of.html" class="title"><code>all_of()</code></a>
+</td>
+<td class="listing-author">
+</td>
+</tr>
+<tr data-index="1" data-listing-file-modified-sort="1671147975989" data-listing-reading-time-sort="1.29" data-listing-title-sort="`are_of_type()`" data-listing-filename-sort="are_of_type.qmd">
+<td class="listing-title">
+<a href="./portuguese/are_of_type.html" class="title"><code>are_of_type()</code></a>
+</td>
+<td class="listing-author">
+</td>
+</tr>
+<tr data-index="2" data-listing-file-modified-sort="1671147975989" data-listing-reading-time-sort="2.775" data-listing-title-sort="`at_position()`" data-listing-filename-sort="at_position.qmd">
+<td class="listing-title">
+<a href="./portuguese/at_position.html" class="title"><code>at_position()</code></a>
+</td>
+<td class="listing-author">
+</td>
+</tr>
+<tr data-index="3" data-listing-file-modified-sort="1671147975989" data-listing-reading-time-sort="1.085" data-listing-title-sort="`ends_with()`" data-listing-filename-sort="ends_with.qmd">
+<td class="listing-title">
+<a href="./portuguese/ends_with.html" class="title"><code>ends_with()</code></a>
+</td>
+<td class="listing-author">
+</td>
+</tr>
+<tr data-index="4" data-listing-file-modified-sort="1671147975989" data-listing-reading-time-sort="2.53" data-listing-title-sort="`matches()`" data-listing-filename-sort="matches.qmd">
+<td class="listing-title">
+<a href="./portuguese/matches.html" class="title"><code>matches()</code></a>
+</td>
+<td class="listing-author">
+</td>
+</tr>
+<tr data-index="5" data-listing-file-modified-sort="1671147975989" data-listing-reading-time-sort="3.9" data-listing-title-sort="`spark_map()`" data-listing-filename-sort="spark_map.qmd">
+<td class="listing-title">
+<a href="./portuguese/spark_map.html" class="title"><code>spark_map()</code></a>
+</td>
+<td class="listing-author">
+</td>
+</tr>
+<tr data-index="6" data-listing-file-modified-sort="1671147975989" data-listing-reading-time-sort="1.105" data-listing-title-sort="`starts_with()`" data-listing-filename-sort="starts_with.qmd">
+<td class="listing-title">
+<a href="./portuguese/starts_with.html" class="title"><code>starts_with()</code></a>
+</td>
+<td class="listing-author">
+</td>
+</tr>
+</tbody>
 
-</div>
-<div class="listing-description">
-Mapear todas as colunas de…<strong></strong>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./portuguese/are_of_type.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-file-modified-sort="1671135430959" data-listing-reading-time-sort="2.775">
-<div class="body">
-<a href="./portuguese/at_position.html">
-<h3 class="no-anchor listing-title">
-<code>at_position()</code>
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Map…<strong></strong>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./portuguese/at_position.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-listing-file-modified-sort="1671135434268" data-listing-reading-time-sort="1.085">
-<div class="body">
-<a href="./portuguese/ends_with.html">
-<h3 class="no-anchor listing-title">
-<code>ends_with()</code>
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Mapear todas as colunas de seu Spark DataFrame cujo o nome termina por um texto específico. Essa função é uma das várias funções de mapeamento existentes (leia o artigo <strong>“Construindo o…</strong>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./portuguese/ends_with.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-listing-file-modified-sort="1671135437540" data-listing-reading-time-sort="2.53">
-<div class="body">
-<a href="./portuguese/matches.html">
-<h3 class="no-anchor listing-title">
-<code>matches()</code>
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Mapear todas as colunas de seu Spark DataFrame que se encaixam em uma expressão regular. Essa função é uma das várias funções de mapeamento existentes (leia o artigo <strong>“Construindo o…</strong>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./portuguese/matches.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-listing-file-modified-sort="1671135440798" data-listing-reading-time-sort="3.9">
-<div class="body">
-<a href="./portuguese/spark_map.html">
-<h3 class="no-anchor listing-title">
-<code>spark_map()</code>
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Com <code>spark_map()</code> você é capaz de aplicar uma função sobre múltiplas colunas de um Spark DataFrame. Em resumo, <code>spark_map()</code> recebe um Spark DataFrame como <em>input</em> e retorna um novo Spark DataFrame (agregado pela função que…<em></em>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./portuguese/spark_map.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-listing-file-modified-sort="1671135444449" data-listing-reading-time-sort="1.105">
-<div class="body">
-<a href="./portuguese/starts_with.html">
-<h3 class="no-anchor listing-title">
-<code>starts_with()</code>
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-Mapear todas as colunas de seu Spark DataFrame cujo o nome se inicia por um texto específico. Essa função é uma das várias funções de mapeamento existentes (leia o artigo <strong>“Construindo o…</strong>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./portuguese/starts_with.html"> </a>
-</div>
-</div>
-</div>
+</table>
 <div class="listing-no-matching d-none">
 No matching items
 </div>

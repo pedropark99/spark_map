@@ -1,318 +1,10 @@
 [
   {
-    "objectID": "articles-en.html",
-    "href": "articles-en.html",
-    "title": "Articles",
+    "objectID": "reference-en.html",
+    "href": "reference-en.html",
+    "title": "Function reference",
     "section": "",
-    "text": "Here, we have a list of all articles (i.e. long documentations) about the spark_map package.\n\n\n\n\n\n\n\n\n\n\nBuilding the mapping\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "articles-ptbr.html",
-    "href": "articles-ptbr.html",
-    "title": "Artigos",
-    "section": "",
-    "text": "Nesta página, temos uma lista de todos os artigos (isto é, documentações longas) sobre o pacote spark_map.\n\n\n\n\n\n\n\n\n\n\nConstruindo o mapeamento\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "english/all_of.html",
-    "href": "english/all_of.html",
-    "title": "all_of()",
-    "section": "",
-    "text": "Map all columns of your Spark DataFrame whose name is included in a string list. This function is one of several existing mapping functions (read the article “Building the mapping”)."
-  },
-  {
-    "objectID": "english/all_of.html#arguments",
-    "href": "english/all_of.html#arguments",
-    "title": "all_of()",
-    "section": "Arguments",
-    "text": "Arguments\n\nlist_cols: a list of strings containing the names of the columns you want to map;"
-  },
-  {
-    "objectID": "english/all_of.html#details-and-examples",
-    "href": "english/all_of.html#details-and-examples",
-    "title": "all_of()",
-    "section": "Details and examples",
-    "text": "Details and examples\nTherefore, all_of() is used to define which columns spark_map() will apply the given function to. You can use this function, when you want to allow a set of columns to be mapped, but for some reason you don’t know in advance if all these columns (or a part of them) will be available in your Spark DataFrame.\nYou must give all_of() a list of strings. Each string represents the name of a column that can be mapped. As an example, the expression all_of(['sales_france', 'sales_brazil', 'sales_colombia']) allows columns named \"sales_france\", \"sales_brazil\" and \"sales_colombia\" to be mapped by spark_map(). However, spark_map() doesn’t necessarily need to find all these columns at once. That is, all_of() makes these columns “optional”, so spark_map() can find all three columns, or only two, or even just one of these columns. See the example below:\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'sales_france', 'sales_brazil', 'sales_russia'])\n\nspark_map(\n    sales,\n    all_of(['sales_france', 'sales_brazil', 'sales_colombia']),\n    F.mean\n  )\\\n  .show()\n\nSelected columns by `spark_map()`: sales_france, sales_brazil\n\n+------------+------------+\n|sales_france|sales_brazil|\n+------------+------------+\n|     16600.0|     24600.0|\n+------------+------------+\nHowever, it is worth noting that spark_map() must find at least one of the columns defined in all_of(). If it doesn’t, spark_map() will raise a KeyError warning that no column could be found with the mapping you defined.\n\nspark_map(sales, all_of(['sales_italy']), F.mean).show()\n\n\nKeyError: '`spark_map()` did not find any column that matches your mapping!'"
-  },
-  {
-    "objectID": "english/are_of_type.html",
-    "href": "english/are_of_type.html",
-    "title": "are_of_type()",
-    "section": "",
-    "text": "Map all columns of your Spark DataFrame that fit a certain data type (string, double, integer, etc.). This function is one of several existing mapping functions (read the article “Building the mapping”)."
-  },
-  {
-    "objectID": "english/are_of_type.html#arguments",
-    "href": "english/are_of_type.html#arguments",
-    "title": "are_of_type()",
-    "section": "Arguments",
-    "text": "Arguments\n\narg_type: a string containing the name of the data type you want to search for (see the available values ​​in the “Details and Examples” section below);"
-  },
-  {
-    "objectID": "english/are_of_type.html#details-and-examples",
-    "href": "english/are_of_type.html#details-and-examples",
-    "title": "are_of_type()",
-    "section": "Details and examples",
-    "text": "Details and examples\nTherefore, are_of_type() is used to define which columns spark_map() will apply the given function to. To use this function, you must provide one of the following values:\n\n\"string\": for columns of type pyspark.sql.types.StringType();\n\"int\": for columns of type pyspark.sql.types.IntegerType();\n\"double\": for columns of type pyspark.sql.types.DoubleType();\n\"date\": for columns of type pyspark.sql.types.DateType();\n\"datetime\": for columns of type pyspark.sql.types.TimestampType();\n\nThis means that are_of_type() accepts only one of the above values. If you provide a string that is not included in the above list, a ValueError is automatically raised by the function, as shown below:\n\nare_of_type(\"str\")\n\n\nValueError: You must choose one of the following values: 'string', 'int', 'double', 'date', 'datetime'\n\nIn essence, are_of_type() uses your Spark DataFrame schema to determine which columns belong to the data type you have determined. Notice in the example below, that the column named \"date\" is mapped by spark_map(), even though this column is clearly a date column. This happens, because Spark is interpreting this column by the type pyspark.sql.types.StringType(), not by pyspark.sql.types.DateType().\n\ndata = [\n  (\"2022-03-01\", \"Luke\", 36981),\n  (\"2022-02-15\", \"Anne\", 31000),\n  (\"2022-03-12\", \"Bishop\", 31281)\n]\n\nsales = spark.createDataFrame(data, ['date', 'name', 'value'])\n\nspark_map(sales, are_of_type(\"string\"), F.max).show()\n\nSelected columns by `spark_map()`: date, name\n\n+----------+----+\n|      date|name|\n+----------+----+\n|2022-03-12|Luke|\n+----------+----+"
-  },
-  {
-    "objectID": "english/articles/building-mapping.html",
-    "href": "english/articles/building-mapping.html",
-    "title": "Building the mapping",
-    "section": "",
-    "text": "You need to provide a mapping to spark_map(). This mapping defines which columns spark_map() should apply the function given in the function argument. You can build this mapping using one of the mapping functions, which are as follows:\nAs a first example, you can use the at_position() function whenever you want to select columns by position. So if you want to select the first, second, third and fourth column, you give the respective indices of those columns to the at_position() function.\nOn the other hand, you may need to use another method to map the columns you are interested in. For example, the students DataFrame has 4 Score columns (Score1, Score2, Score3 and Score4), and we have two obvious ways to map all these columns. One way is using the starts_with() function, and another is using the matches() function. Both options below bring the same results."
-  },
-  {
-    "objectID": "english/articles/building-mapping.html#a-classe-mapping",
-    "href": "english/articles/building-mapping.html#a-classe-mapping",
-    "title": "Building the mapping",
-    "section": "A classe Mapping",
-    "text": "A classe Mapping\nBasically, the mapping is just a small description containing the algorithm that should be used to find the columns and the value that will be passed on to this algorithm. As an example, the result of the expression at_position(3, 4, 5) is a small dict, containing two elements (fun and val). The fun element defines the method/algorithm to be used to find the columns, and the val element stores the value that will be passed to this method/algorithm.\n\nat_position(3, 4, 5)\n\n\n{'fun': 'at_position', 'val': (3, 4, 5)}\n\nAs another example, the result of the expression matches('^Score') is quite similar. However, unlike the previous example that uses a method called at_position, this time, the method/algorithm to be used is called matches, and '^Score' is the value that will be passed to this method.\n\nmatches('^Score')\n\n\n{'fun': 'matches', 'val': '^Score'}\n\nTherefore, when you use one of the standard mapping functions that comes with spark_map package, a dict will be generated containing the name of the method/algorithm to be used to calculate the mapping, and, the input value that will be passed to this method. Upon receiving this dict, spark_map() or spark_across() will automatically search for the method/algorithm to be used inside the class Mapping, and it will execute this method. This means that all standard mapping methods/algorithms from the spark_map package are stored inside this Mapping class."
-  },
-  {
-    "objectID": "english/articles/building-mapping.html#creating-your-own-mapping-method",
-    "href": "english/articles/building-mapping.html#creating-your-own-mapping-method",
-    "title": "Building the mapping",
-    "section": "Creating your own mapping method",
-    "text": "Creating your own mapping method\nDespite being quite useful, you might want to implement your own mapping algorithm, and you can easily do that. Just give to spark_map() or spak_across a dict similar to the dict’s produced by one of the standard mapping functions. That is, a dict containing an item named fun and another item named val.\nThe val item keeps getting the value/object you want to pass to your mapping algorithm/method. However, this time, the fun item must contain a function, not a method/algorithm name inside a string. That is, whenever spark_map() or spark_across() receives a string in this fun item, these functions assume that you are trying to use one of the standard mapping methods, and therefore, they start a search for this method inside the Mapping class.\nOn the other hand, if these functions receive a function in the fun item, then spark_map() or spark_across() will directly execute that function that is in the fun item, inserting the value you provided in the val item in the first argument of this function.\nHowever, this process has some important conditions. Every mapping function must always take three mandatory arguments: 1) value: an arbitrary value for the algorithm1 (which corresponds to to the value given in the val item); 2) cols: the Spark DataFrame column names as a list of strings2; 3) schema: the schema (or schema) of the Spark DataFrame3. Your mapping function should always have these three arguments, even if it doesn’t use all of them.\nTherefore, the value argument of every mapping function will always receive as input the value you passed to the val item of the initial dict. Now, the other two arguments, cols and schema, they will be automatically filled by spark_map() or spark_across(). In other words, spark_map() or spark_across() will automatically collect the values of these arguments for you.\nAs an example, the alphabetic_order() function below maps the column that is in a specific position in the alphabetical order. This alphabetic_order() function only uses the index and cols arguments, even though it receives three arguments. In other words, the schema argument is just there to satisfy the conditions of spark_map() and spark_across().\n\ndef alphabetic_order(index, cols: list, schema: StructType):\n    cols.sort()\n    return cols[index]\n\nOne other requirement that we haven’t covered yet is the return value of your mapping function. Your mapping function must always return a list of strings, which contain the names of the columns that were mapped by the function. If your mapping function does not find any columns during your search, it should return an empty list (i.e. []).\nAs a first demonstration, let’s apply this alphabetic_order() function. For that, let’s use the DataFrame spark sales.sales_per_country as an example. The column list of this DataFrame is shown below:\n\nsales = spark.table('sales.sales_per_country')\nprint(sales.columns)\n\n\n['year', 'month', 'country', 'idstore', 'totalsales']\n\nNow, using the alphabetic_order() inside spark_map():\n\nspark_map(sales, {'fun' = 'alphabetic_order', 'val' = 1}, F.max)\n\nSelected columns by `spark_map()`: idstore\n\n+--------+\n| idstore|\n+--------+\n|    2300|\n+--------+"
-  },
-  {
-    "objectID": "english/articles/building-mapping.html#if-your-mapping-doesnt-find-any-columns",
-    "href": "english/articles/building-mapping.html#if-your-mapping-doesnt-find-any-columns",
-    "title": "Building the mapping",
-    "section": "If your mapping doesn’t find any columns",
-    "text": "If your mapping doesn’t find any columns\nOn the other hand, spark_map() will also raise a KeyError, in case the function you are using in your mapping doesn’t find any columns in your DataFrame. However, in this case, spark_map() sends a clear message that no columns were found using the mapping you defined. As an example, we could reproduce this error, when trying to map in the DataFrame students, all the columns that start with the string 'april'. A KeyError is raised in this case because there is no column in the students table whose name starts with the word “april”.\n\nspark_map(students, starts_with('april'), F.sum)\n\n\nKeyError: `spark_map()` did not find any column that matches your mapping!"
-  },
-  {
-    "objectID": "english/at_position.html",
-    "href": "english/at_position.html",
-    "title": "at_position()",
-    "section": "",
-    "text": "Map the columns of your Spark DataFrame based on their numeric indexes (1st, 2nd, 3rd column, etc.). This function is one of several existing mapping functions (read the article “Building the mapping”)."
-  },
-  {
-    "objectID": "english/at_position.html#arguments",
-    "href": "english/at_position.html#arguments",
-    "title": "at_position()",
-    "section": "Arguments",
-    "text": "Arguments\n\n*indexes: the column indexes (separated by commas);\nzero_index: boolean value (True or False) indicating whether the indexes provided in *indexes are zero-based or not (read the “Details” section below). By default, this argument is set to False;"
-  },
-  {
-    "objectID": "english/at_position.html#details-and-examples",
-    "href": "english/at_position.html#details-and-examples",
-    "title": "at_position()",
-    "section": "Details and examples",
-    "text": "Details and examples\nTherefore, at_position() is used to define which columns spark_map() will apply the given function to. To use this function, you supply the numeric indexes, separated by commas, that represent the columns you want to map in spark_map().\nThe zero_index argument is optional, and determines whether the given column indexes will be based on a zero-start index system, or on a one-start index system. Python uses a zero-start index system, so the value 0 represents the first value of an object, while 1 represents the second value of an object, and so on.\nBut, the zero_index argument is set by default to False. Because of this, the at_position() function always initially works with an index system starting at one. So, in the expression at_position(3, 4, 5), the at_position() function will map the 3rd, 4th and 5th columns of your Spark DataFrame. However, if you want to override this behavior, and use Python’s default index system (starting at zero), just set this argument to True. In the example below, at_position() will map to the 2nd, 3rd and 4th column of the sales DataFrame.\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])\n\nspark_map(sales, at_position(1, 2, 3, zero_index = True), F.mean).show()\n\nSelected columns by `spark_map()`: month, france_Sales, brazil_sales\n\n+-----+------------+------------+\n|month|france_Sales|brazil_sales|\n+-----+------------+------------+\n|  2.0|     16600.0|     24600.0|\n+-----+------------+------------+\nWhen providing a zero index, you should always set the zero_index argument to True. When the zero_index argument is set to False, at_position() will automatically subtract 1 from all indexes. So an index equal to zero becomes an index equal to -1, and negative indexes are not allowed by at_position(). See the example below:\n\nat_position(0, 2, 4)\n\n\nValueError: One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?\n\nFurthermore, any duplicate index is automatically eliminated by at_position(). See the example below in which the indexes 1 and 4 are repeated during the call to at_position(), but they are automatically eliminated in the function result.\n\nat_position(1, 1, 2, 3, 4, 4, 5)\n\n\n{'fun': '__at_position', 'val': (0, 1, 2, 3, 4)}\n\nFurthermore, the indexes given to at_position() must not be inside a list, if you make this mistake, the function will raise a ValueError, as shown below:\n\nat_position([4, 5, 6])\n\n\nValueError: Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.\n\nColumn indexes are a required argument. So, if you don’t provide any index, at_position() will necessarily raise a ValueError, as shown below:\n\nat_position(zero_index = True)\n\n\nValueError: You did not provided any index for `at_position()` to search"
-  },
-  {
-    "objectID": "english/ends_with.html",
-    "href": "english/ends_with.html",
-    "title": "ends_with()",
-    "section": "",
-    "text": "Map all columns of your Spark DataFrame whose name ends with a specific text. This function is one of several existing mapping functions (read the article “Building the mapping”)."
-  },
-  {
-    "objectID": "english/ends_with.html#arguments",
-    "href": "english/ends_with.html#arguments",
-    "title": "ends_with()",
-    "section": "Arguments",
-    "text": "Arguments\n\ntext: a string containing the text you want to search for;"
-  },
-  {
-    "objectID": "english/ends_with.html#details-and-examples",
-    "href": "english/ends_with.html#details-and-examples",
-    "title": "ends_with()",
-    "section": "Details and examples",
-    "text": "Details and examples\nTherefore, ends_with() is used to define which columns spark_map() will apply the given function to. This function performs the inverse process of starts_with(), i.e. it searches for all columns whose name ends with a specific text. So, with the expression ends_with(\"Score\"), ends_with() will map all columns whose name ends with the text \"Score\".\nDuring the mapping process, an exact match between the searched strings is always used. As a result, an expression like ends_with(\"Sales\") is not able to map columns like \"brazil_sales\", \"colombia_sales\" and \"eua_sales\", however it is able to map columns like \"france_Sales \" and \"russia_Sales\". If you need to be more flexible in your mapping, you’ll likely want to use the matches() function instead of ends_with().\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])\n\nspark_map(sales, ends_with('Sales'), F.mean).show()\n\nSelected columns by `spark_map()`: france_Sales, russia_Sales\n\n+------------+------------------+\n|france_Sales|      russia_Sales|\n+------------+------------------+\n|     16600.0|33087.333333333336|\n+------------+------------------+"
-  },
-  {
-    "objectID": "english/matches.html",
-    "href": "english/matches.html",
-    "title": "matches()",
-    "section": "",
-    "text": "Map all columns of your Spark DataFrame that fit into a regular expression. This function is one of several existing mapping functions (read the article “Building the mapping”)."
-  },
-  {
-    "objectID": "english/matches.html#arguments",
-    "href": "english/matches.html#arguments",
-    "title": "matches()",
-    "section": "Arguments",
-    "text": "Arguments\n\nregex: a string (preferably a raw string) containing the regular expression to be used;"
-  },
-  {
-    "objectID": "english/matches.html#details-and-examples",
-    "href": "english/matches.html#details-and-examples",
-    "title": "matches()",
-    "section": "Details and examples",
-    "text": "Details and examples\nTherefore, matches() is used to define which columns spark_map() will apply the given function to. To use this function, you supply a raw string containing the regular expression you want to use. It is extremely important that you provide your expression within a raw string rather than a traditional string, especially if your expression includes special characters like TABs or new lines ('\\t' or '\\n'). In Python, raw strings are constructed by placing an 'r' before the quotes in our string. Therefore, the expression r'raw string' represents a raw string, while 'string' represents a traditional string.\nIt is worth noting that the regular expression provided will be passed to the re.match() method, and will be applied to the name of each column of your Spark DataFrame. With that in mind, if your regular expression can’t find any column, it’s interesting that you investigate your error through the re.match() method. For example, suppose you have the DataFrame pop below. Suppose also that you want to map all columns that contain the string 'male' somewhere. Note that no columns were found by spark_map().\n\ndata = [\n  ('Brazil', 74077777, 86581634, 96536269, 74925448, 88208705, 99177368),\n  ('Colombia', 16315306, 19427307, 22159658, 16787263, 20202658, 23063041),\n  ('Russia', 69265950, 68593139, 66249411, 78703457, 78003730, 76600057)\n]\n\npop = spark.createDataFrame(\n  data,\n  ['country', 'pop_male_1990', 'pop_male_2000', 'pop_male_2010',\n   'pop_female_1990', 'pop_female_2000', 'pop_female_2010']\n)\n\nspark_map(pop, matches(r'male'), F.max).show()\n\n\nKeyError: '`spark_map()` did not found any column that matches your mapping!'\n\nTo investigate what is going wrong in this case, it is useful to separate the name of a column that should have been found and apply re.match() in isolation to that column. Note below that the result of the expression re.match(r'male', name) is None. This means that the regular expression 'male' does not generate a match with the text pop_male_1990.\n\nname = 'pop_male_1990'\nprint(re.match(r'male', name))\n\n\nNone\n\nBy testing various combinations and delving deeper into the problem, you may eventually find that the expression 'male' is wrong as it represents an exact match with the text 'male'. That is, with this expression, re.match() is able to find only the text 'male' and nothing else. We can fix this problem by allowing an arbitrary number of characters to be found around the text 'male'. For this, we circumvent 'male' with the mini-expression '(.+)', as shown below:\n\nname = 'pop_male_1990'\nprint(re.match(r'(.+)male(.+)', name))\n\n\n<re.Match object; span=(0, 13), match='pop_male_1990'>\n\nNow that we’ve tested this new regular expression in re.match() we can return to the matches() function. Notice below that this time all the expected columns are found.\n\nspark_map(pop, matches(r'(.+)male(.+)'), F.max).show()\n\nSelected columns by `spark_map()`: pop_male_1990, pop_male_2000, pop_male_2010, pop_female_1990, pop_female_2000, pop_female_2010\n\n+-------------+-------------+-------------+---------------+---------------+---------------+\n|pop_male_1990|pop_male_2000|pop_male_2010|pop_female_1990|pop_female_2000|pop_female_2010|\n+-------------+-------------+-------------+---------------+---------------+---------------+\n|     74077777|     86581634|     96536269|       78703457|       88208705|       99177368|\n+-------------+-------------+-------------+---------------+---------------+---------------+"
-  },
-  {
-    "objectID": "english/spark_map.html",
-    "href": "english/spark_map.html",
-    "title": "spark_map()",
-    "section": "",
-    "text": "With spark_map() you are able to apply a function over multiple columns of a Spark DataFrame. In short, spark_map() takes a Spark DataFrame as input and returns a new Spark DataFrame (aggregated by the function you provided) as output."
-  },
-  {
-    "objectID": "english/spark_map.html#arguments",
-    "href": "english/spark_map.html#arguments",
-    "title": "spark_map()",
-    "section": "Arguments",
-    "text": "Arguments\n\ntable: a Spark DataFrame or a grouped DataFrame (i.e. pyspark.sql.DataFrame or pyspark.sql.GroupedData);\nmapping: the mapping that defines the columns where you want to apply function (read the article “Building the mapping”);\nfunction: the function you want to apply to each column defined in mapping;"
-  },
-  {
-    "objectID": "english/spark_map.html#details-and-examples",
-    "href": "english/spark_map.html#details-and-examples",
-    "title": "spark_map()",
-    "section": "Details and examples",
-    "text": "Details and examples\nAs an example, consider the students DataFrame below:\n\nd = [\n  (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),\n  (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),\n  (10045, 'George', 29, 1.77, 10, 9, 10, 7, 'Law', 'SC'),\n  (12459, 'Adeline', 26, 1.61, 8, 6, 7, 7, 'Law', 'SC'),\n  (10190, 'Mayla', 22, 1.67, 7, 7, 7, 9, 'Design', 'AR'),\n  (11552, 'Daniel', 24, 1.75, 9, 9, 10, 9, 'Design', 'AR')\n]\n\ncolumns = [\n  'StudentID', 'Name', 'Age', 'Height', 'Score1',\n  'Score2', 'Score3', 'Score4', 'Course', 'Department'\n]\n\nstudents = spark.createDataFrame(d, columns)\nstudents.show(truncate = False)\n\n+---------+-------+---+------+------+------+------+------+---------+----------+\n|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|\n+---------+-------+---+------+------+------+------+------+---------+----------+\n|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |\n|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |\n|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |\n|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |\n|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |\n|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |\n+---------+-------+---+------+------+------+------+------+---------+----------+\nSuppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The spark_map() function allows you to perform this calculation in an extremely simple and clear way, as shown below:\n\nimport pyspark.sql.functions as F\nspark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)\n\nSelected columns by `spark_map()`: Age, Height, Score1\n\n+------------------+------------------+------+\n|Age               |Height            |Score1|\n+------------------+------------------+------+\n|24.166666666666668|1.6966666666666665|8.0   |\n+------------------+------------------+------+\nIf you want your calculation to be applied by group, just provide the grouped table to spark_map(). For example, suppose you wanted to calculate the same averages as in the example above, but within each department:\n\nimport pyspark.sql.functions as F\nby_department = students.groupBy('Department')\nspark_map(by_department, at_position(3, 4, 5), F.mean).show()\n\nSelected columns by `spark_map()`: Age, Height, Score1\n\n+----------+-----+------------------+------+\n|Department|  Age|            Height|Score1|\n+----------+-----+------------------+------+\n|        SC|24.75|1.6900000000000002|   8.0|\n|        AR| 23.0|              1.71|   8.0|\n+----------+-----+------------------+------+"
-  },
-  {
-    "objectID": "english/spark_map.html#you-define-the-calculation-and-spark_map-distributes-it",
-    "href": "english/spark_map.html#you-define-the-calculation-and-spark_map-distributes-it",
-    "title": "spark_map()",
-    "section": "You define the calculation and spark_map() distributes it",
-    "text": "You define the calculation and spark_map() distributes it\nAll spark_map() does is apply any function to a set of columns in your DataFrame. And this function can be any function, as long as it is an aggregator function (that is, a function that can be used inside the pyspark.sql.DataFrame.agg() and pyspark.sql.GroupedData.agg() methods). As long as your function meets this requirement, you can define whatever calculation formula you want, and use spark_map() to spread that calculation over multiple columns.\nAs an example, suppose you needed to use a little inference to test whether the average of the various Student Scores significantly deviates from 6, through the statistic produced by a t test:\n\ndef t_test(x, value_test = 6):\n  return ( F.mean(x) - F.lit(value_test) ) / ( F.stddev(x) / F.sqrt(F.count(x)) )\n\nresults = spark_map(students, starts_with(\"Score\"), t_test)\nresults.show(truncate = False)\n\nSelected columns by `spark_map()`: Score1, Score2, Score3, Score4\n\n+-----------------+------------------+-----------------+----------------+\n|Score1           |Score2            |Score3           |Score4          |\n+-----------------+------------------+-----------------+----------------+\n|3.464101615137754|2.7116307227332026|4.338609156373122|4.47213595499958|\n+-----------------+------------------+-----------------+----------------+"
-  },
-  {
-    "objectID": "english/starts_with.html",
-    "href": "english/starts_with.html",
-    "title": "starts_with()",
-    "section": "",
-    "text": "Map all columns of your Spark DataFrame whose name starts with a specific text. This function is one of several existing mapping functions (read the article “Building the mapping”)."
-  },
-  {
-    "objectID": "english/starts_with.html#arguments",
-    "href": "english/starts_with.html#arguments",
-    "title": "starts_with()",
-    "section": "Arguments",
-    "text": "Arguments\n\ntext: a string containing the text you want to search for;"
-  },
-  {
-    "objectID": "english/starts_with.html#details-and-examples",
-    "href": "english/starts_with.html#details-and-examples",
-    "title": "starts_with()",
-    "section": "Details and examples",
-    "text": "Details and examples\nTherefore, starts_with() is used to define which columns spark_map() will apply the given function to. This function performs the inverse process of ends_with(), that is, it searches for all columns whose name starts with a specific text. Therefore, with the expression starts_with(\"Score\"), starts_with() will map all columns whose name starts with the text \"Score\".\nDuring the mapping process, an exact match between the searched strings is always used. As a result, an expression like starts_with(\"Sales\") is not able to map columns like \"sales_brazil\", \"sales_colombia\" and \"sales_eua\", however it is able to map columns like \"Sales_france \" and \"Sales_russia\". If you need to be more flexible in your mapping, you’ll likely want to use the matches() function instead of starts_with().\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'Sales_france', 'sales_brazil', 'Sales_russia'])\n\nspark_map(sales, starts_with('Sales'), F.mean).show()\n\nSelected columns by `spark_map()`: Sales_france, Sales_russia\n\n+------------+------------------+\n|Sales_france|      Sales_russia|\n+------------+------------------+\n|     16600.0|33087.333333333336|\n+------------+------------------+"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Introducing spark_map",
-    "section": "",
-    "text": "spark_map is a python package that contains an implementation of map() function for Apache Spark DataFrames, using pyspark. In other wrods, the spark_map package offers tools to apply a function over multiple columns of a Spark DataFrame. The package offers two main functions to do that, which are spark_map() and spark_across.\nBoth of these functions perform the same work, which is to apply a function over a set of columns of a Spark DataFrame. But the difference between them, is that spark_map() uses the agg() method of Spark DataFrame’s to apply the function, while spark_across() uses the withColumn() method to do so."
-  },
-  {
-    "objectID": "portuguese/all_of.html",
-    "href": "portuguese/all_of.html",
-    "title": "all_of()",
-    "section": "",
-    "text": "Mapear todas as colunas de seu Spark DataFrame cujo nome esteja incluso em uma lista de strings. Essa função é uma das várias funções de mapeamento existentes (leia o artigo “Construindo o mapeamento”)."
-  },
-  {
-    "objectID": "portuguese/all_of.html#argumentos",
-    "href": "portuguese/all_of.html#argumentos",
-    "title": "all_of()",
-    "section": "Argumentos",
-    "text": "Argumentos\n\nlist_cols: uma lista de strings contendo os nomes das colunas que você deseja mapear;"
-  },
-  {
-    "objectID": "portuguese/all_of.html#detalhes-e-exemplos",
-    "href": "portuguese/all_of.html#detalhes-e-exemplos",
-    "title": "all_of()",
-    "section": "Detalhes e exemplos",
-    "text": "Detalhes e exemplos\nPortanto, all_of() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Você pode utilizar essa função, quando você deseja permitir que um conjunto de colunas seja mapeada, porém, por algum motivo, você não sabe de antemão se todas essas colunas (ou uma parte delas) estará disponível em seu Spark DataFrame.\nVocê deve fornecer à all_of() uma lista de strings. Cada string representa o nome de uma coluna que pode ser mapeada. Como exemplo, a expressão all_of(['sales_france', 'sales_brazil', 'sales_colombia']) permite que as colunas chamadas \"sales_france\", \"sales_brazil\" e \"sales_colombia\" sejam mapeadas por spark_map(). Porém, não necessariamente spark_map() precisa encontrar todas essas colunas de uma vez só. Ou seja, all_of() torna essas colunas “opcionais”, logo, spark_map() pode encontrar as três colunas, ou, apenas duas, ou ainda, apenas uma dessas colunas. Veja o exemplo abaixo:\n\ndados = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(dados, ['year', 'month', 'sales_france', 'sales_brazil', 'sales_russia'])\n\nspark_map(\n    sales,\n    all_of(['sales_france', 'sales_brazil', 'sales_colombia']), \n    F.mean\n  )\\\n  .show()\n\nSelected columns by `spark_map()`: sales_france, sales_brazil\n\n+------------+------------+\n|sales_france|sales_brazil|\n+------------+------------+\n|     16600.0|     24600.0|\n+------------+------------+\nContudo, vale destacar que, spark_map() precisa encontrar pelo menos uma das colunas definidas em all_of(). Caso isso não ocorra, spark_map() vai levantar um KeyError avisando que nenhuma coluna pode ser encontrada com o mapeamento que você definiu.\n\nspark_map(sales, all_of(['sales_italy']), F.mean).show()\n\n\nKeyError: '`spark_map()` did not found any column that matches your mapping!'"
-  },
-  {
-    "objectID": "portuguese/are_of_type.html",
-    "href": "portuguese/are_of_type.html",
-    "title": "are_of_type()",
-    "section": "",
-    "text": "Mapear todas as colunas de seu Spark DataFrame que se encaixam em um determinado tipo de dado (string, double, integer, etc.). Essa função é uma das várias funções de mapeamento existentes (leia o artigo “Construindo o mapeamento”)."
-  },
-  {
-    "objectID": "portuguese/are_of_type.html#argumentos",
-    "href": "portuguese/are_of_type.html#argumentos",
-    "title": "are_of_type()",
-    "section": "Argumentos",
-    "text": "Argumentos\n\narg_type: uma string contendo o nome do tipo de dado que você deseja pesquisar (veja os valores disponíveis na seção “Detalhes e exemplos” abaixo);"
-  },
-  {
-    "objectID": "portuguese/are_of_type.html#detalhes-e-exemplos",
-    "href": "portuguese/are_of_type.html#detalhes-e-exemplos",
-    "title": "are_of_type()",
-    "section": "Detalhes e exemplos",
-    "text": "Detalhes e exemplos\nPortanto, are_of_type() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Para utilizar essa função, você deve fornecer um dos seguintes valores:\n\n\"string\": para colunas do tipo pyspark.sql.types.StringType();\n\"int\": para colunas do tipo pyspark.sql.types.IntegerType();\n\"double\": para colunas do tipo pyspark.sql.types.DoubleType();\n\"date\": para colunas do tipo pyspark.sql.types.DateType();\n\"datetime\": para colunas do tipo pyspark.sql.types.TimestampType();\n\nOu seja, are_of_type() somente um dos valores acima. Caso você forneça uma string que não esteja inclusa nos valores acima, um ValueError é automaticamente acionado pela função, como demonstrado abaixo:\n\nare_of_type(\"str\")\n\n\nValueError: You must choose one of the following values: 'string', 'int', 'double', 'date', 'datetime'\n\nNo fundo, are_of_type() utiliza o schema de seu Spark DataFrame para determinar quais colunas pertencem ao tipo de dado que você determinou. Repare no exemplo abaixo, que a coluna chamada \"date\" é mapeada por spark_map(), mesmo que essa coluna seja claramente uma coluna de datas. Tal fato ocorre, pois Spark está interpretando essa coluna pelo tipo pyspark.sql.types.StringType(), e não pyspark.sql.types.DateType().\n\ndados = [\n  (\"2022-03-01\", \"Luke\", 36981),\n  (\"2022-02-15\", \"Anne\", 31000),\n  (\"2022-03-12\", \"Bishop\", 31281)\n]\n\nsales = spark.createDataFrame(dados, ['date', 'name', 'value'])\n\nspark_map(sales, are_of_type(\"string\"), F.max).show()\n\nSelected columns by `spark_map()`: date, name\n\n+----------+----+\n|      date|name|\n+----------+----+\n|2022-03-12|Luke|\n+----------+----+"
-  },
-  {
-    "objectID": "portuguese/artigos/construindo-mapeamento.html",
-    "href": "portuguese/artigos/construindo-mapeamento.html",
-    "title": "Construindo o mapeamento",
-    "section": "",
-    "text": "Você precisa fornecer um mapeamento (ou mapping) para a função spark_map(). Esse mapeamento define quais são as colunas que spark_map() deve aplicar a função fornecida no argumento function. Você pode construir esse mapping utilizando uma das funções padrão de mapeamento, que são as seguintes:\nComo um primeiro exemplo, você pode utilizar a função at_position() sempre que você deseja selecionar as colunas por posição. Portanto, se você deseja selecionar a primeira, segunda, terceira e quarta coluna, você fornece os respectivos índices dessas colunas à função at_position().\nPor outro lado, você talvez precise utilizar um outro método para mapear as colunas que você está interessado. Por exemplo, o DataFrame students possui 4 colunas de Scores (Score1, Score2, Score3 e Score4), e temos duas formas óbvias de mapearmos todas essas colunas. Uma forma é utilizando a função starts_with(), e outra, através da função matches(). Ambas as opções abaixo trazem os mesmos resultados."
-  },
-  {
-    "objectID": "portuguese/artigos/construindo-mapeamento.html#a-classe-mapping",
-    "href": "portuguese/artigos/construindo-mapeamento.html#a-classe-mapping",
-    "title": "Construindo o mapeamento",
-    "section": "A classe Mapping",
-    "text": "A classe Mapping\nNo fundo, o mapeamento é apenas uma pequena descrição contendo o algoritmo que deve ser utilizado para encontrar as colunas e o valor que será repassado a este algoritmo. Como exemplo, o resultado da expressão at_position(3, 4, 5) é um pequeno dict, contendo dois elementos (fun e val). O elemento fun define o nome do método/algoritmo a ser utilizado para encontrar as colunas, e o elemento val guarda o valor que será repassado para esse método/algoritmo.\n\nat_position(3, 4, 5)\n\n\n{'fun': 'at_position', 'val': (3, 4, 5)}\n\nComo um outro exemplo, o resultado da expressão matches('^Score') é bastante similar. Porém, diferente do exemplo anterior que utiliza o método at_position, dessa vez, o método a ser utilizado é chamado matches, e '^Score' é o valor que será repassado para esse método.\n\nmatches('^Score')\n\n\n{'fun': 'matches', 'val': '^Score'}\n\nPortanto, sempre que você utiliza uma dessas funções de mapeamento padrão, um dict será gerado contendo o nome do método a ser utilizado para calcular o mapeamento, e, o valor de input que será repassado para esse método. Ao receber esse dict, spark_map() ou spark_across() vão automaticamente pesquisar pelo algoritmo a ser utilizado dentro da classe Mapping, e vai executar esse algoritmo. Portanto, todos os métodos/algoritmos pré-definidos de mapeamento no pacote spark_map estão armazenados dentro dessa classe Mapping."
-  },
-  {
-    "objectID": "portuguese/artigos/construindo-mapeamento.html#criando-o-seu-próprio-método-de-mapeamento",
-    "href": "portuguese/artigos/construindo-mapeamento.html#criando-o-seu-próprio-método-de-mapeamento",
-    "title": "Construindo o mapeamento",
-    "section": "Criando o seu próprio método de mapeamento",
-    "text": "Criando o seu próprio método de mapeamento\nApesar de bastante úteis, você talvez queira implementar o seu próprio algoritmo de mapeamento, e você pode fazer isso com facilidade. Basta fornecer à spark_map() ou spak_across uma dict semelhate às dict’s produzidas pelas funções padrão de mapeamento. Isto é, uma dict contendo um item chamado fun e outro chamado val.\nO item val continua recebendo o valor/objeto que você deseja repassar para o seu algoritmo/método de mapeamento. Porém, dessa vez, o item fun deve conter uma função, e não o nome de um método/algoritmo dentro de uma string. Ou seja, sempre que spark_map() ou spark_across() recebem uma string neste item fun, essas funções pressupõe que você está tentando utilizar um dos métodos padrãos de mapeamento, e por isso, eles iniciam uma busca pelos métodos da classe Mapping.\nEm contrapartida, se essas funções recebem uma função nesse item fun, então spark_map() ou spark_across() vão executar diretamente essa função que está no item fun, inserindo o valor que você forneceu no item val no primeiro argumento dessa função.\nPorém, esse processo tem algumas condições importantes. Toda função de mapeamento deve sempre receber três argumentos obrigatórios: 1) value: um valor arbitrário para o algoritmo1 (que corresponde ao valor repassado no item val); 2) cols: os nomes das colunas do Spark DataFrame como uma lista de strings2; 3) schema: o esquema (ou schema) do Spark DataFrame3. Sua função de mapeamento deve sempre ter esses três argumentos, mesmo que ela não use todos eles\nPortanto, o argumento value de toda função de mapeamento vai receber sempre como input o valor que você repassou ao item val do dict inicial. Quanto aos outros dois argumentos cols e schema, eles vão ser automaticamente preenchidos por spark_map() ou spark_across(). Em outras palavras, spark_map() ou spark_across() vão automaticamente coletar os valores desses argumentos por você.\nComo exemplo, a função abaixo mapeia a coluna que está em uma posição específica na ordem alfabética. Esta função alphabetic_order() usa apenas os argumentos index e cols, mesmo que ela receba três argumentos. Em outras palavras, o argumento schema está ali apenas para satisfazer as condições de spark_map() e spark_across().\n\ndef alphabetic_order(index, cols: list, schema: StructType):\n    cols.sort()\n    return cols[index]\n\nUm outro requisito que ainda não comentamos é o valor de retorno de sua função de mapeamento. Sua função de mapeamento deve sempre retornar uma lista de strings, a qual contém os nomes das colunas que foram mapeadas pela função. Caso a sua função de mapeamento não encontre nenhuma coluna durante a sua pesquisa, ela deve retornar uma lista vazia (i.e. []).\nComo demonstração, vamos aplicar essa função alphabetic_order(). Para isso, vamos usar o DataFrame spark sales.sales_per_country como exemplo. A lista de colunas deste DataFrame está exposta abaixo:\n\nsales = spark.table('sales.sales_per_country')\nprint(sales.columns)\n\n\n['year', 'month', 'country', 'idstore', 'totalsales']\n\nAgora, usando o alphabetic_order() dentro de spark_map():\n\nspark_map(sales, {'fun' = 'alphabetic_order', 'val' = 1}, F.max)\n\nSelected columns by `spark_map()`: idstore\n\n+--------+\n| idstore|\n+--------+\n|    2300|\n+--------+"
-  },
-  {
-    "objectID": "portuguese/artigos/construindo-mapeamento.html#caso-o-seu-mapeamento-não-encontre-nenhuma-coluna",
-    "href": "portuguese/artigos/construindo-mapeamento.html#caso-o-seu-mapeamento-não-encontre-nenhuma-coluna",
-    "title": "Construindo o mapeamento",
-    "section": "Caso o seu mapeamento não encontre nenhuma coluna",
-    "text": "Caso o seu mapeamento não encontre nenhuma coluna\nPor outro lado, spark_map() também vai levantar um KeyError, caso a função que você esteja utilizando em seu mapeamento não encontre nenhuma coluna em seu DataFrame. Porém, nesse caso, spark_map() emite uma mensagem clara de que nenhuma coluna foi encontrada utilizando o mapeamento que você definiu. Como exemplo, poderíamos reproduzir esse erro, ao tentar mapear no DataFrame students, todas as colunas que começam pela string 'april'. Um KeyError é levantado nesse caso pois não existe nenhuma coluna na tabela students, cujo nome começe pela palavra “april”.\n\nspark_map(students, starts_with('april'), F.sum)\n\n\nKeyError: `spark_map()` did not found any column that matches your mapping!"
-  },
-  {
-    "objectID": "portuguese/at_position.html",
-    "href": "portuguese/at_position.html",
-    "title": "at_position()",
-    "section": "",
-    "text": "Mapear as colunas de seu Spark DataFrame baseado em seus índices numéricos (1°, 2°, 3° coluna, etc.). Essa função é uma das várias funções de mapeamento existentes (leia o artigo “Construindo o mapeamento”)."
-  },
-  {
-    "objectID": "portuguese/at_position.html#argumentos",
-    "href": "portuguese/at_position.html#argumentos",
-    "title": "at_position()",
-    "section": "Argumentos",
-    "text": "Argumentos\n\n*indexes: os índices das colunas (separados por vírgulas);\nzero_index: valor booleano (True ou False) indicando se os índices fornecidos em *indexes são baseados em zero ou não (leia a seção de “Detalhes” abaixo). Por padrão, esse argumento é setado para False;"
-  },
-  {
-    "objectID": "portuguese/at_position.html#detalhes-e-exemplos",
-    "href": "portuguese/at_position.html#detalhes-e-exemplos",
-    "title": "at_position()",
-    "section": "Detalhes e exemplos",
-    "text": "Detalhes e exemplos\nPortanto, at_position() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Para utilizar essa função, você fornece os índices numéricos, separados por vírgulas, que representam as colunas que você deseja mapear em spark_map().\nO argumento zero_index é opcional, e determina se os índices das colunas fornecidos serão baseados em um sistema de índices iniciado em zero, ou, em um sistema inciado em um. A linguagem Python utiliza um sistema de índices iniciado em zero, logo, o valor 0 representa o primeiro valor de um objeto, enquanto 1, o segundo valor de um objeto, e assim por diante.\nEm contrapartida, o argumento zero_index é configurado por padrão para False. Por causa disso, a função at_position() trabalha sempre inicialmente com um sistema de índices iniciado em um. Logo, na expressão at_position(3, 4, 5), a função at_position() vai mapear a 3°, 4° e 5° colunas de seu Spark DataFrame. Porém, caso você queira sobrepor esse comportamento, e, utilizar o sistema de índices padrão do Python (iniciado em zero), basta configurar esse argumento para True. No exemplo abaixo, at_position() vai mapear a 2°, 3° e 4° coluna do DataFrame sales.\n\ndados = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(dados, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])\n\nspark_map(sales, at_position(1, 2, 3, zero_index = True), F.mean).show()\n\nSelected columns by `spark_map()`: month, france_Sales, brazil_sales\n\n+-----+------------+------------+\n|month|france_Sales|brazil_sales|\n+-----+------------+------------+\n|  2.0|     16600.0|     24600.0|\n+-----+------------+------------+\nAo fornecer um índice zero, você sempre deve configurar o argumento zero_index para True. Quando o argumento zero_index está setado para False, at_position() vai automaticamente subtrair 1 de todos os índices. Logo, um índice igual a zero, se torna um índice igual a -1, e índices negativos não são permitidos por at_position(). Veja o exemplo abaixo:\n\nat_position(0, 2, 4)\n\n\nValueError: 'One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?'\n\nAlém disso, todo e qualquer índice duplicado é automaticamente eliminado por at_position(). Veja o exemplo abaixo em que, os índices 1 e 4 estão repetidos durante a chamada à at_position(), mas, são automaticamente eliminados no resultado da função.\n\nat_position(1, 1, 2, 3, 4, 4, 5)\n\n\n{'fun': '__at_position', 'val': (0, 1, 2, 3, 4)}\n\nPara mais, os índices fornecidos à at_position() não devem estar dentro de uma lista, caso você cometa esse erro, a função vai levantar um ValueError, como demonstrado abaixo:\n\nat_position([4, 5, 6])\n\n\nValueError: 'Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`'.\n\nOs índices das colunas são um argumento obrigatório. Logo, caso você não forneça nenhum índice, at_position() vai obrigatoriamente levantar um ValueError, como demonstrado abaixo:\n\nat_position(zero_index = True)\n\n\nValueError: 'You did not provided any index for `at_position()` to search'."
-  },
-  {
-    "objectID": "portuguese/ends_with.html",
-    "href": "portuguese/ends_with.html",
-    "title": "ends_with()",
-    "section": "",
-    "text": "Mapear todas as colunas de seu Spark DataFrame cujo o nome termina por um texto específico. Essa função é uma das várias funções de mapeamento existentes (leia o artigo “Construindo o mapeamento”)."
-  },
-  {
-    "objectID": "portuguese/ends_with.html#argumentos",
-    "href": "portuguese/ends_with.html#argumentos",
-    "title": "ends_with()",
-    "section": "Argumentos",
-    "text": "Argumentos\n\ntext: uma string contendo o texto pelo qual você deseja pesquisar;"
-  },
-  {
-    "objectID": "portuguese/ends_with.html#detalhes-e-exemplos",
-    "href": "portuguese/ends_with.html#detalhes-e-exemplos",
-    "title": "ends_with()",
-    "section": "Detalhes e exemplos",
-    "text": "Detalhes e exemplos\nPortanto, ends_with() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Esta função realiza o processo inverso de starts_with(), isto é, ela pesquisa por todas as colunas cujo o nome termina por um texto específico. Sendo assim, com a expressão ends_with(\"Score\"), ends_with() vai mapear todas as colunas cujo o nome termina pelo texto \"Score\".\nDurante o processo de mapeamento, é utilizado sempre um match exato entre os strings pesquisados. Como resultado, uma expressão como ends_with(\"Sales\") não é capaz de mapear colunas como \"brazil_sales\", \"colombia_sales\" e \"eua_sales\", porém, é capaz de mapear colunas como \"france_Sales\" e \"russia_Sales\". Se você precisa ser mais flexível em seu mapeamento, é provável que você deseja utilizar a função matches() ao invés de ends_with().\n\ndados = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(dados, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])\n\nspark_map(sales, ends_with('Sales'), F.mean).show()\n\nSelected columns by `spark_map()`: france_Sales, russia_Sales\n\n+------------+------------------+\n|france_Sales|      russia_Sales|\n+------------+------------------+\n|     16600.0|33087.333333333336|\n+------------+------------------+"
+    "text": "Here, we have a list of all documented functions in the spark_map package.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nall_of()\n\n\n\n\n\n\nare_of_type()\n\n\n\n\n\n\nat_position()\n\n\n\n\n\n\nends_with()\n\n\n\n\n\n\nmatches()\n\n\n\n\n\n\nspark_map()\n\n\n\n\n\n\nstarts_with()\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "portuguese/matches.html",
@@ -334,6 +26,27 @@
     "title": "matches()",
     "section": "Detalhes e exemplos",
     "text": "Detalhes e exemplos\nPortanto, matches() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Para utilizar essa função, você fornece uma raw string contendo a expressão regular que você deseja utilizar. É extremamente importante que você forneça sua expressão dentro de uma raw string, ao invés de uma string tradicional, especialmente se sua expressão inclui caracteres especiais como TABs ou new lines ('\\t' ou '\\n'). No Python, raw strings são construídas ao posicionarmos um 'r' antes das aspas de nossa string. Portanto, a expressão r'raw string' representa uma raw string, enquanto 'string', representa uma string tradicional.\nVale destacar que, a expressão regular fornecida será repassada para o método re.match(), e será aplicada sobre o nome de cada uma das colunas de seu Spark DataFrame. Tendo isso em mente, caso a sua expressão regular não consiga encontrar nenhuma coluna, é interessante que você investigue o seu erro através do método re.match(). Por exemplo, suponha que você tenha o DataFrame pop abaixo. Suponha também que você deseja selecionar todas as colunas que contém a sequência 'male' em algum lugar. Perceba que, nenhuma coluna foi encontrada por spark_map().\n\ndados = [\n  ('Brazil', 74077777, 86581634, 96536269, 74925448, 88208705, 99177368),\n  ('Colombia', 16315306, 19427307, 22159658, 16787263, 20202658, 23063041),\n  ('Russia', 69265950, 68593139, 66249411, 78703457, 78003730, 76600057)\n]\n\npop = spark.createDataFrame(\n  dados,\n  ['country', 'pop_male_1990', 'pop_male_2000', 'pop_male_2010', \n   'pop_female_1990', 'pop_female_2000', 'pop_female_2010']\n)\n\nspark_map(pop, matches(r'male'), F.max).show()\n\n\nKeyError: '`spark_map()` did not found any column that matches your mapping!'\n\nPara investigar o que está ocorrendo de errado nesse caso, é útil separarmos o nome de uma coluna que deveria ter sido encontrada e, aplicarmos re.match() de forma isolada sobre essa coluna. Perceba abaixo que, o resultado da expressão re.match(r'male', nome) é None. Isso significa que a expressão regular 'male' de fato não gera um “match” com o texto pop_male_1990.\n\nnome = 'pop_male_1990'\nprint(re.match(r'male', nome))\n\n\nNone\n\nAo testar várias combinações e investigar mais a fundo o problema, você eventualmente pode entender que a expressão 'male' está errada pois ela representa um “match” exato com o texto 'male'. Ou seja, com essa expressão, re.match() é capaz de encontrar apenas o texto 'male' e nada mais. Podemos corrigir esse problema, ao permitirmos que um número arbitrário de caracteres seja encontrado ao redor do texto 'male'. Para isso, contornamos 'male' com a mini-expressão '(.+)', como demonstrado abaixo:\n\nnome = 'pop_male_1990'\nprint(re.match(r'(.+)male(.+)', nome))\n\nAgora que testamos essa nova expressão regular em re.match() podemos retornar à função matches(). Perceba abaixo que, dessa vez, todas as colunas esperadas são encontradas.\n\nspark_map(pop, matches(r'(.+)male(.+)'), F.max).show()\n\nSelected columns by `spark_map()`: pop_male_1990, pop_male_2000, pop_male_2010, pop_female_1990, pop_female_2000, pop_female_2010\n\n+-------------+-------------+-------------+---------------+---------------+---------------+\n|pop_male_1990|pop_male_2000|pop_male_2010|pop_female_1990|pop_female_2000|pop_female_2010|\n+-------------+-------------+-------------+---------------+---------------+---------------+\n|     74077777|     86581634|     96536269|       78703457|       88208705|       99177368|\n+-------------+-------------+-------------+---------------+---------------+---------------+"
+  },
+  {
+    "objectID": "portuguese/all_of.html",
+    "href": "portuguese/all_of.html",
+    "title": "all_of()",
+    "section": "",
+    "text": "Mapear todas as colunas de seu Spark DataFrame cujo nome esteja incluso em uma lista de strings. Essa função é uma das várias funções de mapeamento existentes (leia o artigo “Construindo o mapeamento”)."
+  },
+  {
+    "objectID": "portuguese/all_of.html#argumentos",
+    "href": "portuguese/all_of.html#argumentos",
+    "title": "all_of()",
+    "section": "Argumentos",
+    "text": "Argumentos\n\nlist_cols: uma lista de strings contendo os nomes das colunas que você deseja mapear;"
+  },
+  {
+    "objectID": "portuguese/all_of.html#detalhes-e-exemplos",
+    "href": "portuguese/all_of.html#detalhes-e-exemplos",
+    "title": "all_of()",
+    "section": "Detalhes e exemplos",
+    "text": "Detalhes e exemplos\nPortanto, all_of() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Você pode utilizar essa função, quando você deseja permitir que um conjunto de colunas seja mapeada, porém, por algum motivo, você não sabe de antemão se todas essas colunas (ou uma parte delas) estará disponível em seu Spark DataFrame.\nVocê deve fornecer à all_of() uma lista de strings. Cada string representa o nome de uma coluna que pode ser mapeada. Como exemplo, a expressão all_of(['sales_france', 'sales_brazil', 'sales_colombia']) permite que as colunas chamadas \"sales_france\", \"sales_brazil\" e \"sales_colombia\" sejam mapeadas por spark_map(). Porém, não necessariamente spark_map() precisa encontrar todas essas colunas de uma vez só. Ou seja, all_of() torna essas colunas “opcionais”, logo, spark_map() pode encontrar as três colunas, ou, apenas duas, ou ainda, apenas uma dessas colunas. Veja o exemplo abaixo:\n\ndados = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(dados, ['year', 'month', 'sales_france', 'sales_brazil', 'sales_russia'])\n\nspark_map(\n    sales,\n    all_of(['sales_france', 'sales_brazil', 'sales_colombia']), \n    F.mean\n  )\\\n  .show()\n\nSelected columns by `spark_map()`: sales_france, sales_brazil\n\n+------------+------------+\n|sales_france|sales_brazil|\n+------------+------------+\n|     16600.0|     24600.0|\n+------------+------------+\nContudo, vale destacar que, spark_map() precisa encontrar pelo menos uma das colunas definidas em all_of(). Caso isso não ocorra, spark_map() vai levantar um KeyError avisando que nenhuma coluna pode ser encontrada com o mapeamento que você definiu.\n\nspark_map(sales, all_of(['sales_italy']), F.mean).show()\n\n\nKeyError: '`spark_map()` did not found any column that matches your mapping!'"
   },
   {
     "objectID": "portuguese/spark_map.html",
@@ -364,6 +77,34 @@
     "text": "Você define o cálculo e spark_map() distribui ele\nTudo que spark_map() faz é aplicar uma função qualquer sobre um conjunto de colunas de seu DataFrame. E essa função pode ser qualquer função, desde que seja uma função agregadora (isto é, uma função que pode ser utilizada dentro dos métodos pyspark.sql.DataFrame.agg() e pyspark.sql.GroupedData.agg()). Desde que sua função atenda esse requisito, você pode definir a fórmula de cálculo que quiser, e, utilizar spark_map() para distribuir esse cálculo ao longo de várias colunas.\nComo exemplo, suponha você precisasse utilizar um pouco de inferência para testar se a média dos vários Scores dos estudantes se distancia significativamente de 6, através da estatística produzida por um teste t:\n\ndef t_test(x, value_test = 6):\n  return ( F.mean(x) - F.lit(value_test) ) / ( F.stddev(x) / F.sqrt(F.count(x)) )\n\nresults = spark_map(students, starts_with(\"Score\"), t_test)\nresults.show(truncate = False)\n\nSelected columns by `spark_map()`: Score1, Score2, Score3, Score4\n\n+-----------------+------------------+-----------------+----------------+\n|           Score1|            Score2|           Score3|          Score4|\n+-----------------+------------------+-----------------+----------------+\n|3.464101615137754|2.7116307227332026|4.338609156373122|4.47213595499958|\n+-----------------+------------------+-----------------+----------------+"
   },
   {
+    "objectID": "portuguese/artigos/construindo-mapeamento.html",
+    "href": "portuguese/artigos/construindo-mapeamento.html",
+    "title": "Construindo o mapeamento",
+    "section": "",
+    "text": "Você precisa fornecer um mapeamento (ou mapping) para a função spark_map(). Esse mapeamento define quais são as colunas que spark_map() deve aplicar a função fornecida no argumento function. Você pode construir esse mapping utilizando uma das funções padrão de mapeamento, que são as seguintes:\nComo um primeiro exemplo, você pode utilizar a função at_position() sempre que você deseja selecionar as colunas por posição. Portanto, se você deseja selecionar a primeira, segunda, terceira e quarta coluna, você fornece os respectivos índices dessas colunas à função at_position().\nPor outro lado, você talvez precise utilizar um outro método para mapear as colunas que você está interessado. Por exemplo, o DataFrame students possui 4 colunas de Scores (Score1, Score2, Score3 e Score4), e temos duas formas óbvias de mapearmos todas essas colunas. Uma forma é utilizando a função starts_with(), e outra, através da função matches(). Ambas as opções abaixo trazem os mesmos resultados."
+  },
+  {
+    "objectID": "portuguese/artigos/construindo-mapeamento.html#a-classe-mapping",
+    "href": "portuguese/artigos/construindo-mapeamento.html#a-classe-mapping",
+    "title": "Construindo o mapeamento",
+    "section": "A classe Mapping",
+    "text": "A classe Mapping\nNo fundo, o mapeamento é apenas uma pequena descrição contendo o algoritmo que deve ser utilizado para encontrar as colunas e o valor que será repassado a este algoritmo. Como exemplo, o resultado da expressão at_position(3, 4, 5) é um pequeno dict, contendo dois elementos (fun e val). O elemento fun define o nome do método/algoritmo a ser utilizado para encontrar as colunas, e o elemento val guarda o valor que será repassado para esse método/algoritmo.\n\nat_position(3, 4, 5)\n\n\n{'fun': 'at_position', 'val': (3, 4, 5)}\n\nComo um outro exemplo, o resultado da expressão matches('^Score') é bastante similar. Porém, diferente do exemplo anterior que utiliza o método at_position, dessa vez, o método a ser utilizado é chamado matches, e '^Score' é o valor que será repassado para esse método.\n\nmatches('^Score')\n\n\n{'fun': 'matches', 'val': '^Score'}\n\nPortanto, sempre que você utiliza uma dessas funções de mapeamento padrão, um dict será gerado contendo o nome do método a ser utilizado para calcular o mapeamento, e, o valor de input que será repassado para esse método. Ao receber esse dict, spark_map() ou spark_across() vão automaticamente pesquisar pelo algoritmo a ser utilizado dentro da classe Mapping, e vai executar esse algoritmo. Portanto, todos os métodos/algoritmos pré-definidos de mapeamento no pacote spark_map estão armazenados dentro dessa classe Mapping."
+  },
+  {
+    "objectID": "portuguese/artigos/construindo-mapeamento.html#criando-o-seu-próprio-método-de-mapeamento",
+    "href": "portuguese/artigos/construindo-mapeamento.html#criando-o-seu-próprio-método-de-mapeamento",
+    "title": "Construindo o mapeamento",
+    "section": "Criando o seu próprio método de mapeamento",
+    "text": "Criando o seu próprio método de mapeamento\nApesar de bastante úteis, você talvez queira implementar o seu próprio algoritmo de mapeamento, e você pode fazer isso com facilidade. Basta fornecer à spark_map() ou spak_across uma dict semelhate às dict’s produzidas pelas funções padrão de mapeamento. Isto é, uma dict contendo um item chamado fun e outro chamado val.\nO item val continua recebendo o valor/objeto que você deseja repassar para o seu algoritmo/método de mapeamento. Porém, dessa vez, o item fun deve conter uma função, e não o nome de um método/algoritmo dentro de uma string. Ou seja, sempre que spark_map() ou spark_across() recebem uma string neste item fun, essas funções pressupõe que você está tentando utilizar um dos métodos padrãos de mapeamento, e por isso, eles iniciam uma busca pelos métodos da classe Mapping.\nEm contrapartida, se essas funções recebem uma função nesse item fun, então spark_map() ou spark_across() vão executar diretamente essa função que está no item fun, inserindo o valor que você forneceu no item val no primeiro argumento dessa função.\nPorém, esse processo tem algumas condições importantes. Toda função de mapeamento deve sempre receber três argumentos obrigatórios: 1) value: um valor arbitrário para o algoritmo1 (que corresponde ao valor repassado no item val); 2) cols: os nomes das colunas do Spark DataFrame como uma lista de strings2; 3) schema: o esquema (ou schema) do Spark DataFrame3. Sua função de mapeamento deve sempre ter esses três argumentos, mesmo que ela não use todos eles\nPortanto, o argumento value de toda função de mapeamento vai receber sempre como input o valor que você repassou ao item val do dict inicial. Quanto aos outros dois argumentos cols e schema, eles vão ser automaticamente preenchidos por spark_map() ou spark_across(). Em outras palavras, spark_map() ou spark_across() vão automaticamente coletar os valores desses argumentos por você.\nComo exemplo, a função abaixo mapeia a coluna que está em uma posição específica na ordem alfabética. Esta função alphabetic_order() usa apenas os argumentos index e cols, mesmo que ela receba três argumentos. Em outras palavras, o argumento schema está ali apenas para satisfazer as condições de spark_map() e spark_across().\n\ndef alphabetic_order(index, cols: list, schema: StructType):\n    cols.sort()\n    return cols[index]\n\nUm outro requisito que ainda não comentamos é o valor de retorno de sua função de mapeamento. Sua função de mapeamento deve sempre retornar uma lista de strings, a qual contém os nomes das colunas que foram mapeadas pela função. Caso a sua função de mapeamento não encontre nenhuma coluna durante a sua pesquisa, ela deve retornar uma lista vazia (i.e. []).\nComo demonstração, vamos aplicar essa função alphabetic_order(). Para isso, vamos usar o DataFrame spark sales.sales_per_country como exemplo. A lista de colunas deste DataFrame está exposta abaixo:\n\nsales = spark.table('sales.sales_per_country')\nprint(sales.columns)\n\n\n['year', 'month', 'country', 'idstore', 'totalsales']\n\nAgora, usando o alphabetic_order() dentro de spark_map():\n\nspark_map(sales, {'fun' = 'alphabetic_order', 'val' = 1}, F.max)\n\nSelected columns by `spark_map()`: idstore\n\n+--------+\n| idstore|\n+--------+\n|    2300|\n+--------+"
+  },
+  {
+    "objectID": "portuguese/artigos/construindo-mapeamento.html#caso-o-seu-mapeamento-não-encontre-nenhuma-coluna",
+    "href": "portuguese/artigos/construindo-mapeamento.html#caso-o-seu-mapeamento-não-encontre-nenhuma-coluna",
+    "title": "Construindo o mapeamento",
+    "section": "Caso o seu mapeamento não encontre nenhuma coluna",
+    "text": "Caso o seu mapeamento não encontre nenhuma coluna\nPor outro lado, spark_map() também vai levantar um KeyError, caso a função que você esteja utilizando em seu mapeamento não encontre nenhuma coluna em seu DataFrame. Porém, nesse caso, spark_map() emite uma mensagem clara de que nenhuma coluna foi encontrada utilizando o mapeamento que você definiu. Como exemplo, poderíamos reproduzir esse erro, ao tentar mapear no DataFrame students, todas as colunas que começam pela string 'april'. Um KeyError é levantado nesse caso pois não existe nenhuma coluna na tabela students, cujo nome começe pela palavra “april”.\n\nspark_map(students, starts_with('april'), F.sum)\n\n\nKeyError: `spark_map()` did not found any column that matches your mapping!"
+  },
+  {
     "objectID": "portuguese/starts_with.html",
     "href": "portuguese/starts_with.html",
     "title": "starts_with()",
@@ -385,25 +126,81 @@
     "text": "Detalhes e exemplos\nPortanto, starts_with() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Esta função realiza o processo inverso de ends_with(), isto é, ela pesquisa por todas as colunas cujo o nome se inicia por um texto específico. Sendo assim, com a expressão starts_with(\"Score\"), starts_with() vai mapear todas as colunas cujo o nome se inicia pelo texto \"Score\".\nDurante o processo de mapeamento, é utilizado sempre um match exato entre os strings pesquisados. Como resultado, uma expressão como starts_with(\"Sales\") não é capaz de mapear colunas como \"sales_brazil\", \"sales_colombia\" e \"sales_eua\", porém, é capaz de mapear colunas como \"Sales_france\" e \"Sales_russia\". Se você precisa ser mais flexível em seu mapeamento, é provável que você deseja utilizar a função matches() ao invés de starts_with().\n\ndados = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(dados, ['year', 'month', 'Sales_france', 'sales_brazil', 'Sales_russia'])\n\nspark_map(sales, starts_with('Sales'), F.mean).show()\n\nSelected columns by `spark_map()`: Sales_france, Sales_russia\n\n+------------+------------------+\n|Sales_france|      Sales_russia|\n+------------+------------------+\n|     16600.0|33087.333333333336|\n+------------+------------------+"
   },
   {
-    "objectID": "reference-en.html",
-    "href": "reference-en.html",
-    "title": "Function reference",
+    "objectID": "portuguese/ends_with.html",
+    "href": "portuguese/ends_with.html",
+    "title": "ends_with()",
     "section": "",
-    "text": "Here, we have a list of all documented functions in the spark_map package.\n\n\n\n\n\n\n\n\n\n\nall_of()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nare_of_type()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nat_position()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nends_with()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nmatches()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nspark_map()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nstarts_with()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\nNo matching items"
+    "text": "Mapear todas as colunas de seu Spark DataFrame cujo o nome termina por um texto específico. Essa função é uma das várias funções de mapeamento existentes (leia o artigo “Construindo o mapeamento”)."
+  },
+  {
+    "objectID": "portuguese/ends_with.html#argumentos",
+    "href": "portuguese/ends_with.html#argumentos",
+    "title": "ends_with()",
+    "section": "Argumentos",
+    "text": "Argumentos\n\ntext: uma string contendo o texto pelo qual você deseja pesquisar;"
+  },
+  {
+    "objectID": "portuguese/ends_with.html#detalhes-e-exemplos",
+    "href": "portuguese/ends_with.html#detalhes-e-exemplos",
+    "title": "ends_with()",
+    "section": "Detalhes e exemplos",
+    "text": "Detalhes e exemplos\nPortanto, ends_with() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Esta função realiza o processo inverso de starts_with(), isto é, ela pesquisa por todas as colunas cujo o nome termina por um texto específico. Sendo assim, com a expressão ends_with(\"Score\"), ends_with() vai mapear todas as colunas cujo o nome termina pelo texto \"Score\".\nDurante o processo de mapeamento, é utilizado sempre um match exato entre os strings pesquisados. Como resultado, uma expressão como ends_with(\"Sales\") não é capaz de mapear colunas como \"brazil_sales\", \"colombia_sales\" e \"eua_sales\", porém, é capaz de mapear colunas como \"france_Sales\" e \"russia_Sales\". Se você precisa ser mais flexível em seu mapeamento, é provável que você deseja utilizar a função matches() ao invés de ends_with().\n\ndados = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(dados, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])\n\nspark_map(sales, ends_with('Sales'), F.mean).show()\n\nSelected columns by `spark_map()`: france_Sales, russia_Sales\n\n+------------+------------------+\n|france_Sales|      russia_Sales|\n+------------+------------------+\n|     16600.0|33087.333333333336|\n+------------+------------------+"
+  },
+  {
+    "objectID": "portuguese/are_of_type.html",
+    "href": "portuguese/are_of_type.html",
+    "title": "are_of_type()",
+    "section": "",
+    "text": "Mapear todas as colunas de seu Spark DataFrame que se encaixam em um determinado tipo de dado (string, double, integer, etc.). Essa função é uma das várias funções de mapeamento existentes (leia o artigo “Construindo o mapeamento”)."
+  },
+  {
+    "objectID": "portuguese/are_of_type.html#argumentos",
+    "href": "portuguese/are_of_type.html#argumentos",
+    "title": "are_of_type()",
+    "section": "Argumentos",
+    "text": "Argumentos\n\narg_type: uma string contendo o nome do tipo de dado que você deseja pesquisar (veja os valores disponíveis na seção “Detalhes e exemplos” abaixo);"
+  },
+  {
+    "objectID": "portuguese/are_of_type.html#detalhes-e-exemplos",
+    "href": "portuguese/are_of_type.html#detalhes-e-exemplos",
+    "title": "are_of_type()",
+    "section": "Detalhes e exemplos",
+    "text": "Detalhes e exemplos\nPortanto, are_of_type() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Para utilizar essa função, você deve fornecer um dos seguintes valores:\n\n\"string\": para colunas do tipo pyspark.sql.types.StringType();\n\"int\": para colunas do tipo pyspark.sql.types.IntegerType();\n\"double\": para colunas do tipo pyspark.sql.types.DoubleType();\n\"date\": para colunas do tipo pyspark.sql.types.DateType();\n\"datetime\": para colunas do tipo pyspark.sql.types.TimestampType();\n\nOu seja, are_of_type() somente um dos valores acima. Caso você forneça uma string que não esteja inclusa nos valores acima, um ValueError é automaticamente acionado pela função, como demonstrado abaixo:\n\nare_of_type(\"str\")\n\n\nValueError: You must choose one of the following values: 'string', 'int', 'double', 'date', 'datetime'\n\nNo fundo, are_of_type() utiliza o schema de seu Spark DataFrame para determinar quais colunas pertencem ao tipo de dado que você determinou. Repare no exemplo abaixo, que a coluna chamada \"date\" é mapeada por spark_map(), mesmo que essa coluna seja claramente uma coluna de datas. Tal fato ocorre, pois Spark está interpretando essa coluna pelo tipo pyspark.sql.types.StringType(), e não pyspark.sql.types.DateType().\n\ndados = [\n  (\"2022-03-01\", \"Luke\", 36981),\n  (\"2022-02-15\", \"Anne\", 31000),\n  (\"2022-03-12\", \"Bishop\", 31281)\n]\n\nsales = spark.createDataFrame(dados, ['date', 'name', 'value'])\n\nspark_map(sales, are_of_type(\"string\"), F.max).show()\n\nSelected columns by `spark_map()`: date, name\n\n+----------+----+\n|      date|name|\n+----------+----+\n|2022-03-12|Luke|\n+----------+----+"
+  },
+  {
+    "objectID": "portuguese/at_position.html",
+    "href": "portuguese/at_position.html",
+    "title": "at_position()",
+    "section": "",
+    "text": "Mapear as colunas de seu Spark DataFrame baseado em seus índices numéricos (1°, 2°, 3° coluna, etc.). Essa função é uma das várias funções de mapeamento existentes (leia o artigo “Construindo o mapeamento”)."
+  },
+  {
+    "objectID": "portuguese/at_position.html#argumentos",
+    "href": "portuguese/at_position.html#argumentos",
+    "title": "at_position()",
+    "section": "Argumentos",
+    "text": "Argumentos\n\n*indexes: os índices das colunas (separados por vírgulas);\nzero_index: valor booleano (True ou False) indicando se os índices fornecidos em *indexes são baseados em zero ou não (leia a seção de “Detalhes” abaixo). Por padrão, esse argumento é setado para False;"
+  },
+  {
+    "objectID": "portuguese/at_position.html#detalhes-e-exemplos",
+    "href": "portuguese/at_position.html#detalhes-e-exemplos",
+    "title": "at_position()",
+    "section": "Detalhes e exemplos",
+    "text": "Detalhes e exemplos\nPortanto, at_position() é utilizada para definir quais são as colunas sobre as quais spark_map() vai aplicar a função fornecida. Para utilizar essa função, você fornece os índices numéricos, separados por vírgulas, que representam as colunas que você deseja mapear em spark_map().\nO argumento zero_index é opcional, e determina se os índices das colunas fornecidos serão baseados em um sistema de índices iniciado em zero, ou, em um sistema inciado em um. A linguagem Python utiliza um sistema de índices iniciado em zero, logo, o valor 0 representa o primeiro valor de um objeto, enquanto 1, o segundo valor de um objeto, e assim por diante.\nEm contrapartida, o argumento zero_index é configurado por padrão para False. Por causa disso, a função at_position() trabalha sempre inicialmente com um sistema de índices iniciado em um. Logo, na expressão at_position(3, 4, 5), a função at_position() vai mapear a 3°, 4° e 5° colunas de seu Spark DataFrame. Porém, caso você queira sobrepor esse comportamento, e, utilizar o sistema de índices padrão do Python (iniciado em zero), basta configurar esse argumento para True. No exemplo abaixo, at_position() vai mapear a 2°, 3° e 4° coluna do DataFrame sales.\n\ndados = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(dados, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])\n\nspark_map(sales, at_position(1, 2, 3, zero_index = True), F.mean).show()\n\nSelected columns by `spark_map()`: month, france_Sales, brazil_sales\n\n+-----+------------+------------+\n|month|france_Sales|brazil_sales|\n+-----+------------+------------+\n|  2.0|     16600.0|     24600.0|\n+-----+------------+------------+\nAo fornecer um índice zero, você sempre deve configurar o argumento zero_index para True. Quando o argumento zero_index está setado para False, at_position() vai automaticamente subtrair 1 de todos os índices. Logo, um índice igual a zero, se torna um índice igual a -1, e índices negativos não são permitidos por at_position(). Veja o exemplo abaixo:\n\nat_position(0, 2, 4)\n\n\nValueError: 'One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?'\n\nAlém disso, todo e qualquer índice duplicado é automaticamente eliminado por at_position(). Veja o exemplo abaixo em que, os índices 1 e 4 estão repetidos durante a chamada à at_position(), mas, são automaticamente eliminados no resultado da função.\n\nat_position(1, 1, 2, 3, 4, 4, 5)\n\n\n{'fun': '__at_position', 'val': (0, 1, 2, 3, 4)}\n\nPara mais, os índices fornecidos à at_position() não devem estar dentro de uma lista, caso você cometa esse erro, a função vai levantar um ValueError, como demonstrado abaixo:\n\nat_position([4, 5, 6])\n\n\nValueError: 'Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`'.\n\nOs índices das colunas são um argumento obrigatório. Logo, caso você não forneça nenhum índice, at_position() vai obrigatoriamente levantar um ValueError, como demonstrado abaixo:\n\nat_position(zero_index = True)\n\n\nValueError: 'You did not provided any index for `at_position()` to search'."
   },
   {
     "objectID": "reference-ptbr.html",
     "href": "reference-ptbr.html",
     "title": "Referência de funções",
     "section": "",
-    "text": "Nesta página, temos uma lista de todas as funções documentadas no pacote spark_map.\n\n\n\n\n\n\n\n\n\n\nall_of()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nare_of_type()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nat_position()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nends_with()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nmatches()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nspark_map()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\nstarts_with()\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\nNo matching items"
+    "text": "Nesta página, temos uma lista de todas as funções documentadas no pacote spark_map.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nall_of()\n\n\n\n\n\n\nare_of_type()\n\n\n\n\n\n\nat_position()\n\n\n\n\n\n\nends_with()\n\n\n\n\n\n\nmatches()\n\n\n\n\n\n\nspark_map()\n\n\n\n\n\n\nstarts_with()\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "english/articles/building-mapping.html#the-mapping-class",
-    "href": "english/articles/building-mapping.html#the-mapping-class",
-    "title": "Building the mapping",
-    "section": "The Mapping class",
-    "text": "The Mapping class\nBasically, the mapping is just a small description containing the algorithm that should be used to find the columns and the value that will be passed on to this algorithm. As an example, the result of the expression at_position(3, 4, 5) is a small dict, containing two elements (fun and val). The fun element defines the method/algorithm to be used to find the columns, and the val element stores the value that will be passed to this method/algorithm.\n\nat_position(3, 4, 5)\n\n\n{'fun': 'at_position', 'val': (3, 4, 5)}\n\nAs another example, the result of the expression matches('^Score') is quite similar. However, unlike the previous example that uses a method called at_position, this time, the method/algorithm to be used is called matches, and '^Score' is the value that will be passed to this method.\n\nmatches('^Score')\n\n\n{'fun': 'matches', 'val': '^Score'}\n\nTherefore, when you use one of the standard mapping functions that comes with spark_map package, a dict will be generated containing the name of the method/algorithm to be used to calculate the mapping, and, the input value that will be passed to this method. Upon receiving this dict, spark_map() or spark_across() will automatically search for the method/algorithm to be used inside the class Mapping, and it will execute this method. This means that all standard mapping methods/algorithms from the spark_map package are stored inside this Mapping class."
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Introducing spark_map",
+    "section": "",
+    "text": "spark_map is a python package that contains an implementation of map() function for Apache Spark DataFrames, using pyspark. In other wrods, the spark_map package offers tools to apply a function over multiple columns of a Spark DataFrame. The package offers two main functions to do that, which are spark_map() and spark_across.\nBoth of these functions perform the same work, which is to apply a function over a set of columns of a Spark DataFrame. But the difference between them, is that spark_map() uses the agg() method of Spark DataFrame’s to apply the function, while spark_across() uses the withColumn() method to do so."
   },
   {
     "objectID": "index.html#installation",
@@ -420,17 +217,206 @@
     "text": "Documentation\nThe full documentation for spark_map package is available in this website. To access it, just use the Function Reference and Articles menus, located at the top navigation bar of this page. All documentation is available both in english and in portuguese."
   },
   {
-    "objectID": "index.html#a-simple-example",
-    "href": "index.html#a-simple-example",
-    "title": "Introducing spark_map",
-    "section": "A simple example",
-    "text": "A simple example\nAs an example, consider the students DataFrame below:\n\nd = [\n  (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),\n  (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),\n  (10045, 'George', 29, 1.77, 10, 9, 10, 7, 'Law', 'SC'),\n  (12459, 'Adeline', 26, 1.61, 8, 6, 7, 7, 'Law', 'SC'),\n  (10190, 'Mayla', 22, 1.67, 7, 7, 7, 9, 'Design', 'AR'),\n  (11552, 'Daniel', 24, 1.75, 9, 9, 10, 9, 'Design', 'AR')\n]\n\ncolumns = [\n  'StudentID', 'Name', 'Age', 'Height', 'Score1',\n  'Score2', 'Score3', 'Score4', 'Course', 'Department'\n]\n\nstudents = spark.createDataFrame(d, columns)\nstudents.show(truncate = False)\n\n+---------+-------+---+------+------+------+------+------+---------+----------+\n|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|\n+---------+-------+---+------+------+------+------+------+---------+----------+\n|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |\n|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |\n|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |\n|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |\n|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |\n|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |\n+---------+-------+---+------+------+------+------+------+---------+----------+\nSuppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The spark_map() function allows you to perform this calculation in an extremely simple and clear way, as shown below:\n\nimport pyspark.sql.functions as F\nspark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)\n\nSelected columns by `spark_map()`: Age, Height, Score1\n\n+------------------+------------------+------+\n|Age               |Height            |Score1|\n+------------------+------------------+------+\n|24.166666666666668|1.6966666666666665|8.0   |\n+------------------+------------------+------+\nIf you want your calculation to be applied by group, just provide the grouped table to spark_map(). For example, suppose you wanted to calculate the same averages as in the example above, but within each department:\n\nimport pyspark.sql.functions as F\nby_department = students.groupBy('Department')\nspark_map(by_department, at_position(3, 4, 5), F.mean).show()\n\nSelected columns by `spark_map()`: Age, Height, Score1\n\n+----------+-----+------------------+------+\n|Department|  Age|            Height|Score1|\n+----------+-----+------------------+------+\n|        SC|24.75|1.6900000000000002|   8.0|\n|        AR| 23.0|              1.71|   8.0|\n+----------+-----+------------------+------+"
-  },
-  {
     "objectID": "index.html#a-simple-example-of-use",
     "href": "index.html#a-simple-example-of-use",
     "title": "Introducing spark_map",
     "section": "A simple example of use",
     "text": "A simple example of use\nAs an example, consider the students DataFrame below:\n\nd = [\n  (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),\n  (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),\n  (10045, 'George', 29, 1.77, 10, 9, 10, 7, 'Law', 'SC'),\n  (12459, 'Adeline', 26, 1.61, 8, 6, 7, 7, 'Law', 'SC'),\n  (10190, 'Mayla', 22, 1.67, 7, 7, 7, 9, 'Design', 'AR'),\n  (11552, 'Daniel', 24, 1.75, 9, 9, 10, 9, 'Design', 'AR')\n]\n\ncolumns = [\n  'StudentID', 'Name', 'Age', 'Height', 'Score1',\n  'Score2', 'Score3', 'Score4', 'Course', 'Department'\n]\n\nstudents = spark.createDataFrame(d, columns)\nstudents.show(truncate = False)\n\n+---------+-------+---+------+------+------+------+------+---------+----------+\n|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|\n+---------+-------+---+------+------+------+------+------+---------+----------+\n|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |\n|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |\n|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |\n|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |\n|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |\n|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |\n+---------+-------+---+------+------+------+------+------+---------+----------+\nSuppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The spark_map() function allows you to perform this calculation in an extremely simple and clear way, as shown below:\n\nfrom pyspark.sql.functions import mean\nfrom spark_map import spark_map, at_position\n\nspark_map(students, at_position(3, 4, 5), mean).show(truncate = False)\n\nSelected columns by `spark_map()`: Age, Height, Score1\n\n+------------------+------------------+------+\n|Age               |Height            |Score1|\n+------------------+------------------+------+\n|24.166666666666668|1.6966666666666665|8.0   |\n+------------------+------------------+------+\nIf you want your calculation to be applied by group, just provide the grouped table to spark_map(). For example, suppose you wanted to calculate the same averages as in the example above, but within each department:\n\nby_department = students.groupBy('Department')\nspark_map(by_department, at_position(3, 4, 5), mean).show()\n\nSelected columns by `spark_map()`: Age, Height, Score1\n\n+----------+-----+------------------+------+\n|Department|  Age|            Height|Score1|\n+----------+-----+------------------+------+\n|        SC|24.75|1.6900000000000002|   8.0|\n|        AR| 23.0|              1.71|   8.0|\n+----------+-----+------------------+------+"
+  },
+  {
+    "objectID": "articles-en.html",
+    "href": "articles-en.html",
+    "title": "Articles",
+    "section": "",
+    "text": "Here, we have a list of all articles (i.e. long documentations) about the spark_map package.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nBuilding the mapping\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "english/matches.html",
+    "href": "english/matches.html",
+    "title": "matches()",
+    "section": "",
+    "text": "Map all columns of your Spark DataFrame that fit into a regular expression. This function is one of several existing mapping functions (read the article “Building the mapping”)."
+  },
+  {
+    "objectID": "english/matches.html#arguments",
+    "href": "english/matches.html#arguments",
+    "title": "matches()",
+    "section": "Arguments",
+    "text": "Arguments\n\nregex: a string (preferably a raw string) containing the regular expression to be used;"
+  },
+  {
+    "objectID": "english/matches.html#details-and-examples",
+    "href": "english/matches.html#details-and-examples",
+    "title": "matches()",
+    "section": "Details and examples",
+    "text": "Details and examples\nTherefore, matches() is used to define which columns spark_map() will apply the given function to. To use this function, you supply a raw string containing the regular expression you want to use. It is extremely important that you provide your expression within a raw string rather than a traditional string, especially if your expression includes special characters like TABs or new lines ('\\t' or '\\n'). In Python, raw strings are constructed by placing an 'r' before the quotes in our string. Therefore, the expression r'raw string' represents a raw string, while 'string' represents a traditional string.\nIt is worth noting that the regular expression provided will be passed to the re.match() method, and will be applied to the name of each column of your Spark DataFrame. With that in mind, if your regular expression can’t find any column, it’s interesting that you investigate your error through the re.match() method. For example, suppose you have the DataFrame pop below. Suppose also that you want to map all columns that contain the string 'male' somewhere. Note that no columns were found by spark_map().\n\ndata = [\n  ('Brazil', 74077777, 86581634, 96536269, 74925448, 88208705, 99177368),\n  ('Colombia', 16315306, 19427307, 22159658, 16787263, 20202658, 23063041),\n  ('Russia', 69265950, 68593139, 66249411, 78703457, 78003730, 76600057)\n]\n\npop = spark.createDataFrame(\n  data,\n  ['country', 'pop_male_1990', 'pop_male_2000', 'pop_male_2010',\n   'pop_female_1990', 'pop_female_2000', 'pop_female_2010']\n)\n\nspark_map(pop, matches(r'male'), F.max).show()\n\n\nKeyError: '`spark_map()` did not found any column that matches your mapping!'\n\nTo investigate what is going wrong in this case, it is useful to separate the name of a column that should have been found and apply re.match() in isolation to that column. Note below that the result of the expression re.match(r'male', name) is None. This means that the regular expression 'male' does not generate a match with the text pop_male_1990.\n\nname = 'pop_male_1990'\nprint(re.match(r'male', name))\n\n\nNone\n\nBy testing various combinations and delving deeper into the problem, you may eventually find that the expression 'male' is wrong as it represents an exact match with the text 'male'. That is, with this expression, re.match() is able to find only the text 'male' and nothing else. We can fix this problem by allowing an arbitrary number of characters to be found around the text 'male'. For this, we circumvent 'male' with the mini-expression '(.+)', as shown below:\n\nname = 'pop_male_1990'\nprint(re.match(r'(.+)male(.+)', name))\n\n\n<re.Match object; span=(0, 13), match='pop_male_1990'>\n\nNow that we’ve tested this new regular expression in re.match() we can return to the matches() function. Notice below that this time all the expected columns are found.\n\nspark_map(pop, matches(r'(.+)male(.+)'), F.max).show()\n\nSelected columns by `spark_map()`: pop_male_1990, pop_male_2000, pop_male_2010, pop_female_1990, pop_female_2000, pop_female_2010\n\n+-------------+-------------+-------------+---------------+---------------+---------------+\n|pop_male_1990|pop_male_2000|pop_male_2010|pop_female_1990|pop_female_2000|pop_female_2010|\n+-------------+-------------+-------------+---------------+---------------+---------------+\n|     74077777|     86581634|     96536269|       78703457|       88208705|       99177368|\n+-------------+-------------+-------------+---------------+---------------+---------------+"
+  },
+  {
+    "objectID": "english/all_of.html",
+    "href": "english/all_of.html",
+    "title": "all_of()",
+    "section": "",
+    "text": "Map all columns of your Spark DataFrame whose name is included in a string list. This function is one of several existing mapping functions (read the article “Building the mapping”)."
+  },
+  {
+    "objectID": "english/all_of.html#arguments",
+    "href": "english/all_of.html#arguments",
+    "title": "all_of()",
+    "section": "Arguments",
+    "text": "Arguments\n\nlist_cols: a list of strings containing the names of the columns you want to map;"
+  },
+  {
+    "objectID": "english/all_of.html#details-and-examples",
+    "href": "english/all_of.html#details-and-examples",
+    "title": "all_of()",
+    "section": "Details and examples",
+    "text": "Details and examples\nTherefore, all_of() is used to define which columns spark_map() will apply the given function to. You can use this function, when you want to allow a set of columns to be mapped, but for some reason you don’t know in advance if all these columns (or a part of them) will be available in your Spark DataFrame.\nYou must give all_of() a list of strings. Each string represents the name of a column that can be mapped. As an example, the expression all_of(['sales_france', 'sales_brazil', 'sales_colombia']) allows columns named \"sales_france\", \"sales_brazil\" and \"sales_colombia\" to be mapped by spark_map(). However, spark_map() doesn’t necessarily need to find all these columns at once. That is, all_of() makes these columns “optional”, so spark_map() can find all three columns, or only two, or even just one of these columns. See the example below:\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'sales_france', 'sales_brazil', 'sales_russia'])\n\nspark_map(\n    sales,\n    all_of(['sales_france', 'sales_brazil', 'sales_colombia']),\n    F.mean\n  )\\\n  .show()\n\nSelected columns by `spark_map()`: sales_france, sales_brazil\n\n+------------+------------+\n|sales_france|sales_brazil|\n+------------+------------+\n|     16600.0|     24600.0|\n+------------+------------+\nHowever, it is worth noting that spark_map() must find at least one of the columns defined in all_of(). If it doesn’t, spark_map() will raise a KeyError warning that no column could be found with the mapping you defined.\n\nspark_map(sales, all_of(['sales_italy']), F.mean).show()\n\n\nKeyError: '`spark_map()` did not find any column that matches your mapping!'"
+  },
+  {
+    "objectID": "english/spark_map.html",
+    "href": "english/spark_map.html",
+    "title": "spark_map()",
+    "section": "",
+    "text": "With spark_map() you are able to apply a function over multiple columns of a Spark DataFrame. In short, spark_map() takes a Spark DataFrame as input and returns a new Spark DataFrame (aggregated by the function you provided) as output."
+  },
+  {
+    "objectID": "english/spark_map.html#arguments",
+    "href": "english/spark_map.html#arguments",
+    "title": "spark_map()",
+    "section": "Arguments",
+    "text": "Arguments\n\ntable: a Spark DataFrame or a grouped DataFrame (i.e. pyspark.sql.DataFrame or pyspark.sql.GroupedData);\nmapping: the mapping that defines the columns where you want to apply function (read the article “Building the mapping”);\nfunction: the function you want to apply to each column defined in mapping;"
+  },
+  {
+    "objectID": "english/spark_map.html#details-and-examples",
+    "href": "english/spark_map.html#details-and-examples",
+    "title": "spark_map()",
+    "section": "Details and examples",
+    "text": "Details and examples\nAs an example, consider the students DataFrame below:\n\nd = [\n  (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),\n  (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),\n  (10045, 'George', 29, 1.77, 10, 9, 10, 7, 'Law', 'SC'),\n  (12459, 'Adeline', 26, 1.61, 8, 6, 7, 7, 'Law', 'SC'),\n  (10190, 'Mayla', 22, 1.67, 7, 7, 7, 9, 'Design', 'AR'),\n  (11552, 'Daniel', 24, 1.75, 9, 9, 10, 9, 'Design', 'AR')\n]\n\ncolumns = [\n  'StudentID', 'Name', 'Age', 'Height', 'Score1',\n  'Score2', 'Score3', 'Score4', 'Course', 'Department'\n]\n\nstudents = spark.createDataFrame(d, columns)\nstudents.show(truncate = False)\n\n+---------+-------+---+------+------+------+------+------+---------+----------+\n|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|\n+---------+-------+---+------+------+------+------+------+---------+----------+\n|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |\n|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |\n|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |\n|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |\n|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |\n|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |\n+---------+-------+---+------+------+------+------+------+---------+----------+\nSuppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The spark_map() function allows you to perform this calculation in an extremely simple and clear way, as shown below:\n\nimport pyspark.sql.functions as F\nspark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)\n\nSelected columns by `spark_map()`: Age, Height, Score1\n\n+------------------+------------------+------+\n|Age               |Height            |Score1|\n+------------------+------------------+------+\n|24.166666666666668|1.6966666666666665|8.0   |\n+------------------+------------------+------+\nIf you want your calculation to be applied by group, just provide the grouped table to spark_map(). For example, suppose you wanted to calculate the same averages as in the example above, but within each department:\n\nimport pyspark.sql.functions as F\nby_department = students.groupBy('Department')\nspark_map(by_department, at_position(3, 4, 5), F.mean).show()\n\nSelected columns by `spark_map()`: Age, Height, Score1\n\n+----------+-----+------------------+------+\n|Department|  Age|            Height|Score1|\n+----------+-----+------------------+------+\n|        SC|24.75|1.6900000000000002|   8.0|\n|        AR| 23.0|              1.71|   8.0|\n+----------+-----+------------------+------+"
+  },
+  {
+    "objectID": "english/spark_map.html#you-define-the-calculation-and-spark_map-distributes-it",
+    "href": "english/spark_map.html#you-define-the-calculation-and-spark_map-distributes-it",
+    "title": "spark_map()",
+    "section": "You define the calculation and spark_map() distributes it",
+    "text": "You define the calculation and spark_map() distributes it\nAll spark_map() does is apply any function to a set of columns in your DataFrame. And this function can be any function, as long as it is an aggregator function (that is, a function that can be used inside the pyspark.sql.DataFrame.agg() and pyspark.sql.GroupedData.agg() methods). As long as your function meets this requirement, you can define whatever calculation formula you want, and use spark_map() to spread that calculation over multiple columns.\nAs an example, suppose you needed to use a little inference to test whether the average of the various Student Scores significantly deviates from 6, through the statistic produced by a t test:\n\ndef t_test(x, value_test = 6):\n  return ( F.mean(x) - F.lit(value_test) ) / ( F.stddev(x) / F.sqrt(F.count(x)) )\n\nresults = spark_map(students, starts_with(\"Score\"), t_test)\nresults.show(truncate = False)\n\nSelected columns by `spark_map()`: Score1, Score2, Score3, Score4\n\n+-----------------+------------------+-----------------+----------------+\n|Score1           |Score2            |Score3           |Score4          |\n+-----------------+------------------+-----------------+----------------+\n|3.464101615137754|2.7116307227332026|4.338609156373122|4.47213595499958|\n+-----------------+------------------+-----------------+----------------+"
+  },
+  {
+    "objectID": "english/articles/building-mapping.html",
+    "href": "english/articles/building-mapping.html",
+    "title": "Building the mapping",
+    "section": "",
+    "text": "You need to provide a mapping to spark_map(). This mapping defines which columns spark_map() should apply the function given in the function argument. You can build this mapping using one of the mapping functions, which are as follows:\nAs a first example, you can use the at_position() function whenever you want to select columns by position. So if you want to select the first, second, third and fourth column, you give the respective indices of those columns to the at_position() function.\nOn the other hand, you may need to use another method to map the columns you are interested in. For example, the students DataFrame has 4 Score columns (Score1, Score2, Score3 and Score4), and we have two obvious ways to map all these columns. One way is using the starts_with() function, and another is using the matches() function. Both options below bring the same results."
+  },
+  {
+    "objectID": "english/articles/building-mapping.html#the-mapping-class",
+    "href": "english/articles/building-mapping.html#the-mapping-class",
+    "title": "Building the mapping",
+    "section": "The Mapping class",
+    "text": "The Mapping class\nBasically, the mapping is just a small description containing the algorithm that should be used to find the columns and the value that will be passed on to this algorithm. As an example, the result of the expression at_position(3, 4, 5) is a small dict, containing two elements (fun and val). The fun element defines the method/algorithm to be used to find the columns, and the val element stores the value that will be passed to this method/algorithm.\n\nat_position(3, 4, 5)\n\n\n{'fun': 'at_position', 'val': (3, 4, 5)}\n\nAs another example, the result of the expression matches('^Score') is quite similar. However, unlike the previous example that uses a method called at_position, this time, the method/algorithm to be used is called matches, and '^Score' is the value that will be passed to this method.\n\nmatches('^Score')\n\n\n{'fun': 'matches', 'val': '^Score'}\n\nTherefore, when you use one of the standard mapping functions that comes with spark_map package, a dict will be generated containing the name of the method/algorithm to be used to calculate the mapping, and, the input value that will be passed to this method. Upon receiving this dict, spark_map() or spark_across() will automatically search for the method/algorithm to be used inside the class Mapping, and it will execute this method. This means that all standard mapping methods/algorithms from the spark_map package are stored inside this Mapping class."
+  },
+  {
+    "objectID": "english/articles/building-mapping.html#creating-your-own-mapping-method",
+    "href": "english/articles/building-mapping.html#creating-your-own-mapping-method",
+    "title": "Building the mapping",
+    "section": "Creating your own mapping method",
+    "text": "Creating your own mapping method\nDespite being quite useful, you might want to implement your own mapping algorithm, and you can easily do that. Just give to spark_map() or spak_across a dict similar to the dict’s produced by one of the standard mapping functions. That is, a dict containing an item named fun and another item named val.\nThe val item keeps getting the value/object you want to pass to your mapping algorithm/method. However, this time, the fun item must contain a function, not a method/algorithm name inside a string. That is, whenever spark_map() or spark_across() receives a string in this fun item, these functions assume that you are trying to use one of the standard mapping methods, and therefore, they start a search for this method inside the Mapping class.\nOn the other hand, if these functions receive a function in the fun item, then spark_map() or spark_across() will directly execute that function that is in the fun item, inserting the value you provided in the val item in the first argument of this function.\nHowever, this process has some important conditions. Every mapping function must always take three mandatory arguments: 1) value: an arbitrary value for the algorithm1 (which corresponds to to the value given in the val item); 2) cols: the Spark DataFrame column names as a list of strings2; 3) schema: the schema (or schema) of the Spark DataFrame3. Your mapping function should always have these three arguments, even if it doesn’t use all of them.\nTherefore, the value argument of every mapping function will always receive as input the value you passed to the val item of the initial dict. Now, the other two arguments, cols and schema, they will be automatically filled by spark_map() or spark_across(). In other words, spark_map() or spark_across() will automatically collect the values of these arguments for you.\nAs an example, the alphabetic_order() function below maps the column that is in a specific position in the alphabetical order. This alphabetic_order() function only uses the index and cols arguments, even though it receives three arguments. In other words, the schema argument is just there to satisfy the conditions of spark_map() and spark_across().\n\ndef alphabetic_order(index, cols: list, schema: StructType):\n    cols.sort()\n    return cols[index]\n\nOne other requirement that we haven’t covered yet is the return value of your mapping function. Your mapping function must always return a list of strings, which contain the names of the columns that were mapped by the function. If your mapping function does not find any columns during your search, it should return an empty list (i.e. []).\nAs a first demonstration, let’s apply this alphabetic_order() function. For that, let’s use the DataFrame spark sales.sales_per_country as an example. The column list of this DataFrame is shown below:\n\nsales = spark.table('sales.sales_per_country')\nprint(sales.columns)\n\n\n['year', 'month', 'country', 'idstore', 'totalsales']\n\nNow, using the alphabetic_order() inside spark_map():\n\nspark_map(sales, {'fun' = 'alphabetic_order', 'val' = 1}, F.max)\n\nSelected columns by `spark_map()`: idstore\n\n+--------+\n| idstore|\n+--------+\n|    2300|\n+--------+"
+  },
+  {
+    "objectID": "english/articles/building-mapping.html#if-your-mapping-doesnt-find-any-columns",
+    "href": "english/articles/building-mapping.html#if-your-mapping-doesnt-find-any-columns",
+    "title": "Building the mapping",
+    "section": "If your mapping doesn’t find any columns",
+    "text": "If your mapping doesn’t find any columns\nOn the other hand, spark_map() will also raise a KeyError, in case the function you are using in your mapping doesn’t find any columns in your DataFrame. However, in this case, spark_map() sends a clear message that no columns were found using the mapping you defined. As an example, we could reproduce this error, when trying to map in the DataFrame students, all the columns that start with the string 'april'. A KeyError is raised in this case because there is no column in the students table whose name starts with the word “april”.\n\nspark_map(students, starts_with('april'), F.sum)\n\n\nKeyError: `spark_map()` did not find any column that matches your mapping!"
+  },
+  {
+    "objectID": "english/starts_with.html",
+    "href": "english/starts_with.html",
+    "title": "starts_with()",
+    "section": "",
+    "text": "Map all columns of your Spark DataFrame whose name starts with a specific text. This function is one of several existing mapping functions (read the article “Building the mapping”)."
+  },
+  {
+    "objectID": "english/starts_with.html#arguments",
+    "href": "english/starts_with.html#arguments",
+    "title": "starts_with()",
+    "section": "Arguments",
+    "text": "Arguments\n\ntext: a string containing the text you want to search for;"
+  },
+  {
+    "objectID": "english/starts_with.html#details-and-examples",
+    "href": "english/starts_with.html#details-and-examples",
+    "title": "starts_with()",
+    "section": "Details and examples",
+    "text": "Details and examples\nTherefore, starts_with() is used to define which columns spark_map() will apply the given function to. This function performs the inverse process of ends_with(), that is, it searches for all columns whose name starts with a specific text. Therefore, with the expression starts_with(\"Score\"), starts_with() will map all columns whose name starts with the text \"Score\".\nDuring the mapping process, an exact match between the searched strings is always used. As a result, an expression like starts_with(\"Sales\") is not able to map columns like \"sales_brazil\", \"sales_colombia\" and \"sales_eua\", however it is able to map columns like \"Sales_france \" and \"Sales_russia\". If you need to be more flexible in your mapping, you’ll likely want to use the matches() function instead of starts_with().\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'Sales_france', 'sales_brazil', 'Sales_russia'])\n\nspark_map(sales, starts_with('Sales'), F.mean).show()\n\nSelected columns by `spark_map()`: Sales_france, Sales_russia\n\n+------------+------------------+\n|Sales_france|      Sales_russia|\n+------------+------------------+\n|     16600.0|33087.333333333336|\n+------------+------------------+"
+  },
+  {
+    "objectID": "english/ends_with.html",
+    "href": "english/ends_with.html",
+    "title": "ends_with()",
+    "section": "",
+    "text": "Map all columns of your Spark DataFrame whose name ends with a specific text. This function is one of several existing mapping functions (read the article “Building the mapping”)."
+  },
+  {
+    "objectID": "english/ends_with.html#arguments",
+    "href": "english/ends_with.html#arguments",
+    "title": "ends_with()",
+    "section": "Arguments",
+    "text": "Arguments\n\ntext: a string containing the text you want to search for;"
+  },
+  {
+    "objectID": "english/ends_with.html#details-and-examples",
+    "href": "english/ends_with.html#details-and-examples",
+    "title": "ends_with()",
+    "section": "Details and examples",
+    "text": "Details and examples\nTherefore, ends_with() is used to define which columns spark_map() will apply the given function to. This function performs the inverse process of starts_with(), i.e. it searches for all columns whose name ends with a specific text. So, with the expression ends_with(\"Score\"), ends_with() will map all columns whose name ends with the text \"Score\".\nDuring the mapping process, an exact match between the searched strings is always used. As a result, an expression like ends_with(\"Sales\") is not able to map columns like \"brazil_sales\", \"colombia_sales\" and \"eua_sales\", however it is able to map columns like \"france_Sales \" and \"russia_Sales\". If you need to be more flexible in your mapping, you’ll likely want to use the matches() function instead of ends_with().\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])\n\nspark_map(sales, ends_with('Sales'), F.mean).show()\n\nSelected columns by `spark_map()`: france_Sales, russia_Sales\n\n+------------+------------------+\n|france_Sales|      russia_Sales|\n+------------+------------------+\n|     16600.0|33087.333333333336|\n+------------+------------------+"
+  },
+  {
+    "objectID": "english/are_of_type.html",
+    "href": "english/are_of_type.html",
+    "title": "are_of_type()",
+    "section": "",
+    "text": "Map all columns of your Spark DataFrame that fit a certain data type (string, double, integer, etc.). This function is one of several existing mapping functions (read the article “Building the mapping”)."
+  },
+  {
+    "objectID": "english/are_of_type.html#arguments",
+    "href": "english/are_of_type.html#arguments",
+    "title": "are_of_type()",
+    "section": "Arguments",
+    "text": "Arguments\n\narg_type: a string containing the name of the data type you want to search for (see the available values ​​in the “Details and Examples” section below);"
+  },
+  {
+    "objectID": "english/are_of_type.html#details-and-examples",
+    "href": "english/are_of_type.html#details-and-examples",
+    "title": "are_of_type()",
+    "section": "Details and examples",
+    "text": "Details and examples\nTherefore, are_of_type() is used to define which columns spark_map() will apply the given function to. To use this function, you must provide one of the following values:\n\n\"string\": for columns of type pyspark.sql.types.StringType();\n\"int\": for columns of type pyspark.sql.types.IntegerType();\n\"double\": for columns of type pyspark.sql.types.DoubleType();\n\"date\": for columns of type pyspark.sql.types.DateType();\n\"datetime\": for columns of type pyspark.sql.types.TimestampType();\n\nThis means that are_of_type() accepts only one of the above values. If you provide a string that is not included in the above list, a ValueError is automatically raised by the function, as shown below:\n\nare_of_type(\"str\")\n\n\nValueError: You must choose one of the following values: 'string', 'int', 'double', 'date', 'datetime'\n\nIn essence, are_of_type() uses your Spark DataFrame schema to determine which columns belong to the data type you have determined. Notice in the example below, that the column named \"date\" is mapped by spark_map(), even though this column is clearly a date column. This happens, because Spark is interpreting this column by the type pyspark.sql.types.StringType(), not by pyspark.sql.types.DateType().\n\ndata = [\n  (\"2022-03-01\", \"Luke\", 36981),\n  (\"2022-02-15\", \"Anne\", 31000),\n  (\"2022-03-12\", \"Bishop\", 31281)\n]\n\nsales = spark.createDataFrame(data, ['date', 'name', 'value'])\n\nspark_map(sales, are_of_type(\"string\"), F.max).show()\n\nSelected columns by `spark_map()`: date, name\n\n+----------+----+\n|      date|name|\n+----------+----+\n|2022-03-12|Luke|\n+----------+----+"
+  },
+  {
+    "objectID": "english/at_position.html",
+    "href": "english/at_position.html",
+    "title": "at_position()",
+    "section": "",
+    "text": "Map the columns of your Spark DataFrame based on their numeric indexes (1st, 2nd, 3rd column, etc.). This function is one of several existing mapping functions (read the article “Building the mapping”)."
+  },
+  {
+    "objectID": "english/at_position.html#arguments",
+    "href": "english/at_position.html#arguments",
+    "title": "at_position()",
+    "section": "Arguments",
+    "text": "Arguments\n\n*indexes: the column indexes (separated by commas);\nzero_index: boolean value (True or False) indicating whether the indexes provided in *indexes are zero-based or not (read the “Details” section below). By default, this argument is set to False;"
+  },
+  {
+    "objectID": "english/at_position.html#details-and-examples",
+    "href": "english/at_position.html#details-and-examples",
+    "title": "at_position()",
+    "section": "Details and examples",
+    "text": "Details and examples\nTherefore, at_position() is used to define which columns spark_map() will apply the given function to. To use this function, you supply the numeric indexes, separated by commas, that represent the columns you want to map in spark_map().\nThe zero_index argument is optional, and determines whether the given column indexes will be based on a zero-start index system, or on a one-start index system. Python uses a zero-start index system, so the value 0 represents the first value of an object, while 1 represents the second value of an object, and so on.\nBut, the zero_index argument is set by default to False. Because of this, the at_position() function always initially works with an index system starting at one. So, in the expression at_position(3, 4, 5), the at_position() function will map the 3rd, 4th and 5th columns of your Spark DataFrame. However, if you want to override this behavior, and use Python’s default index system (starting at zero), just set this argument to True. In the example below, at_position() will map to the 2nd, 3rd and 4th column of the sales DataFrame.\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])\n\nspark_map(sales, at_position(1, 2, 3, zero_index = True), F.mean).show()\n\nSelected columns by `spark_map()`: month, france_Sales, brazil_sales\n\n+-----+------------+------------+\n|month|france_Sales|brazil_sales|\n+-----+------------+------------+\n|  2.0|     16600.0|     24600.0|\n+-----+------------+------------+\nWhen providing a zero index, you should always set the zero_index argument to True. When the zero_index argument is set to False, at_position() will automatically subtract 1 from all indexes. So an index equal to zero becomes an index equal to -1, and negative indexes are not allowed by at_position(). See the example below:\n\nat_position(0, 2, 4)\n\n\nValueError: One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?\n\nFurthermore, any duplicate index is automatically eliminated by at_position(). See the example below in which the indexes 1 and 4 are repeated during the call to at_position(), but they are automatically eliminated in the function result.\n\nat_position(1, 1, 2, 3, 4, 4, 5)\n\n\n{'fun': '__at_position', 'val': (0, 1, 2, 3, 4)}\n\nFurthermore, the indexes given to at_position() must not be inside a list, if you make this mistake, the function will raise a ValueError, as shown below:\n\nat_position([4, 5, 6])\n\n\nValueError: Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.\n\nColumn indexes are a required argument. So, if you don’t provide any index, at_position() will necessarily raise a ValueError, as shown below:\n\nat_position(zero_index = True)\n\n\nValueError: You did not provided any index for `at_position()` to search"
+  },
+  {
+    "objectID": "articles-ptbr.html",
+    "href": "articles-ptbr.html",
+    "title": "Artigos",
+    "section": "",
+    "text": "Nesta página, temos uma lista de todos os artigos (isto é, documentações longas) sobre o pacote spark_map.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nConstruindo o mapeamento\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]
