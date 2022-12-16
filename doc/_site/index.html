@@ -220,8 +220,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p><code>spark_map</code> is a python package that contains an implementation of <code>map()</code> function for Apache Spark DataFrames, using <code>pyspark</code>. In other wrods, the <code>spark_map</code> package offers tools to apply a function over multiple columns of a Spark DataFrame. The package offers two main functions to do that, which are <code>spark_map()</code> and <code>spark_across</code>.</p>
-<p>Both of these functions perform the same work, which is to apply a function over a set of columns of a Spark DataFrame. But the difference between them, is that <code>spark_map()</code> uses the <code>agg()</code> method of Spark DataFrame’s to apply the function, while <code>spark_across()</code> uses the <code>withColumn()</code> method to do so.</p>
+<p><code>spark_map</code> is a python package that offers some tools to apply a function over multiple columns of Apache Spark DataFrames, using <code>pyspark</code>. You could say that <code>spark_map</code> offers an implemmentation for the <code>map()</code> python function for Spark DataFrames. There are two main functions in the package that performs the heavy work, which are <code>spark_map()</code> and <code>spark_across</code>.</p>
+<p>Both of these functions perform the same work, which is to apply a function over a set of columns of a Spark DataFrame. But they differ in the method they use to apply this function. While <code>spark_map()</code> uses the <code>agg()</code> method of Spark DataFrame’s to apply the function, <code>spark_across()</code> uses the <code>withColumn()</code> method to do so.</p>
+<p>This means that you will mainly use <code>spark_map()</code> when you want to calculate <strong>aggregates</strong>. Is worthy pointing out that <code>spark_map()</code> works perfectly with grouped DataFrames as well (i.e.&nbsp;<code>GroupedData</code>). In the other hand, you will use <code>spark_across()</code> when you want to just transform the values of multiple colums at once by applying the same function over them.</p>
 </section>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
@@ -230,7 +231,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="documentation" class="level2">
 <h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
-<p>The full documentation for <code>spark_map</code> package is available in this website. To access it, just use the <code>Function Reference</code> and <code>Articles</code> menus, located at the top navigation bar of this page. All documentation is available both in <a href="./reference-en.html">english</a> and in <a href="./reference-ptbr.html">portuguese</a>.</p>
+<p>The full documentation for <code>spark_map</code> package is available at this website. To access it, just use the <code>Function Reference</code> and <code>Articles</code> menus located at the top navigation bar of this page. All documentation is available both in <a href="./reference-en.html">english</a> and in <a href="./reference-ptbr.html">portuguese</a> languages.</p>
 </section>
 <section id="a-simple-example-of-use" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-example-of-use">A simple example of use</h2>
