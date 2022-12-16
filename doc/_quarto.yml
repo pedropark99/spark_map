@@ -7,6 +7,8 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: how-to-build.qmd
+        text: How to build
       - text: Function Reference
         menu:
           - text: In english

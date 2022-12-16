@@ -1,0 +1,19 @@
+---
+title: How to build the package
+---
+
+To build the `spark_map` package, you need to first, clone the repository to your machine (with `git clone`), and change to the root directory of the project (with `cd`):
+
+```bash
+git clone https://github.com/pedropark99/spark_map.git
+cd spark_map
+```
+
+After that, you use the standard `build` command for python packages. As a result, a `dist` folder will be created in the current directory, and the compiled files for the package will be inside of it.
+
+```bash
+# If you are in windows
+py -m build
+# If you are in MacOs/Linux
+python3 -m build
+```
