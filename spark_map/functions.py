@@ -3,7 +3,7 @@ from pyspark.sql import DataFrame, GroupedData
 from pyspark.sql.types import *
 import re
 
-from mapping import Mapping
+from spark_map.mapping import Mapping
 
 
 
