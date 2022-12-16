@@ -7,7 +7,7 @@ execute:
 
 ## Descrição
 
-Mapear todas as colunas de seu Spark DataFrame que se encaixam em um determinado tipo de dado (string, double, integer, etc.). Essa função é uma das várias funções de mapeamento existentes (leia o artigo [**"Construindo o mapeamento"**](https://github.com/pedropark99/spark_map/blob/main/doc/portuguese/artigos/construindo-mapeamento.md)). 
+Mapear todas as colunas de seu Spark DataFrame que se encaixam em um determinado tipo de dado (string, double, integer, etc.). Essa função é uma das várias funções de mapeamento existentes (leia o artigo [**"Construindo o mapeamento"**](artigos/construindo-mapeamento.qmd)). 
 
 ## Argumentos
 

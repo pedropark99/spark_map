@@ -7,7 +7,7 @@ execute:
 
 ## Descrição
 
-Mapear as colunas de seu Spark DataFrame baseado em seus índices numéricos (1°, 2°, 3° coluna, etc.). Essa função é uma das várias funções de mapeamento existentes (leia o artigo [**"Construindo o mapeamento"**](https://github.com/pedropark99/spark_map/blob/main/doc/portuguese/artigos/construindo-mapeamento.md)). 
+Mapear as colunas de seu Spark DataFrame baseado em seus índices numéricos (1°, 2°, 3° coluna, etc.). Essa função é uma das várias funções de mapeamento existentes (leia o artigo [**"Construindo o mapeamento"**](artigos/construindo-mapeamento.qmd)). 
 
 ## Argumentos
 

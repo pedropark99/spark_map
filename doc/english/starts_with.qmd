@@ -6,7 +6,7 @@ execute:
 
 ## Description
 
-Map all columns of your Spark DataFrame whose name starts with a specific text. This function is one of several existing mapping functions (read the article [**"Building the mapping"**](https://github.com/pedropark99/spark_map/blob/main/doc/english/articles/building-mapping.md)).
+Map all columns of your Spark DataFrame whose name starts with a specific text. This function is one of several existing mapping functions (read the article [**"Building the mapping"**](articles/building-mapping.qmd)).
 
 ## Arguments
 
