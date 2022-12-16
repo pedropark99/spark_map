@@ -20,6 +20,10 @@ Therefore, `ends_with()` is used to define which columns `spark_map()` will appl
 During the mapping process, an exact match between the searched *strings* is always used. As a result, an expression like `ends_with("Sales")` is not able to map columns like `"brazil_sales"`, `"colombia_sales"` and `"eua_sales"`, however it is able to map columns like `"france_Sales "` and `"russia_Sales"`. If you need to be more flexible in your mapping, you'll likely want to use the `matches()` function instead of `ends_with()`.
 
 ```{python}
+from pyspark.sql import SparkSession
+from spark_map.functions import spark_map, ends_with
+spark = SparkSession.builder.getOrCreate()
+
 data = [
   (2022, 1, 12300, 41000, 36981),
   (2022, 2, 19120, 21300, 31000),

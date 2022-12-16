@@ -20,6 +20,9 @@ Com `spark_map()` você é capaz de aplicar uma função sobre múltiplas coluna
 Como exemplo, considere o DataFrame `students` abaixo:
 
 ```{python}
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+
 d = [
   (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),
   (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),
@@ -55,6 +58,8 @@ Suponha que você deseja calcular a média da terceira, quarta e quinta coluna d
 
 ```{python}
 import pyspark.sql.functions as F
+from spark_map.functions import spark_map, at_position
+
 spark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)
 ```
 ```
@@ -70,7 +75,6 @@ Selected columns by `spark_map()`: Heigth, Score1, Score2
 Se você deseja que seu cálculo seja aplicado por grupo, basta fornecer a tabela já agrupada para `spark_map()`. Por exemplo, suponha que você desejasse calcular as mesmas médias do exemplo acima, porém, dentro de cada departamento:
 
 ```{python}
-import pyspark.sql.functions as F
 by_department = students.groupBy('Department')
 spark_map(by_department, at_position(3, 4, 5), F.mean).show()
 ```
@@ -94,6 +98,8 @@ Tudo que `spark_map()` faz é aplicar uma função qualquer sobre um conjunto de
 Como exemplo, suponha você precisasse utilizar um pouco de inferência para testar se a média dos vários Scores dos estudantes se distancia significativamente de 6, através da estatística produzida por um teste *t*:
 
 ```{python}
+from spark_map.functions import starts_with
+
 def t_test(x, value_test = 6):
   return ( F.mean(x) - F.lit(value_test) ) / ( F.stddev(x) / F.sqrt(F.count(x)) )
 

@@ -22,6 +22,10 @@ The `zero_index` argument is optional, and determines whether the given column i
 But, the `zero_index` argument is set by default to `False`. Because of this, the `at_position()` function always initially works with an index system starting at one. So, in the expression `at_position(3, 4, 5)`, the `at_position()` function will map the 3rd, 4th and 5th columns of your Spark DataFrame. However, if you want to override this behavior, and use Python's default index system (starting at zero), just set this argument to `True`. In the example below, `at_position()` will map to the 2nd, 3rd and 4th column of the `sales` DataFrame.
 
 ```{python}
+from pyspark.sql import SparkSession
+from spark_map.functions import spark_map, at_position
+spark = SparkSession.builder.getOrCreate()
+
 data = [
   (2022, 1, 12300, 41000, 36981),
   (2022, 2, 19120, 21300, 31000),

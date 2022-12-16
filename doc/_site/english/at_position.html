@@ -238,15 +238,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>zero_index</code> argument is optional, and determines whether the given column indexes will be based on a zero-start index system, or on a one-start index system. Python uses a zero-start index system, so the value 0 represents the first value of an object, while 1 represents the second value of an object, and so on.</p>
 <p>But, the <code>zero_index</code> argument is set by default to <code>False</code>. Because of this, the <code>at_position()</code> function always initially works with an index system starting at one. So, in the expression <code>at_position(3, 4, 5)</code>, the <code>at_position()</code> function will map the 3rd, 4th and 5th columns of your Spark DataFrame. However, if you want to override this behavior, and use Python’s default index system (starting at zero), just set this argument to <code>True</code>. In the example below, <code>at_position()</code> will map to the 2nd, 3rd and 4th column of the <code>sales</code> DataFrame.</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(data, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'france_Sales'</span>, <span class="st">'brazil_sales'</span>, <span class="st">'russia_Sales'</span>])</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>spark_map(sales, at_position(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, zero_index <span class="op">=</span> <span class="va">True</span>), F.mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map, at_position</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(data, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'france_Sales'</span>, <span class="st">'brazil_sales'</span>, <span class="st">'russia_Sales'</span>])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>spark_map(sales, at_position(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, zero_index <span class="op">=</span> <span class="va">True</span>), F.mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>Selected columns by `spark_map()`: month, france_Sales, brazil_sales
 

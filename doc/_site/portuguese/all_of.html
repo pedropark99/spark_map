@@ -236,20 +236,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Portanto, <code>all_of()</code> é utilizada para definir quais são as colunas sobre as quais <code>spark_map()</code> vai aplicar a função fornecida. Você pode utilizar essa função, quando você deseja permitir que um conjunto de colunas seja mapeada, porém, por algum motivo, você não sabe de antemão se todas essas colunas (ou uma parte delas) estará disponível em seu Spark DataFrame.</p>
 <p>Você deve fornecer à <code>all_of()</code> uma lista de <em>strings</em>. Cada <em>string</em> representa o nome de uma coluna que pode ser mapeada. Como exemplo, a expressão <code>all_of(['sales_france', 'sales_brazil', 'sales_colombia'])</code> permite que as colunas chamadas <code>"sales_france"</code>, <code>"sales_brazil"</code> e <code>"sales_colombia"</code> sejam mapeadas por <code>spark_map()</code>. Porém, não necessariamente <code>spark_map()</code> precisa encontrar todas essas colunas de uma vez só. Ou seja, <code>all_of()</code> torna essas colunas “opcionais”, logo, <code>spark_map()</code> pode encontrar as três colunas, ou, apenas duas, ou ainda, apenas uma dessas colunas. Veja o exemplo abaixo:</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dados <span class="op">=</span> [</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(dados, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_russia'</span>])</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>spark_map(</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    sales,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    all_of([<span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_colombia'</span>]), </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    F.mean</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  )<span class="op">\</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  .show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map, all_of</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dados <span class="op">=</span> [</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(dados, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_russia'</span>])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>spark_map(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    sales,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    all_of([<span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_colombia'</span>]), </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    F.mean</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  )<span class="op">\</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  .show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>Selected columns by `spark_map()`: sales_france, sales_brazil
 

@@ -23,6 +23,10 @@ O argumento `zero_index` é opcional, e determina se os índices das colunas for
 Em contrapartida, o argumento `zero_index` é configurado por padrão para `False`. Por causa disso, a função `at_position()` trabalha sempre inicialmente com um sistema de índices iniciado em um. Logo, na expressão `at_position(3, 4, 5)`, a função `at_position()` vai mapear a 3°, 4° e 5° colunas de seu Spark DataFrame. Porém, caso você queira sobrepor esse comportamento, e, utilizar o sistema de índices padrão do Python (iniciado em zero), basta configurar esse argumento para `True`. No exemplo abaixo, `at_position()` vai mapear a 2°, 3° e 4° coluna do DataFrame `sales`.
 
 ```{python}
+from pyspark.sql import SparkSession
+from spark_map.functions import spark_map, at_position
+spark = SparkSession.builder.getOrCreate()
+
 dados = [
   (2022, 1, 12300, 41000, 36981),
   (2022, 2, 19120, 21300, 31000),

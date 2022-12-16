@@ -250,15 +250,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>No fundo, <code>are_of_type()</code> utiliza o schema de seu Spark DataFrame para determinar quais colunas pertencem ao tipo de dado que você determinou. Repare no exemplo abaixo, que a coluna chamada <code>"date"</code> é mapeada por <code>spark_map()</code>, mesmo que essa coluna seja claramente uma coluna de datas. Tal fato ocorre, pois Spark está interpretando essa coluna pelo tipo <code>pyspark.sql.types.StringType()</code>, e não <code>pyspark.sql.types.DateType()</code>.</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dados <span class="op">=</span> [</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="st">"2022-03-01"</span>, <span class="st">"Luke"</span>, <span class="dv">36981</span>),</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  (<span class="st">"2022-02-15"</span>, <span class="st">"Anne"</span>, <span class="dv">31000</span>),</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  (<span class="st">"2022-03-12"</span>, <span class="st">"Bishop"</span>, <span class="dv">31281</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(dados, [<span class="st">'date'</span>, <span class="st">'name'</span>, <span class="st">'value'</span>])</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>spark_map(sales, are_of_type(<span class="st">"string"</span>), F.<span class="bu">max</span>).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map, are_of_type</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>dados <span class="op">=</span> [</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  (<span class="st">"2022-03-01"</span>, <span class="st">"Luke"</span>, <span class="dv">36981</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  (<span class="st">"2022-02-15"</span>, <span class="st">"Anne"</span>, <span class="dv">31000</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  (<span class="st">"2022-03-12"</span>, <span class="st">"Bishop"</span>, <span class="dv">31281</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(dados, [<span class="st">'date'</span>, <span class="st">'name'</span>, <span class="st">'value'</span>])</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>spark_map(sales, are_of_type(<span class="st">"string"</span>), F.<span class="bu">max</span>).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <pre><code>Selected columns by `spark_map()`: date, name
 

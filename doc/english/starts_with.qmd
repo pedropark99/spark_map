@@ -19,6 +19,10 @@ Therefore, `starts_with()` is used to define which columns `spark_map()` will ap
 During the mapping process, an exact *match* between the searched *strings* is always used. As a result, an expression like `starts_with("Sales")` is not able to map columns like `"sales_brazil"`, `"sales_colombia"` and `"sales_eua"`, however it is able to map columns like `"Sales_france "` and `"Sales_russia"`. If you need to be more flexible in your mapping, you'll likely want to use the `matches()` function instead of `starts_with()`.
 
 ```{python}
+from pyspark.sql import SparkSession
+from spark_map.functions import spark_map, starts_with
+spark = SparkSession.builder.getOrCreate()
+
 data = [
   (2022, 1, 12300, 41000, 36981),
   (2022, 2, 19120, 21300, 31000),

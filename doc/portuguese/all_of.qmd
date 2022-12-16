@@ -19,6 +19,10 @@ Portanto, `all_of()` é utilizada para definir quais são as colunas sobre as qu
 Você deve fornecer à `all_of()` uma lista de *strings*. Cada *string* representa o nome de uma coluna que pode ser mapeada. Como exemplo, a expressão `all_of(['sales_france', 'sales_brazil', 'sales_colombia'])` permite que as colunas chamadas `"sales_france"`, `"sales_brazil"` e `"sales_colombia"` sejam mapeadas por `spark_map()`. Porém, não necessariamente `spark_map()` precisa encontrar todas essas colunas de uma vez só. Ou seja, `all_of()` torna essas colunas "opcionais", logo, `spark_map()` pode encontrar as três colunas, ou, apenas duas, ou ainda, apenas uma dessas colunas. Veja o exemplo abaixo:
 
 ```{python}
+from pyspark.sql import SparkSession
+from spark_map.functions import spark_map, all_of
+spark = SparkSession.builder.getOrCreate()
+
 dados = [
   (2022, 1, 12300, 41000, 36981),
   (2022, 2, 19120, 21300, 31000),

@@ -19,6 +19,11 @@ Therefore, `matches()` is used to define which columns `spark_map()` will apply 
 It is worth noting that the regular expression provided will be passed to the `re.match()` method, and will be applied to the name of each column of your Spark DataFrame. With that in mind, if your regular expression can't find any column, it's interesting that you investigate your error through the `re.match()` method. For example, suppose you have the DataFrame `pop` below. Suppose also that you want to map all columns that contain the string `'male'` somewhere. Note that no columns were found by `spark_map()`.
 
 ```{python}
+from pyspark.sql import SparkSession
+from spark_map.functions import spark_map, matches
+spark = SparkSession.builder.getOrCreate()
+import re
+
 data = [
   ('Brazil', 74077777, 86581634, 96536269, 74925448, 88208705, 99177368),
   ('Colombia', 16315306, 19427307, 22159658, 16787263, 20202658, 23063041),

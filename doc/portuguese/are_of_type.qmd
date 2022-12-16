@@ -36,6 +36,10 @@ ValueError: You must choose one of the following values: 'string', 'int', 'doubl
 No fundo, `are_of_type()` utiliza o schema de seu Spark DataFrame para determinar quais colunas pertencem ao tipo de dado que você determinou. Repare no exemplo abaixo, que a coluna chamada `"date"` é mapeada por `spark_map()`, mesmo que essa coluna seja claramente uma coluna de datas. Tal fato ocorre, pois Spark está interpretando essa coluna pelo tipo `pyspark.sql.types.StringType()`, e não `pyspark.sql.types.DateType()`.
 
 ```{python}
+from pyspark.sql import SparkSession
+from spark_map.functions import spark_map, are_of_type
+spark = SparkSession.builder.getOrCreate()
+
 dados = [
   ("2022-03-01", "Luke", 36981),
   ("2022-02-15", "Anne", 31000),
