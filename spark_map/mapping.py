@@ -10,6 +10,30 @@ def check_string_type(x, mapping_function: str):
     raise TypeError(f"Input of `{mapping_function}` needs to be a string (data of type `str`). Not a {type(x)}.")
 
 
+
+def build_mapping(mapping, cols: list, schema: StructType):
+  mapping_function = mapping['fun']
+  value = mapping['val']
+  if isinstance(mapping_function, str):
+    ### If mapping['fun'] is a string, look for a default mapping method
+    ### inside the methods the `Mapping` class
+    print("Looking for default mapping method inside the `Mapping` class")
+    m = Mapping()
+    method_to_call = getattr(m, mapping_function)
+    method_to_call(value, cols, schema)
+    selected_cols = m.mapped_cols
+  else:
+    ### If is not a string, a function is expected instead
+    selected_cols = mapping_function(value, cols, schema)
+  
+  if len(selected_cols) == 0:
+    message = "`spark_map()` did not found any column that matches your mapping!"
+    raise KeyError(message)
+  
+  return selected_cols
+
+
+
     
 ### ====================================================================================
 ### We use the Mapping class to store the default available mapping methods

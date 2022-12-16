@@ -2,7 +2,7 @@
 title: "Referência de funções"
 listing:
     contents: "portuguese/*.qmd"
-    type: default
+    type: table
 ---
 
 Nesta página, temos uma lista de todas as funções documentadas no pacote `spark_map`.

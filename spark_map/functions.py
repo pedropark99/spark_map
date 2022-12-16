@@ -3,7 +3,7 @@ from pyspark.sql import DataFrame, GroupedData
 from pyspark.sql.types import *
 import re
 
-from spark_map.mapping import Mapping
+from spark_map.mapping import build_mapping, check_string_type
 
 
 
@@ -19,8 +19,8 @@ def spark_map(table, mapping, function):
   >>> tb = spark.table('sales.sales_by_day')
   >>> spark_map(tb, at_position(3,4,5), F.mean)
   """
-  cols = get_columns(table)
-  schema = get_schema(table)
+  cols = __get_columns(table)
+  schema = __get_schema(table)
   
   mapping = build_mapping(mapping, cols, schema)
   message = f"Selected columns by `spark_map()`: {', '.join(mapping)}\n"
@@ -38,7 +38,7 @@ def spark_map(table, mapping, function):
 
 
 
-def spark_across(table, mapping, function, **kwargs):
+def spark_across(table:DataFrame, mapping, function, **kwargs):
   """
   With `spark_across()` you can apply a function across multiple columns of a spark DataFrame.
   While `spark_map()` calculates aggregates in a set of columns, `spark_across()` uses
@@ -50,8 +50,11 @@ def spark_across(table, mapping, function, **kwargs):
   >>> tb = spark.table('sales.sales_by_day')
   >>> spark_across(tb, at_position(3,4,5), F.cast, 'double')
   """
-  cols = get_columns(table)
-  schema = get_schema(table)
+  if isinstance(table, GroupedData):
+    raise ValueError("You gave a grouped Spark DataFrame to `spark_across()`. However, this function work solely with plain Spark DataFrames. Did you meant to use `spark_map()` instead?")
+  
+  cols = table.columns
+  schema = table.schema
   
   mapping = build_mapping(mapping, cols, schema)
   message = f"Selected columns by `spark_across()`: {', '.join(mapping)}\n"
@@ -64,7 +67,7 @@ def spark_across(table, mapping, function, **kwargs):
 
 
 
-def get_columns(table:DataFrame):
+def __get_columns(table:DataFrame):
   if isinstance(table, GroupedData):
     cols = table._df.columns
   if isinstance(table, DataFrame):
@@ -73,7 +76,7 @@ def get_columns(table:DataFrame):
   return cols
 
 
-def get_schema(table:DataFrame):
+def __get_schema(table:DataFrame):
   if isinstance(table, GroupedData):
     schema = list(table._df.schema)
   if isinstance(table, DataFrame):
@@ -84,14 +87,6 @@ def get_schema(table:DataFrame):
 
 
 
-
-
-def check_string_type(x, mapping_function: str):
-  if isinstance(x, str):
-    return(True)
-  else:
-    raise TypeError(f"Input of `{mapping_function}` needs to be a string (data of type `str`). Not a {type(x)}.")
-      
     
     
     
@@ -138,33 +133,4 @@ def are_of_type(arg_type: str):
     message = f'You must choose one of the following values: {types}'
     raise ValueError(message)
   return {'fun': "are_of_type", 'val': arg_type}
-  
-  
-
-
-  
-  
-  
-  
-def build_mapping(mapping, cols: list, schema: StructType):
-  mapping_function = mapping['fun']
-  value = mapping['val']
-  if isinstance(mapping_function, str):
-    ### If mapping['fun'] is a string, look for a default mapping method
-    ### inside the methods the `Mapping` class
-    print("Looking for default mapping method inside the `Mapping` class")
-    m = Mapping()
-    method_to_call = getattr(m, mapping_function)
-    method_to_call(value, cols, schema)
-    selected_cols = m.mapped_cols
-  else:
-    ### If is not a string, a function is expected instead
-    selected_cols = mapping_function(value, cols, schema)
-  
-  if len(selected_cols) == 0:
-    message = "`spark_map()` did not found any column that matches your mapping!"
-    raise KeyError(message)
-  
-  return selected_cols
-
 
