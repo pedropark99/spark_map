@@ -17,7 +17,7 @@ pip install spark_map
 
 # Documentation
 
-The full documentation for `spark_map` package is available at this website. To access it, just use the `Function Reference` and `Articles` menus located at the top navigation bar of this page. All documentation is available both in [english](reference-en.qmd) and in [portuguese](reference-ptbr.qmd) languages.
+The full documentation for `spark_map` package is available at this website. To access it, just use the `Function Reference` and `Articles` menus located at the top navigation bar of this page. All documentation is available both in [english](https://pedropark99.github.io/spark_map/reference-en.html) and in [portuguese](https://pedropark99.github.io/spark_map/reference-ptbr.html) languages.
 
 
 
