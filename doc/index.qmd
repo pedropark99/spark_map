@@ -6,11 +6,11 @@ execute:
 
 ## Overview
 
-`spark_map` is a python package that offers some tools to apply a function over multiple columns of Apache Spark DataFrames, using `pyspark`. You could say that `spark_map` offers an implemmentation for the `map()` python function for Spark DataFrames. There are two main functions in the package that performs the heavy work, which are `spark_map()` and `spark_across`.
+`spark_map` is a python package that offers some tools to easily apply a function over multiple columns of Apache Spark DataFrames, using `pyspark`. You could say that `spark_map` offers an implementation for the `map()` python function for Spark DataFrames. There are two main functions in the package that performs the heavy work, which are `spark_map()` and `spark_across()`.
 
-Both of these functions perform the same work, which is to apply a function over a set of columns of a Spark DataFrame. But they differ in the method they use to apply this function. While `spark_map()` uses the `agg()` method of Spark DataFrame's to apply the function, `spark_across()` uses the `withColumn()` method to do so.
+Both of these functions perform the same work, which is to apply a function over multiple columns of a Spark DataFrame. But they differ in the method they use to apply this function. `spark_map()` uses the `agg()` method of Spark DataFrame's to apply the function, and `spark_across()` uses the `withColumn()` method to do so.
 
-This means that you will mainly use `spark_map()` when you want to calculate aggregates. Is worthy pointing out that `spark_map()` works perfectly with grouped DataFrames as well (i.e. `GroupedData`). In the other hand, you will use `spark_across()` when you want to just transform the values of multiple colums at once by applying the same function over them.
+This means that you will mainly use `spark_map()` when you want to calculate aggregates of each column. Is worthy pointing out that `spark_map()` works perfectly with grouped DataFrames as well (i.e. `GroupedData`). In the other hand, you will use `spark_across()` when you want to just transform the values of multiple colums at once by applying the same function over them.
 
 ## Installation
 
@@ -31,6 +31,9 @@ The full documentation for `spark_map` package is available at this website. To 
 As an example, consider the `students` DataFrame below:
 
 ```{python}
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+
 d = [
   (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),
   (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),

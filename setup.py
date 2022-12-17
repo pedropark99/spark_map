@@ -10,7 +10,8 @@ project = metadata['project']
 setup(
     name = project['name'],
     version = project['version'],
-    author = project['authors'],
+    author = project['authors'][0]['name'],
+    author_email = project['authors'][0]['email'],
     license = 'MIT License',
     description = project['description'],
     long_description = project['readme'],
