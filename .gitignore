@@ -2,3 +2,4 @@ spark_map.egg-info
 dist
 *.pyc
 spark_map/__pycache__
+.pytest_cache
