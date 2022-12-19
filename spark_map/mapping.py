@@ -136,10 +136,6 @@ class Mapping:
         'datetime' : TimestampType(), 'long': LongType()
       }
 
-      if str_type not in valid_types:
-        valid_keys = ", ".join(list(valid_types.keys()))
-        raise KeyError(f"You must choose one of the following key types: {valid_keys}")
-
       target_type = valid_types[str_type]
       selected_cols = list()
       for name, field in zip(cols, schema):
