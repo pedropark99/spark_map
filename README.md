@@ -17,7 +17,7 @@ pip install spark_map
 
 # Documentation
 
-The full documentation for `spark_map` package is available at this website. To access it, just use the `Function Reference` and `Articles` menus located at the top navigation bar of this page. All documentation is available both in [english](https://pedropark99.github.io/spark_map/reference-en.html) and in [portuguese](https://pedropark99.github.io/spark_map/reference-ptbr.html) languages.
+The full documentation for `spark_map` package is available at the [website of the package](https://pedropark99.github.io/spark_map/). To access it, just use the `Function Reference` and `Articles` menus located at the top navigation bar of the website. All documentation is available both in [english](https://pedropark99.github.io/spark_map/reference-en.html) and in [portuguese](https://pedropark99.github.io/spark_map/reference-ptbr.html) languages.
 
 
 
@@ -66,7 +66,8 @@ Suppose you want to calculate the average of the third, fourth and fifth columns
 from pyspark.sql.functions import mean
 from spark_map import spark_map, at_position
 
-spark_map(students, at_position(3, 4, 5), mean).show(truncate = False)
+spark_map(students, at_position(3, 4, 5), mean)\
+  .show(truncate = False)
 ```
 
 ```

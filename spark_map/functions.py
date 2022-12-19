@@ -3,7 +3,7 @@ from pyspark.sql import DataFrame, GroupedData
 from pyspark.sql.types import *
 import re
 
-from spark_map.mapping import build_mapping, check_string_type
+from spark_map.mapping import build_mapping, check_string_input
 
 
 
@@ -94,7 +94,7 @@ def all_of(list_cols: list):
   return {'fun': 'all_of', 'val': list_cols}
     
 def matches(regex: str):
-  check_string_type(regex, "matches()")
+  check_string_input(regex, "matches()")
   return {'fun': "matches", 'val': regex} 
 
   
@@ -112,21 +112,21 @@ def at_position(*indexes, zero_index = False):
     raise ValueError("One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?")
     
   # Transform to `set` to avoid duplicates indexes
-  indexes = tuple(set(indexes))
+  indexes = list(set(indexes))
   return {'fun': "at_position", 'val': indexes}
 
 
 def starts_with(text: str):
-  check_string_type(text, "starts_with()")
+  check_string_input(text, "starts_with()")
   return {'fun': "starts_with", 'val': text}
 
 def ends_with(text: str):
-  check_string_type(text, "ends_with()")
+  check_string_input(text, "ends_with()")
   return {'fun': "ends_with", 'val': text}
 
 def are_of_type(arg_type: str):
-  check_string_type(arg_type, "are_of_type()")
-  valid_types = ['string', 'int', 'double', 'date', 'datetime']
+  check_string_input(arg_type, "are_of_type()")
+  valid_types = ['string', 'int', 'long', 'double', 'date', 'datetime']
   if arg_type not in valid_types:
     types = [f"'{t}'" for t in valid_types]
     types = ', '.join(types)
