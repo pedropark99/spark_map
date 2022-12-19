@@ -26,3 +26,9 @@ dependencies = [
 Homepage = "https://pedropark99.github.io/spark_map/"
 Repo = "https://github.com/pedropark99/spark_map"
 Issues = "https://github.com/pedropark99/spark_map/issues"
+
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
