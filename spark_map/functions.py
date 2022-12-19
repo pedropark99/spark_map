@@ -1,4 +1,4 @@
-import pyspark.sql.functions as F
+from pyspark.sql.functions import column
 from pyspark.sql import DataFrame, GroupedData
 from pyspark.sql.types import *
 import re
@@ -28,7 +28,7 @@ def spark_map(table, mapping, function):
   
   params = []
   for col in mapping:
-    params.append(function(F.col(col)).alias(col))
+    params.append(function(column(col)).alias(col))
     
   result = table.agg(*params)
   
