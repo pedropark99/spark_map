@@ -3,21 +3,73 @@ from pyspark.sql.types import TimestampType, StringType, DateType, IntegerType, 
 import re
 
 
-def is_string(x):
+def __is_string(x):
   return isinstance(x, str)
 
-def check_string_input(x, mapping_function: str):
-  if is_string(x):
+def __check_string_input(x, mapping_function: str):
+  if __is_string(x):
     return(True)
   else:
-    raise TypeError(f"Input of `{mapping_function}` needs to be a string (data of type `str`). Not a {type(x)}.")
+    raise TypeError(f"Input of `{mapping_function}` needs to be a string (data of type `str`). Not {type(x)}.")
 
 
 
-def build_mapping(mapping, cols: list, schema: StructType):
+
+    
+def all_of(list_cols: list):
+  return {'fun': 'all_of', 'val': list_cols}
+    
+def matches(regex: str):
+  __check_string_input(regex, "matches()")
+  return {'fun': "matches", 'val': regex} 
+
+  
+def at_position(*indexes, zero_index = False):
+  if len(indexes) == 0:
+    raise ValueError("You did not provided any index for `at_position()` to search")
+  if isinstance(indexes[0], list):
+    raise ValueError("Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.")  
+  if zero_index == False:
+    indexes = [index - 1 for index in indexes]
+  
+  # Check if any of the indexes are negative:
+  negative = [index < 0 for index in indexes]
+  if any(negative):
+    raise ValueError("One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?")
+    
+  # Transform to `set` to avoid duplicated indexes
+  indexes = list(set(indexes))
+  return {'fun': "at_position", 'val': indexes}
+
+
+def starts_with(text: str):
+  __check_string_input(text, "starts_with()")
+  return {'fun': "starts_with", 'val': text}
+
+def ends_with(text: str):
+  __check_string_input(text, "ends_with()")
+  return {'fun': "ends_with", 'val': text}
+
+def are_of_type(arg_type: str):
+  __check_string_input(arg_type, "are_of_type()")
+  valid_types = ['string', 'int', 'long', 'double', 'date', 'datetime']
+  if arg_type not in valid_types:
+    types = [f"'{t}'" for t in valid_types]
+    types = ', '.join(types)
+    message = f'You must choose one of the following values: {types}'
+    raise ValueError(message)
+  return {'fun': "are_of_type", 'val': arg_type}
+
+
+
+
+
+
+
+def __map_columns(mapping, cols: list, schema: StructType):
   mapping_function = mapping['fun']
   mapping_value = mapping['val']
-  if is_string(mapping_function):
+  if __is_string(mapping_function):
     m = Mapping()
     method_to_call = getattr(m, mapping_function)
     method_to_call(mapping_value, cols, schema)
@@ -95,6 +147,4 @@ class Mapping:
           selected_cols.append(name)
 
       self.mapped_cols = selected_cols
-
-
 
