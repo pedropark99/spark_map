@@ -19,8 +19,12 @@ def spark_map(table, mapping, function):
   >>> tb = spark.table('sales.sales_by_day')
   >>> spark_map(tb, at_position(3,4,5), F.mean)
   """
-  cols = __get_columns(table)
-  schema = __get_schema(table)
+  if __is_spark_grouped_data(table):
+    cols = table._df.columns
+    schema = list(table._df.schema)
+  if __is_spark_dataframe(table):
+    cols = table.columns
+    schema = list(table.schema)
   
   mapping = __map_columns(mapping, cols, schema)
   __report_mapped_columns(mapping)
@@ -47,11 +51,11 @@ def spark_across(table:DataFrame, mapping, function, **kwargs):
   >>> tb = spark.table('sales.sales_by_day')
   >>> spark_across(tb, at_position(3,4,5), F.cast, 'double')
   """
-  if isinstance(table, GroupedData):
+  if __is_spark_grouped_data(table):
     raise ValueError("You gave a grouped Spark DataFrame to `spark_across()`. However, this function work solely with plain Spark DataFrames. Did you meant to use `spark_map()` instead?")
   
   cols = table.columns
-  schema = table.schema
+  schema = list(table.schema)
   
   mapping = __map_columns(mapping, cols, schema)
   __report_mapped_columns(mapping)
@@ -64,23 +68,12 @@ def spark_across(table:DataFrame, mapping, function, **kwargs):
 
 
 
-def __get_columns(table:DataFrame):
-  if isinstance(table, GroupedData):
-    cols = table._df.columns
-  if isinstance(table, DataFrame):
-    cols = table.columns
 
-  return cols
+def __is_spark_dataframe(x):
+  return isinstance(x, DataFrame)
 
-
-def __get_schema(table:DataFrame):
-  if isinstance(table, GroupedData):
-    schema = list(table._df.schema)
-  if isinstance(table, DataFrame):
-    schema = list(table.schema)
-
-  return schema
-
+def __is_spark_grouped_data(x):
+  return isinstance(x, GroupedData)
 
 
 
@@ -88,4 +81,3 @@ def __get_schema(table:DataFrame):
 def __report_mapped_columns(mapping:list[str]):
   message = f"Selected columns by `spark_map()`: {', '.join(mapping)}\n"
   print(message)
-
