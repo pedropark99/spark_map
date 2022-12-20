@@ -1,7 +1,5 @@
 from pyspark.sql.functions import column
 from pyspark.sql import DataFrame, GroupedData
-from pyspark.sql.types import *
-import re
 
 from spark_map.mapping import __map_columns
 
@@ -74,8 +72,6 @@ def __is_spark_dataframe(x):
 
 def __is_spark_grouped_data(x):
   return isinstance(x, GroupedData)
-
-
 
 
 def __report_mapped_columns(mapping:list[str]):
