@@ -58,7 +58,8 @@ Suponha que você deseja calcular a média da terceira, quarta e quinta coluna d
 
 ```{python}
 import pyspark.sql.functions as F
-from spark_map.functions import spark_map, at_position
+from spark_map.functions import spark_map
+from spark_map.mapping import at_position
 
 spark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)
 ```
@@ -98,7 +99,7 @@ Tudo que `spark_map()` faz é aplicar uma função qualquer sobre um conjunto de
 Como exemplo, suponha você precisasse utilizar um pouco de inferência para testar se a média dos vários Scores dos estudantes se distancia significativamente de 6, através da estatística produzida por um teste *t*:
 
 ```{python}
-from spark_map.functions import starts_with
+from spark_map.mapping import starts_with
 
 def t_test(x, value_test = 6):
   return ( F.mean(x) - F.lit(value_test) ) / ( F.stddev(x) / F.sqrt(F.count(x)) )

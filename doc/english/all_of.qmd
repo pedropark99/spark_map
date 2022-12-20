@@ -20,7 +20,8 @@ You must give `all_of()` a list of *strings*. Each *string* represents the name 
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, all_of
+from spark_map.functions import spark_map
+from spark_map.mapping import all_of
 spark = SparkSession.builder.getOrCreate()
 
 data = [

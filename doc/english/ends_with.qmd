@@ -21,7 +21,8 @@ During the mapping process, an exact match between the searched *strings* is alw
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, ends_with
+from spark_map.functions import spark_map
+from spark_map.mapping import ends_with
 spark = SparkSession.builder.getOrCreate()
 
 data = [

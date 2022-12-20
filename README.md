@@ -11,7 +11,7 @@ This means that you will mainly use `spark_map()` when you want to calculate agg
 
 To get the latest version of `spark_map` at PyPI, use:
 
-```
+```bash
 pip install spark_map
 ```
 

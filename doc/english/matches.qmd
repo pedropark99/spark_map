@@ -20,7 +20,8 @@ It is worth noting that the regular expression provided will be passed to the `r
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, matches
+from spark_map.functions import spark_map
+from spark_map.mapping import matches
 spark = SparkSession.builder.getOrCreate()
 import re
 

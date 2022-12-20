@@ -1,0 +1,11 @@
+{
+  "hash": "7f2504b138a7113d4f40f1a5df2a6e1b",
+  "result": {
+    "markdown": "---\ntitle: How to test the package\n---\n\n## Overview\n\nThe `spark_map` package uses the `pytest` framework to perform the unit tests of the package. Because of that, you need to have the `pytest` package installed on your machine. To install it, you can use `pip`:\n\n\n```{bash}\n#| eval: false\npip install pytest\n```\n\n\nAfter you make sure that `pytest` is installed, you can run the tests. To run the unit tests of the package, you just need to run the `pytest` command on the terminal:\n\n\n```{bash}\n#| eval: false\npytest\n```\n\n\n## Remember to include the current directory into the PYTHONPATH\n\nTo test the package, you have to make sure that the root directory of the project of the package is included in the `PYTHONPATH` variable. To do make life easier, the following rule is included in the `pyproject.toml` file:\n\n\n```{toml}\n#| eval: false\n[tool.pytest.ini_options]\npythonpath = [\n  \".\"\n]\n```\n\n\nWith the above rule, the root directory of the project should be included automatically when you run the tests with the `pytest` command. You can read more about this rule in the `pytest` documentation^[<https://docs.pytest.org/en/7.1.x/reference/reference.html#confval-pythonpath>].\n\n",
+    "supporting": [
+      "how-to-test_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

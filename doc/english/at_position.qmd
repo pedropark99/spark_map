@@ -23,7 +23,8 @@ But, the `zero_index` argument is set by default to `False`. Because of this, th
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, at_position
+from spark_map.functions import spark_map
+from spark_map.mapping import at_position
 spark = SparkSession.builder.getOrCreate()
 
 data = [

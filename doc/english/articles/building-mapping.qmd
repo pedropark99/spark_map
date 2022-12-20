@@ -19,7 +19,8 @@ On the other hand, you may need to use another method to map the columns you are
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, starts_with
+from spark_map.functions import spark_map
+from spark_map.mapping import starts_with
 spark = SparkSession.builder.getOrCreate()
 
 d = [
@@ -42,7 +43,7 @@ spark_map(students, starts_with("Score"), F.sum).show(truncate = False)
 ```
 
 ```{python}
-from spark_map.functions import matches
+from spark_map.mapping import matches
 spark_map(students, matches("(.+)[0-9]$"), F.sum).show(truncate = False)
 ```
 
@@ -52,7 +53,7 @@ spark_map(students, matches("(.+)[0-9]$"), F.sum).show(truncate = False)
 Basically, the mapping is just a small description containing the algorithm that should be used to find the columns and the value that will be passed on to this algorithm. As an example, the result of the expression `at_position(3, 4, 5)` is a small `dict`, containing two elements (`fun` and `val`). The `fun` element defines the method/algorithm to be used to find the columns, and the `val` element stores the value that will be passed to this method/algorithm.
 
 ```{python}
-from spark_map.functions import at_position
+from spark_map.mapping import at_position
 at_position(3, 4, 5)
 ```
 ```{python}
@@ -107,7 +108,7 @@ print(sales.columns)
 Now, using the `alphabetic_order()` inside `spark_map()`:
 
 ```{python}
-spark_map(sales, {'fun' = 'alphabetic_order', 'val' = 1}, F.max)
+spark_map(sales, {'fun' = alphabetic_order, 'val' = 1}, F.max)
 ```
 
 ```

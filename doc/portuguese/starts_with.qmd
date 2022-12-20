@@ -20,7 +20,8 @@ Durante o processo de mapeamento, é utilizado sempre um *match* exato entre os 
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, starts_with
+from spark_map.functions import spark_map
+from spark_map.mapping import starts_with
 spark = SparkSession.builder.getOrCreate()
 
 dados = [

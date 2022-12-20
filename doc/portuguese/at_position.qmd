@@ -24,7 +24,8 @@ Em contrapartida, o argumento `zero_index` é configurado por padrão para `Fals
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, at_position
+from spark_map.functions import spark_map
+from spark_map.mapping import at_position
 spark = SparkSession.builder.getOrCreate()
 
 dados = [

@@ -19,7 +19,8 @@ Por outro lado, você talvez precise utilizar um outro método para mapear as co
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, starts_with
+from spark_map.functions import spark_map
+from spark_map.mapping import starts_with
 spark = SparkSession.builder.getOrCreate()
 
 d = [
@@ -42,8 +43,7 @@ spark_map(students, starts_with("Score"), F.sum).show(truncate = False)
 ```
 
 ```{python}
-from spark_map.functions import matches
-
+from spark_map.mapping import matches
 spark_map(students, matches("[0-9]$"), F.sum).show(truncate = False)
 ```
 
@@ -53,7 +53,7 @@ spark_map(students, matches("[0-9]$"), F.sum).show(truncate = False)
 No fundo, o mapeamento é apenas uma pequena descrição contendo o algoritmo que deve ser utilizado para encontrar as colunas e o valor que será repassado a este algoritmo. Como exemplo, o resultado da expressão `at_position(3, 4, 5)` é um pequeno `dict`, contendo dois elementos (`fun` e `val`). O elemento `fun` define o nome do método/algoritmo a ser utilizado para encontrar as colunas, e o elemento `val` guarda o valor que será repassado para esse método/algoritmo.
 
 ```{python}
-from spark_map.functions import at_position
+from spark_map.mapping import at_position
 at_position(3, 4, 5)
 ```
 

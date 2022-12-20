@@ -20,7 +20,8 @@ During the mapping process, an exact *match* between the searched *strings* is a
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, starts_with
+from spark_map.functions import spark_map
+from spark_map.mapping import starts_with
 spark = SparkSession.builder.getOrCreate()
 
 data = [

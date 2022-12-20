@@ -6,6 +6,6 @@ Documentation Markdown files for `spark_map` are available in English and in Por
 
 To compile all the documentation files, you just need to open a terminal, and run the `quarto render` command inside this folder. But, in order to run this command, you need to have the [Quarto](https://quarto.org/) tool installed in your machine.
 
-```
+```bash
 quarto render doc
 ```

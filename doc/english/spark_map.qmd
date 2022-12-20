@@ -59,7 +59,8 @@ Suppose you want to calculate the average of the third, fourth and fifth columns
 
 ```{python}
 import pyspark.sql.functions as F
-from spark_map.functions import spark_map, at_position
+from spark_map.functions import spark_map
+from spark_map.mapping import at_position
 spark_map(students, at_position(3, 4, 5), F.mean).show(truncate = False)
 ```
 ```
@@ -98,7 +99,7 @@ All `spark_map()` does is apply any function to a set of columns in your DataFra
 As an example, suppose you needed to use a little inference to test whether the average of the various Student Scores significantly deviates from 6, through the statistic produced by a *t* test:
 
 ```{python}
-from spark_map.functions import starts_with
+from spark_map.mapping import starts_with
 
 def t_test(x, value_test = 6):
   return ( F.mean(x) - F.lit(value_test) ) / ( F.stddev(x) / F.sqrt(F.count(x)) )

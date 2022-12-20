@@ -37,7 +37,8 @@ No fundo, `are_of_type()` utiliza o schema de seu Spark DataFrame para determina
 
 ```{python}
 from pyspark.sql import SparkSession
-from spark_map.functions import spark_map, are_of_type
+from spark_map.functions import spark_map
+from spark_map.mapping import are_of_type
 spark = SparkSession.builder.getOrCreate()
 
 dados = [

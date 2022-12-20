@@ -9,6 +9,8 @@ website:
         text: Home
       - href: how-to-build.qmd
         text: How to build
+      - href: how-to-test.qmd
+        text: How to test
       - text: Function Reference
         menu:
           - text: In english

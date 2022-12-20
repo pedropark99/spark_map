@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>spark_map - starts_with()</title>
+<title>spark_map - How to test the package</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -86,22 +86,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../">
-<script src="../site_libs/quarto-html/quarto.js"></script>
-<script src="../site_libs/quarto-html/popper.min.js"></script>
-<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,7 +123,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -133,7 +133,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">spark_map</span>
     </a>
   </div>
@@ -143,15 +143,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html">
+    <a class="nav-link" href="./index.html">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../how-to-build.html">
+    <a class="nav-link" href="./how-to-build.html">
  <span class="menu-text">How to build</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../how-to-test.html">
+    <a class="nav-link active" href="./how-to-test.html" aria-current="page">
  <span class="menu-text">How to test</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -160,11 +160,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-function-reference">    
         <li>
-    <a class="dropdown-item" href="../reference-en.html">
+    <a class="dropdown-item" href="./reference-en.html">
  <span class="dropdown-text">In english</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../reference-ptbr.html">
+    <a class="dropdown-item" href="./reference-ptbr.html">
  <span class="dropdown-text">Em português</span></a>
   </li>  
     </ul>
@@ -175,11 +175,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
-    <a class="dropdown-item" href="../articles-en.html">
+    <a class="dropdown-item" href="./articles-en.html">
  <span class="dropdown-text">In english</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../articles-ptbr.html">
+    <a class="dropdown-item" href="./articles-ptbr.html">
  <span class="dropdown-text">Em português</span></a>
   </li>  
     </ul>
@@ -199,9 +199,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#descrição" id="toc-descrição" class="nav-link active" data-scroll-target="#descrição">Descrição</a></li>
-  <li><a href="#argumentos" id="toc-argumentos" class="nav-link" data-scroll-target="#argumentos">Argumentos</a></li>
-  <li><a href="#detalhes-e-exemplos" id="toc-detalhes-e-exemplos" class="nav-link" data-scroll-target="#detalhes-e-exemplos">Detalhes e exemplos</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#remember-to-include-the-current-directory-in-the-search-path" id="toc-remember-to-include-the-current-directory-in-the-search-path" class="nav-link" data-scroll-target="#remember-to-include-the-current-directory-in-the-search-path">Remember to include the current directory in the search path</a></li>
   </ul>
 </nav>
     </div>
@@ -210,7 +209,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><code>starts_with()</code></h1>
+<h1 class="title">How to test the package</h1>
 </div>
 
 
@@ -225,48 +224,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="descrição" class="level2">
-<h2 class="anchored" data-anchor-id="descrição">Descrição</h2>
-<p>Mapear todas as colunas de seu Spark DataFrame cujo o nome se inicia por um texto específico. Essa função é uma das várias funções de mapeamento existentes (leia o artigo <a href="../portuguese/artigos/construindo-mapeamento.html"><strong>“Construindo o mapeamento”</strong></a>).</p>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>The <code>spark_map</code> package uses the <code>pytest</code> framework to perform the unit tests of the package. Because of that, you need to have the <code>pytest</code> package installed on your machine. To install it, you can use <code>pip</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pytest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After you make sure that <code>pytest</code> is installed, you can run the tests. To run the unit tests of the package, you just need to run the <code>pytest</code> command on the terminal:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="argumentos" class="level2">
-<h2 class="anchored" data-anchor-id="argumentos">Argumentos</h2>
-<ul>
-<li><code>text</code>: uma <em>string</em> contendo o texto pelo qual você deseja pesquisar;</li>
-</ul>
-</section>
-<section id="detalhes-e-exemplos" class="level2">
-<h2 class="anchored" data-anchor-id="detalhes-e-exemplos">Detalhes e exemplos</h2>
-<p>Portanto, <code>starts_with()</code> é utilizada para definir quais são as colunas sobre as quais <code>spark_map()</code> vai aplicar a função fornecida. Esta função realiza o processo inverso de <code>ends_with()</code>, isto é, ela pesquisa por todas as colunas cujo o nome se inicia por um texto específico. Sendo assim, com a expressão <code>starts_with("Score")</code>, <code>starts_with()</code> vai mapear todas as colunas cujo o nome se inicia pelo texto <code>"Score"</code>.</p>
-<p>Durante o processo de mapeamento, é utilizado sempre um <em>match</em> exato entre os <em>strings</em> pesquisados. Como resultado, uma expressão como <code>starts_with("Sales")</code> não é capaz de mapear colunas como <code>"sales_brazil"</code>, <code>"sales_colombia"</code> e <code>"sales_eua"</code>, porém, é capaz de mapear colunas como <code>"Sales_france"</code> e <code>"Sales_russia"</code>. Se você precisa ser mais flexível em seu mapeamento, é provável que você deseja utilizar a função <code>matches()</code> ao invés de <code>starts_with()</code>.</p>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> starts_with</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dados <span class="op">=</span> [</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(dados, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'Sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'Sales_russia'</span>])</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>spark_map(sales, starts_with(<span class="st">'Sales'</span>), F.mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<pre><code>Selected columns by `spark_map()`: Sales_france, Sales_russia
-
-+------------+------------------+
-|Sales_france|      Sales_russia|
-+------------+------------------+
-|     16600.0|33087.333333333336|
-+------------+------------------+</code></pre>
+<section id="remember-to-include-the-current-directory-in-the-search-path" class="level2">
+<h2 class="anchored" data-anchor-id="remember-to-include-the-current-directory-in-the-search-path">Remember to include the current directory in the search path</h2>
+<p>To test the package, you have to make sure that the root directory of the project of the package is included in the search path of the python interpreter (i.e.&nbsp;the <code>PYTHONPATH</code> variable). To do make life easier, the following rule is included in the <code>pyproject.toml</code> file:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="dt">tool</span><span class="kw">.</span><span class="dt">pytest</span><span class="kw">.</span><span class="dt">ini_options</span><span class="kw">]</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">pythonpath</span> <span class="op">=</span> <span class="op">[</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"."</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With the above rule, the root directory of the project should be included automatically when you run the tests with the <code>pytest</code> command. You can read more about this rule in the <code>pytest</code> documentation<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 
 
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><a href="https://docs.pytest.org/en/7.1.x/reference/reference.html#confval-pythonpath" class="uri">https://docs.pytest.org/en/7.1.x/reference/reference.html#confval-pythonpath</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
