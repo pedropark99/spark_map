@@ -48,7 +48,7 @@ Selected columns by `spark_map()`: month, france_Sales, brazil_sales
 +-----+------------+------------+
 ```
 
-When providing a zero index, you should always set the `zero_index` argument to `True`. When the `zero_index` argument is set to `False`, `at_position()` will automatically subtract 1 from all indexes. So an index equal to zero becomes an index equal to -1, and negative indexes are not allowed by `at_position()`. See the example below:
+When providing a zero index, you should always set the `zero_index` argument to `True`. Because when the `zero_index` argument is set to `False`, `at_position()` will automatically subtract 1 from all indexes, and, as a consequence, an index equal to zero becomes an index equal to -1, and negative indexes are not allowed by `at_position()`. See the example below:
 
 ```{python}
 at_position(0, 2, 4)
@@ -58,14 +58,14 @@ at_position(0, 2, 4)
 ValueError: One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?
 ```
 
-Furthermore, any duplicate index is automatically eliminated by `at_position()`. See the example below in which the indexes 1 and 4 are repeated during the call to `at_position()`, but they are automatically eliminated in the function result.
+Furthermore, any duplicated index is automatically eliminated by `at_position()`. See the example below in which the indexes 1 and 4 are repeated during the call to `at_position()`, but they are automatically eliminated in the function result.
 
 ```{python}
 at_position(1, 1, 2, 3, 4, 4, 5)
 ```
 
 ```{python}
-{'fun': '__at_position', 'val': (0, 1, 2, 3, 4)}
+{'fun': 'at_position', 'val': [0, 1, 2, 3, 4]}
 ```
 
 Furthermore, the indexes given to `at_position()` must not be inside a list, if you make this mistake, the function will raise a `ValueError`, as shown below:
@@ -79,10 +79,16 @@ ValueError: Did you provided your column indexes inside a list? You should not e
 
 Column indexes are a required argument. So, if you don't provide any index, `at_position()` will necessarily raise a `ValueError`, as shown below:
 
-
 ```{python}
 at_position(zero_index = True)
 ```
 ```{python}
 ValueError: You did not provided any index for `at_position()` to search
 ```
+
+Furthermore, is important to be careful to select a set of indexes that are inside of your DataFrame boudaries. In other words, if you try to select the 10th column of a DataFrame that have only 5 columns, you will get an `IndexError`, telling that your index is out of range:
+
+```{python}
+spark_map(sales, at_position(10), mean)
+```
+

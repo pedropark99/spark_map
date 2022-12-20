@@ -49,7 +49,7 @@ Selected columns by `spark_map()`: month, france_Sales, brazil_sales
 +-----+------------+------------+
 ```
 
-Ao fornecer um índice zero, você sempre deve configurar o argumento `zero_index` para `True`. Quando o argumento `zero_index` está setado para `False`, `at_position()` vai automaticamente subtrair 1 de todos os índices. Logo, um índice igual a zero, se torna um índice igual a -1, e índices negativos não são permitidos por `at_position()`. Veja o exemplo abaixo:
+Ao fornecer um índice zero, você sempre deve configurar o argumento `zero_index` para `True`. Pois quando o argumento `zero_index` está setado para `False`, `at_position()` vai automaticamente subtrair 1 de todos os índices, e, como resultado, um índice igual a zero, se torna um índice igual a -1, e índices negativos não são permitidos por `at_position()`. Veja o exemplo abaixo:
 
 ```{python}
 at_position(0, 2, 4)
@@ -86,5 +86,12 @@ at_position(zero_index = True)
 ```
 ```{python}
 ValueError: 'You did not provided any index for `at_position()` to search'.
+```
+
+
+Além disso, é importante você ter cuidado em fornecer um conjunto de índices que esteja dentro do limite de seu DataFrame. Em outras palavras, se você tentar selecionar a décima coluna de um DataFrame que só possui 5 colunas, você vai ter como resultado um `IndexError` te descrevendo que o seu índice está fora dos limites (*index out of bounds*):
+
+```{python}
+spark_map(sales, at_position(10), mean)
 ```
 
