@@ -5,4 +5,5 @@ spark = SparkSession.builder.getOrCreate()
 
 students = spark.read.parquet("data/students.parquet")
 transf = spark.read.parquet("data/transf.parquet")
-transf.printSchema()
+stock_prices = spark.read.parquet("data/stock-prices-dija.parquet")
+stock_prices.show()
