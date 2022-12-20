@@ -1,0 +1,82 @@
+---
+title: "`spark_across()`"
+execute:
+  eval: false
+---
+
+
+## Description
+
+With `spark_across()` you can easily apply a function over multiple columns of a Spark DataFrame (i.e. `DataFrame`). In short, `spark_across()` use the `withColumn()` DataFrame method to apply your function over the mapped columns. This function is heavily inspired in the `dplyr::across()` function, from the R package `dplyr`^[<https://dplyr.tidyverse.org/reference/across.html>].
+
+## Arguments
+
+- `table`: a Spark DataFrame (i.e. `pyspark.sql.dataframe.DataFrame`);
+- `mapping`: the mapping that defines the columns where you want to apply `function` (read the article [**"Building the mapping"**](https://github.com/pedropark99/spark_map/blob/main/doc/english/articles/building-mapping.md));
+- `function`: the function you want to apply to each column defined in `mapping`;
+- `**kwargs`: named arguments to be passed to the function defined in `function`;
+
+
+## Details and examples
+
+As an example, consider the `students` DataFrame below:
+
+```{python}
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+
+d = [
+  (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),
+  (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),
+  (10045, 'George', 29, 1.77, 10, 9, 10, 7, 'Law', 'SC'),
+  (12459, 'Adeline', 26, 1.61, 8, 6, 7, 7, 'Law', 'SC'),
+  (10190, 'Mayla', 22, 1.67, 7, 7, 7, 9, 'Design', 'AR'),
+  (11552, 'Daniel', 24, 1.75, 9, 9, 10, 9, 'Design', 'AR')
+]
+
+columns = [
+  'StudentID', 'Name', 'Age', 'Height', 'Score1',
+  'Score2', 'Score3', 'Score4', 'Course', 'Department'
+]
+
+students = spark.createDataFrame(d, columns)
+students.show(truncate = False)
+```
+
+```
++---------+-------+---+------+------+------+------+------+---------+----------+
+|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|
++---------+-------+---+------+------+------+------+------+---------+----------+
+|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |
+|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |
+|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |
+|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |
+|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |
+|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |
++---------+-------+---+------+------+------+------+------+---------+----------+
+```
+
+Suppose you want to cast all columns of this DataFrame `students` that starts with the text `"Score"` to the `DoubleType()`. The `spark_across()` function allows you to perform this calculation in an extremely simple and clear way, as shown below:
+
+```{python}
+from pyspark.sql.functions import cast
+from spark_map.functions import spark_map
+from spark_map.mapping import starts_with
+
+spark_across(students, starts_with('Score'), cast, 'double')\
+    .show(truncate = False)
+```
+```
+Selected columns by `spark_map()`: Score1, Score2, Score3, Score4
+
++---------+-------+---+------+------+------+------+------+---------+----------+
+|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|
++---------+-------+---+------+------+------+------+------+---------+----------+
+|12114    |Anne   |21 |1.56  |8.0   |9.0   |10.0  |9.0   |Economics|SC        |
+|13007    |Adrian |23 |1.82  |6.0   |6.0   |8.0   |7.0   |Economics|SC        |
+|10045    |George |29 |1.77  |10.0  |9.0   |10.0  |7.0   |Law      |SC        |
+|12459    |Adeline|26 |1.61  |8.0   |6.0   |7.0   |7.0   |Law      |SC        |
+|10190    |Mayla  |22 |1.67  |7.0   |7.0   |7.0   |9.0   |Design   |AR        |
+|11552    |Daniel |24 |1.75  |9.0   |9.0   |10.0  |9.0   |Design   |AR        |
++---------+-------+---+------+------+------+------+------+---------+----------+
+```
