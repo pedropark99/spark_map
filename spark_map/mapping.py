@@ -1,3 +1,4 @@
+import re
 from pyspark.sql.types import StructType
 from pyspark.sql.types import (
   StringType
@@ -7,10 +8,17 @@ from pyspark.sql.types import (
   , DateType
   , TimestampType
 )
-import re
 
 
-from spark_map.utils import __check_list_input, __check_string_input, __is_string
+
+from spark_map.utils import (
+  __check_list_input
+  , __check_string_input
+  , __is_string
+)
+
+
+
 
     
 def all_of(list_cols:list[str]):
