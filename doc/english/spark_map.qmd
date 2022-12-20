@@ -7,11 +7,11 @@ execute:
 
 ## Description
 
-With `spark_map()` you are able to apply a function over multiple columns of a Spark DataFrame. In short, `spark_map()` takes a Spark DataFrame as *input* and returns a new Spark DataFrame (aggregated by the function you provided) as *output*.
+With `spark_map()` you are easily apply a aggregate function over multiple columns of a Spark DataFrame (i.e. `DataFrame`), or a grouped Spark DataFrame (i.e. `GroupedData`). In short, `spark_map()` use the `agg()` DataFrame method to apply your function over the mapped columns. This means that `spark_map()` takes a Spark DataFrame as *input* and returns a new Spark DataFrame (aggregated by the function you provided) as *output*.
 
 ## Arguments
 
-- `table`: a Spark DataFrame or a grouped DataFrame (i.e. `pyspark.sql.DataFrame` or `pyspark.sql.GroupedData`);
+- `table`: a Spark DataFrame or a grouped DataFrame (i.e. `pyspark.sql.dataframe.DataFrame` or `pyspark.sql.group.GroupedData`);
 - `mapping`: the mapping that defines the columns where you want to apply `function` (read the article [**"Building the mapping"**](https://github.com/pedropark99/spark_map/blob/main/doc/english/articles/building-mapping.md));
 - `function`: the function you want to apply to each column defined in `mapping`;
 
@@ -73,7 +73,7 @@ Selected columns by `spark_map()`: Age, Height, Score1
 +------------------+------------------+------+
 ```
 
-If you want your calculation to be applied by group, just provide the grouped table to `spark_map()`. For example, suppose you wanted to calculate the same averages as in the example above, but within each department:
+If you want your calculation to be applied by group, just provide the grouped DataFrame to `spark_map()`. For example, suppose you wanted to calculate the same averages as in the example above, but within each department:
 
 ```{python}
 by_department = students.groupBy('Department')
@@ -94,9 +94,9 @@ Selected columns by `spark_map()`: Age, Height, Score1
 
 ## You define the calculation and `spark_map()` distributes it
 
-All `spark_map()` does is apply any function to a set of columns in your DataFrame. And this function can be any function, as long as it is an aggregator function (that is, a function that can be used inside the `pyspark.sql.DataFrame.agg()` and `pyspark.sql.GroupedData.agg()` methods). As long as your function meets this requirement, you can define whatever calculation formula you want, and use `spark_map()` to spread that calculation over multiple columns.
+All `spark_map()` does is apply any function to a set of columns in your DataFrame. And this function can be any function, as long as it is an aggregator function (that is, a function that can be used inside the `pyspark.sql.dataframe.DataFrame.agg()` and `pyspark.sql.group.GroupedData.agg()` methods). As long as your function meets this requirement, you can define whatever calculation formula you want, and use `spark_map()` to spread that calculation over multiple columns.
 
-As an example, suppose you needed to use a little inference to test whether the average of the various Student Scores significantly deviates from 6, through the statistic produced by a *t* test:
+As an example, suppose you needed to use a little of inference to test whether the average of the various Student Scores significantly deviates from 6, through the statistic produced by a t test:
 
 ```{python}
 from spark_map.mapping import starts_with
