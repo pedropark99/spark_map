@@ -3,54 +3,43 @@ from pyspark.sql.types import TimestampType, StringType, DateType, IntegerType, 
 import re
 
 
-def __is_string(x):
-  return isinstance(x, str)
-
-def __check_string_input(x, mapping_function: str):
-  if __is_string(x):
-    return(True)
-  else:
-    raise TypeError(f"Input of `{mapping_function}` needs to be a string (data of type `str`). Not {type(x)}.")
-
-
-
+from spark_map.utils import __check_list_input, __check_string_input
 
     
-def all_of(list_cols: list):
+def all_of(list_cols:list[str]):
+  __check_list_input(list_cols, str, "all_of()")
   return {'fun': 'all_of', 'val': list_cols}
     
-def matches(regex: str):
+def matches(regex:str):
   __check_string_input(regex, "matches()")
   return {'fun': "matches", 'val': regex} 
 
   
-def at_position(*indexes, zero_index = False):
-  if len(indexes) == 0:
-    raise ValueError("You did not provided any index for `at_position()` to search")
-  if isinstance(indexes[0], list):
-    raise ValueError("Did you provided your column indexes inside a list? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.")  
+def at_position(*indexes:list[int], zero_index:bool = False):
+  __check_list_input(indexes, int, "at_position()")
+
   if zero_index == False:
     indexes = [index - 1 for index in indexes]
-  
   # Check if any of the indexes are negative:
   negative = [index < 0 for index in indexes]
   if any(negative):
     raise ValueError("One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?")
-    
+
   # Transform to `set` to avoid duplicated indexes
   indexes = list(set(indexes))
+  indexes.sort()
   return {'fun': "at_position", 'val': indexes}
 
 
-def starts_with(text: str):
+def starts_with(text:str):
   __check_string_input(text, "starts_with()")
   return {'fun': "starts_with", 'val': text}
 
-def ends_with(text: str):
+def ends_with(text:str):
   __check_string_input(text, "ends_with()")
   return {'fun': "ends_with", 'val': text}
 
-def are_of_type(arg_type: str):
+def are_of_type(arg_type:str):
   __check_string_input(arg_type, "are_of_type()")
   valid_types = ['string', 'int', 'long', 'double', 'date', 'datetime']
   if arg_type not in valid_types:
@@ -66,7 +55,7 @@ def are_of_type(arg_type: str):
 
 
 
-def __map_columns(mapping, cols: list, schema: StructType):
+def __map_columns(mapping, cols:list, schema:StructType):
   mapping_function = mapping['fun']
   mapping_value = mapping['val']
   if __is_string(mapping_function):
@@ -98,15 +87,15 @@ class Mapping:
     
     
   
-    def all_of(self, list_cols: list, cols: list, schema: StructType):
+    def all_of(self, list_cols:list[str], cols:list[str], schema:StructType):
       selected_cols = [col for col in list_cols if col in cols]
       self.mapped_cols = selected_cols
 
-    def at_position(self, indexes, cols: list, schema: StructType):
+    def at_position(self, indexes:list[int], cols:list[str], schema:StructType):
       selected_cols = [cols[i] for i in indexes]
       self.mapped_cols = selected_cols
 
-    def ends_with(self, text: str, cols: list, schema: StructType):
+    def ends_with(self, text:str, cols:list[str], schema:StructType):
       selected_cols = list()
       for col in cols:
         if col.endswith(text):
@@ -114,7 +103,7 @@ class Mapping:
 
       self.mapped_cols = selected_cols
 
-    def starts_with(self, text: str, cols: list, schema: StructType):
+    def starts_with(self, text:str, cols:list[str], schema:StructType):
       selected_cols = list()
       for col in cols:
         if col.startswith(text):
@@ -123,13 +112,13 @@ class Mapping:
       self.mapped_cols = selected_cols
 
 
-    def matches(self, regex: str, cols: list, schema: StructType):
+    def matches(self, regex:str, cols:list[str], schema:StructType):
       regex = re.compile(regex)
       selected_cols = [col for col in cols if re.match(regex, col)]
       self.mapped_cols = selected_cols
 
 
-    def are_of_type(self, str_type: str, cols: list, schema: StructType):
+    def are_of_type(self, str_type:str, cols:list[str], schema:StructType):
       valid_types = {
         'int' : IntegerType(), 'double' : DoubleType(), 
         'string' : StringType(), 'date' : DateType(),
