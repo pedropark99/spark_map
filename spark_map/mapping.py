@@ -3,7 +3,7 @@ from pyspark.sql.types import TimestampType, StringType, DateType, IntegerType, 
 import re
 
 
-from spark_map.utils import __check_list_input, __check_string_input
+from spark_map.utils import __check_list_input, __check_string_input, __is_string
 
     
 def all_of(list_cols:list[str]):
