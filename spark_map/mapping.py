@@ -1,5 +1,12 @@
 from pyspark.sql.types import StructType
-from pyspark.sql.types import TimestampType, StringType, DateType, IntegerType, LongType, DoubleType
+from pyspark.sql.types import (
+  StringType
+  , IntegerType
+  , LongType
+  , DoubleType
+  , DateType
+  , TimestampType
+)
 import re
 
 
