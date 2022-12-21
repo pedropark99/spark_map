@@ -6,11 +6,7 @@
 
 # Overview
 
-`spark_map` is a python package that offers some tools to easily apply a function over multiple columns of Apache Spark DataFrames, using `pyspark`. You could say that `spark_map` offers an implementation for the `map()` python function for Spark DataFrames. There are two main functions in the package that performs the heavy work, which are `spark_map()` and `spark_across()`.
-
-Both of these functions perform the same work, which is to apply a function over multiple columns of a Spark DataFrame. But they differ in the method they use to apply this function. `spark_map()` uses the `agg()` method of Spark DataFrame's to apply the function, and `spark_across()` uses the `withColumn()` method to do so.
-
-This means that you will mainly use `spark_map()` when you want to calculate aggregates of each column. Is worthy pointing out that `spark_map()` works perfectly with grouped DataFrames as well (i.e. `GroupedData`). In the other hand, you will use `spark_across()` when you want to just transform the values of multiple colums at once by applying the same function over them.
+`spark_map` is a python package that offers some tools that help you to apply a function over multiple columns of Apache Spark DataFrames, using `pyspark`. The package offers two main functions (or "two main methods") to distribute your calculations, which are `spark_map()` and `spark_across()`. Furthermore, the package offers several methods to map (or select) the columns to which you want to apply your calculations (these methods are called *mapping methods* in the package).
 
 # Installation
 
@@ -22,87 +18,54 @@ pip install spark_map
 
 # Documentation
 
-The full documentation for `spark_map` package is available at the [website of the package](https://pedropark99.github.io/spark_map/). To access it, just use the `Function Reference` and `Articles` menus located at the top navigation bar of the website. All documentation is available both in [english](https://pedropark99.github.io/spark_map/reference-en.html) and in [portuguese](https://pedropark99.github.io/spark_map/reference-ptbr.html) languages.
+The full documentation for `spark_map` package is available at the [website of the package](https://pedropark99.github.io/spark_map/). To access it, just use the `Function Reference` and `Articles` menus located at the top navigation bar of the website.
 
 
 
-# A simple example of use
+# What problem `spark_map` solves?
 
-As an example, consider the `students` DataFrame below:
-
-```python
-from pyspark.sql import SparkSession
-spark = SparkSession.builder.getOrCreate()
-
-d = [
-  (12114, 'Anne', 21, 1.56, 8, 9, 10, 9, 'Economics', 'SC'),
-  (13007, 'Adrian', 23, 1.82, 6, 6, 8, 7, 'Economics', 'SC'),
-  (10045, 'George', 29, 1.77, 10, 9, 10, 7, 'Law', 'SC'),
-  (12459, 'Adeline', 26, 1.61, 8, 6, 7, 7, 'Law', 'SC'),
-  (10190, 'Mayla', 22, 1.67, 7, 7, 7, 9, 'Design', 'AR'),
-  (11552, 'Daniel', 24, 1.75, 9, 9, 10, 9, 'Design', 'AR')
-]
-
-columns = [
-  'StudentID', 'Name', 'Age', 'Height', 'Score1',
-  'Score2', 'Score3', 'Score4', 'Course', 'Department'
-]
-
-students = spark.createDataFrame(d, columns)
-students.show(truncate = False)
-```
-
-```
-+---------+-------+---+------+------+------+------+------+---------+----------+
-|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|
-+---------+-------+---+------+------+------+------+------+---------+----------+
-|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |
-|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |
-|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |
-|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |
-|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |
-|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |
-+---------+-------+---+------+------+------+------+------+---------+----------+
-```
-
-Suppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The `spark_map()` function allows you to perform this calculation in an extremely simple and clear way, as shown below:
+When you work a lot with data pipelines using Apache Spark and `pyspark`, at some day, you might find yourself writing a very long `agg()` statement to aggregate multiple columns of my Spark DataFrame with the same function, like this one below:
 
 ```python
-from pyspark.sql.functions import mean
-from spark_map import spark_map, at_position
-
-spark_map(students, at_position(3, 4, 5), mean)\
-  .show(truncate = False)
+from pyspark.sql.functions import sum, column
+aggregates = (
+    spark.table('cards.detailed_sales_per_user')
+        .groupBy('day')
+        .agg(
+            sum(column('cards_lite')).alias('cards_lite'),
+            sum(column('cards_silver')).alias('cards_silver'),
+            sum(column('cards_gold')).alias('cards_gold'),
+            sum(column('cards_premium')).alias('cards_premium'),
+            sum(column('cards_enterprise')).alias('cards_enterprise'),
+            sum(column('cards_business')).alias('cards_business')
+        )
+)
 ```
+The problem with this code is that: it is not elegant; and it is error-prone. Because it involves copy and paste, and very subtle changes in each line. Following the golden rule of DRY (*do not repeat yourself*), we need a better way to write this code. That is the exact problem that `spark_map` solves for you!
 
-```
-Selected columns by `spark_map()`: Age, Height, Score1
-
-+------------------+------------------+------+
-|Age               |Height            |Score1|
-+------------------+------------------+------+
-|24.166666666666668|1.6966666666666665|8.0   |
-+------------------+------------------+------+
-```
-
-
-If you want your calculation to be applied by group, just provide the grouped table to `spark_map()`. For example, suppose you wanted to calculate the same averages as in the example above, but within each department:
+When you want to apply the same function (like `sum()`) over multiple columns of a Spark DataFrame (like `spark.table('cards.detailed_sales_per_user')`) that might be grouped by a variable (like `day`), you can use the `spark_map` package, to declare this operation in a much better, elegant and concise way, by using the `spark_map()` function.
 
 ```python
-by_department = students.groupBy('Department')
-spark_map(by_department, at_position(3, 4, 5), mean).show()
+from spark_map.functions import spark_map
+from spark_map.mapping import starts_with
+grouped_by_day = spark.table('cards.detailed_sales_per_user')\
+    .groupBy('day')
+
+aggregates = spark_map(grouped_by_day, starts_with('cards'), sum)
 ```
 
-```
-Selected columns by `spark_map()`: Age, Height, Score1
+# How `spark_map()` works ?
 
-+----------+-----+------------------+------+
-|Department|  Age|            Height|Score1|
-+----------+-----+------------------+------+
-|        SC|24.75|1.6900000000000002|   8.0|
-|        AR| 23.0|              1.71|   8.0|
-+----------+-----+------------------+------+
-```
+The `spark_map()` function receives three inputs, which are `table` (i.e. the Spark DataFrame you want to use), `mapping` (i.e. a "mapping" that describes which columns you want to apply your function), and `function` (i.e. the function you want to apply to each column in the Spark DataFrame).
 
+In short, the `starts_with('cards')` section tells `spark_map()` that you want to apply the input function on all columns of `grouped_by_day` whose name starts with the text `'cards'`. In other words, all `spark_map()` does is to apply the function you want (in the above example this function is `sum()`) to whatever column it finds in the input DataFrame which fits in the description of your mapping method.
+
+You can use different mapping methods to select the columns of your DataFrame, and the package offers several built-in methods which can be very useful for you, which are available through the `spark_map.mapping` module of the package. You can select columns based on:
+
+- `at_position()`: their position (i.e. 3rd, 4th and 5th columns);
+- `matches()`: a regex to which their match;
+- `are_of_type()`: the type of data their store (i.e. all columns of type `int`);
+- `starts_with()` and `ends_with()`: its name starting or ending with a particular pattern;
+- `all_of()`: its name being inside a specific list of options;
 
 
