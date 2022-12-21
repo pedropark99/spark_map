@@ -4,7 +4,7 @@
     "href": "reference-en.html",
     "title": "Function reference",
     "section": "",
-    "text": "Here, we have a list of all documented functions in the spark_map package.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nall_of()\n\n\n\n\n\n\nare_of_type()\n\n\n\n\n\n\nat_position()\n\n\n\n\n\n\nends_with()\n\n\n\n\n\n\nmatches()\n\n\n\n\n\n\nspark_map()\n\n\n\n\n\n\nstarts_with()\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Here, we have a list of all documented functions in the spark_map package.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nall_of()\n\n\n\n\n\n\nare_of_type()\n\n\n\n\n\n\nat_position()\n\n\n\n\n\n\nends_with()\n\n\n\n\n\n\nmatches()\n\n\n\n\n\n\nspark_across()\n\n\n\n\n\n\nspark_map()\n\n\n\n\n\n\nstarts_with()\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "portuguese/matches.html",
@@ -277,7 +277,7 @@
     "href": "english/all_of.html",
     "title": "all_of()",
     "section": "",
-    "text": "Map all columns of your Spark DataFrame whose name is included in a string list. This function is one of several existing mapping functions (read the article “Building the mapping”)."
+    "text": "import sys\nsys.path.append(\"../../.\")"
   },
   {
     "objectID": "english/all_of.html#arguments",
@@ -291,7 +291,7 @@
     "href": "english/all_of.html#details-and-examples",
     "title": "all_of()",
     "section": "Details and examples",
-    "text": "Details and examples\nTherefore, all_of() is used to define which columns spark_map() will apply the given function to. You can use this function, when you want to allow a set of columns to be mapped, but for some reason you don’t know in advance if all these columns (or a part of them) will be available in your Spark DataFrame.\nYou must give all_of() a list of strings. Each string represents the name of a column that can be mapped. As an example, the expression all_of(['sales_france', 'sales_brazil', 'sales_colombia']) allows columns named \"sales_france\", \"sales_brazil\" and \"sales_colombia\" to be mapped by spark_map(). However, spark_map() doesn’t necessarily need to find all these columns at once. That is, all_of() makes these columns “optional”, so spark_map() can find all three columns, or only two, or even just one of these columns. See the example below:\n\nfrom pyspark.sql import SparkSession\nfrom spark_map.functions import spark_map\nfrom spark_map.mapping import all_of\nspark = SparkSession.builder.getOrCreate()\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'sales_france', 'sales_brazil', 'sales_russia'])\n\nspark_map(\n    sales,\n    all_of(['sales_france', 'sales_brazil', 'sales_colombia']),\n    F.mean\n  )\\\n  .show()\n\nSelected columns by `spark_map()`: sales_france, sales_brazil\n\n+------------+------------+\n|sales_france|sales_brazil|\n+------------+------------+\n|     16600.0|     24600.0|\n+------------+------------+\nHowever, it is worth noting that spark_map() must find at least one of the columns defined in all_of(). If it doesn’t, spark_map() will raise a KeyError warning that no column could be found with the mapping you defined.\n\nspark_map(sales, all_of(['sales_italy']), F.mean).show()\n\n\nKeyError: '`spark_map()` did not find any column that matches your mapping!'"
+    "text": "Details and examples\nTherefore, all_of() is used to define which columns spark_map() will apply the given function to. You can use this function, when you want to allow a set of columns to be mapped, but for some reason you don’t know in advance if all these columns (or a part of them) will be available in your Spark DataFrame.\nYou must give all_of() a list of strings. Each string represents the name of a column that can be mapped. As an example, the expression all_of(['sales_france', 'sales_brazil', 'sales_colombia']) allows columns named \"sales_france\", \"sales_brazil\" and \"sales_colombia\" to be mapped by spark_map(). However, spark_map() doesn’t necessarily need to find all these columns at once. That is, all_of() makes these columns “optional”, so spark_map() can find all three columns, or only two, or even just one of these columns. See the example below:\n\nfrom pyspark.sql import SparkSession\nfrom pyspark.sql.functions import mean\nfrom spark_map.functions import spark_map\nfrom spark_map.mapping import all_of\nspark = SparkSession.builder.getOrCreate()\n\ndata = [\n  (2022, 1, 12300, 41000, 36981),\n  (2022, 2, 19120, 21300, 31000),\n  (2022, 3, 18380, 11500, 31281)\n]\n\nsales = spark.createDataFrame(data, ['year', 'month', 'sales_france', 'sales_brazil', 'sales_russia'])\n\nspark_map(\n    sales,\n    all_of(['sales_france', 'sales_brazil', 'sales_colombia']),\n    mean\n  )\\\n  .show()\n\nSelected columns by `spark_map()`: sales_france, sales_brazil\n\n\n\n[Stage 0:>                                                        (0 + 12) / 12]\n\n\n+------------+------------+\n|sales_france|sales_brazil|\n+------------+------------+\n|     16600.0|     24600.0|\n+------------+------------+\n\n\n\n                                                                                \n\n\nHowever, it is worth noting that spark_map() must find at least one of the columns defined in all_of(). If it doesn’t, spark_map() will raise a KeyError warning that no column could be found with the mapping you defined.\n\nspark_map(sales, all_of(['sales_italy']), mean).show()\n\nKeyError: '`spark_map()` did not found any column that matches your mapping!'"
   },
   {
     "objectID": "english/spark_map.html",
@@ -439,5 +439,12 @@
     "title": "Artigos",
     "section": "",
     "text": "Nesta página, temos uma lista de todos os artigos (isto é, documentações longas) sobre o pacote spark_map.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nConstruindo o mapeamento\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "english/all_of.html#description",
+    "href": "english/all_of.html#description",
+    "title": "all_of()",
+    "section": "Description",
+    "text": "Description\nMap all columns of your Spark DataFrame whose name is included in a string list. This function is one of several existing mapping functions (read the article “Building the mapping”)."
   }
 ]

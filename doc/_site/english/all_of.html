@@ -225,6 +225,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sys.path.append(<span class="st">"../../."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <section id="description" class="level2">
 <h2 class="anchored" data-anchor-id="description">Description</h2>
 <p>Map all columns of your Spark DataFrame whose name is included in a string list. This function is one of several existing mapping functions (read the article <a href="../english/articles/building-mapping.html"><strong>“Building the mapping”</strong></a>).</p>
@@ -239,40 +243,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="details-and-examples">Details and examples</h2>
 <p>Therefore, <code>all_of()</code> is used to define which columns <code>spark_map()</code> will apply the given function to. You can use this function, when you want to allow a set of columns to be mapped, but for some reason you don’t know in advance if all these columns (or a part of them) will be available in your Spark DataFrame.</p>
 <p>You must give <code>all_of()</code> a list of <em>strings</em>. Each <em>string</em> represents the name of a column that can be mapped. As an example, the expression <code>all_of(['sales_france', 'sales_brazil', 'sales_colombia'])</code> allows columns named <code>"sales_france"</code>, <code>"sales_brazil"</code> and <code>"sales_colombia"</code> to be mapped by <code>spark_map()</code>. However, <code>spark_map()</code> doesn’t necessarily need to find all these columns at once. That is, <code>all_of()</code> makes these columns “optional”, so <code>spark_map()</code> can find all three columns, or only two, or even just one of these columns. See the example below:</p>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> all_of</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(data, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_russia'</span>])</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>spark_map(</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    sales,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    all_of([<span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_colombia'</span>]),</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    F.mean</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  )<span class="op">\</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  .show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> mean</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> all_of</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(data, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_russia'</span>])</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>spark_map(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    sales,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    all_of([<span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_colombia'</span>]),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    mean</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  )<span class="op">\</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  .show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
 <pre><code>Selected columns by `spark_map()`: sales_france, sales_brazil
-
-+------------+------------+
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 0:&gt;                                                        (0 + 12) / 12]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+------------+------------+
 |sales_france|sales_brazil|
 +------------+------------+
 |     16600.0|     24600.0|
-+------------+------------+</code></pre>
-<p>However, it is worth noting that <code>spark_map()</code> <strong>must find at least one of the columns defined</strong> in <code>all_of()</code>. If it doesn’t, <code>spark_map()</code> will raise a <code>KeyError</code> warning that no column could be found with the mapping you defined.</p>
-<div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>spark_map(sales, all_of([<span class="st">'sales_italy'</span>]), F.mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
++------------+------------+
+</code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                                </code></pre>
+</div>
+</div>
+<p>However, it is worth noting that <code>spark_map()</code> <strong>must find at least one of the columns defined</strong> in <code>all_of()</code>. If it doesn’t, <code>spark_map()</code> will raise a <code>KeyError</code> warning that no column could be found with the mapping you defined.</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">KeyError</span>: <span class="st">'`spark_map()` did not find any column that matches your mapping!'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>spark_map(sales, all_of([<span class="st">'sales_italy'</span>]), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>KeyError: '`spark_map()` did not found any column that matches your mapping!'</code></pre>
+</div>
 </div>
 
 

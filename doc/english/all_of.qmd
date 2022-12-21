@@ -1,8 +1,15 @@
 ---
 title: "`all_of()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| echo: false
+import sys
+sys.path.append("../../.")
+```
+
 
 ## Description
 
@@ -20,6 +27,7 @@ You must give `all_of()` a list of *strings*. Each *string* represents the name 
 
 ```{python}
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import mean
 from spark_map.functions import spark_map
 from spark_map.mapping import all_of
 spark = SparkSession.builder.getOrCreate()
@@ -35,27 +43,16 @@ sales = spark.createDataFrame(data, ['year', 'month', 'sales_france', 'sales_bra
 spark_map(
     sales,
     all_of(['sales_france', 'sales_brazil', 'sales_colombia']),
-    F.mean
+    mean
   )\
   .show()
 ```
 
-```
-Selected columns by `spark_map()`: sales_france, sales_brazil
 
-+------------+------------+
-|sales_france|sales_brazil|
-+------------+------------+
-|     16600.0|     24600.0|
-+------------+------------+
-```
 
 However, it is worth noting that `spark_map()` **must find at least one of the columns defined** in `all_of()`. If it doesn't, `spark_map()` will raise a `KeyError` warning that no column could be found with the mapping you defined.
 
 ```{python}
-spark_map(sales, all_of(['sales_italy']), F.mean).show()
-```
-
-```{python}
-KeyError: '`spark_map()` did not find any column that matches your mapping!'
+#| error: true
+spark_map(sales, all_of(['sales_italy']), mean).show()
 ```
