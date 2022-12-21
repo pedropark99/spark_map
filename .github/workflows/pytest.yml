@@ -1,0 +1,23 @@
+name: Run unit tests of the package
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: pip install pytest pyspark
+
+      - name: Run tests
+        run: pytest
