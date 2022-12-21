@@ -13,7 +13,7 @@
 To get the latest version of `spark_map` at PyPI, use:
 
 ```bash
-pip install spark_map
+pip install spark-map
 ```
 
 # Documentation
