@@ -1,8 +1,20 @@
 ---
 title: Building the mapping
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| include: false
+import sys
+sys.path.append("../../../.")
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+sc.setLogLevel("OFF")
+```
+
 
 You need to provide a mapping to `spark_map()`. This mapping defines which columns `spark_map()` should apply the function given in the `function` argument. You can build this *mapping* using one of the mapping functions, which are as follows:
 
@@ -19,6 +31,7 @@ On the other hand, you may need to use another method to map the columns you are
 
 ```{python}
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import sum, max
 from spark_map.functions import spark_map
 from spark_map.mapping import starts_with
 spark = SparkSession.builder.getOrCreate()
@@ -39,12 +52,12 @@ columns = [
 
 students = spark.createDataFrame(d, columns)
 
-spark_map(students, starts_with("Score"), F.sum).show(truncate = False)
+spark_map(students, starts_with("Score"), sum).show(truncate = False)
 ```
 
 ```{python}
 from spark_map.mapping import matches
-spark_map(students, matches("(.+)[0-9]$"), F.sum).show(truncate = False)
+spark_map(students, matches("(.+)[0-9]$"), sum).show(truncate = False)
 ```
 
 
@@ -56,17 +69,11 @@ Basically, the mapping is just a small description containing the algorithm that
 from spark_map.mapping import at_position
 at_position(3, 4, 5)
 ```
-```{python}
-{'fun': 'at_position', 'val': (3, 4, 5)}
-```
 
 As another example, the result of the expression `matches('^Score')` is quite similar. However, unlike the previous example that uses a method called `at_position`, this time, the method/algorithm to be used is called `matches`, and `'^Score'` is the value that will be passed to this method.
 
 ```{python}
 matches('^Score')
-```
-```{python}
-{'fun': 'matches', 'val': '^Score'}
 ```
 
 Therefore, when you use one of the standard mapping functions that comes with `spark_map` package, a `dict` will be generated containing the name of the method/algorithm to be used to calculate the mapping, and, the input value that will be passed to this method. Upon receiving this `dict`, `spark_map()` or `spark_across()` will automatically search for the method/algorithm to be used inside the class `Mapping`, and it will execute this method. This means that all standard mapping methods/algorithms from the `spark_map` package are stored inside this `Mapping` class.
@@ -87,62 +94,34 @@ Therefore, the `value` argument of every mapping function will always receive as
 As an example, the `alphabetic_order()` function below maps the column that is in a specific position in the alphabetical order. This `alphabetic_order()` function only uses the `index` and `cols` arguments, even though it receives three arguments. In other words, the `schema` argument is just there to satisfy the conditions of `spark_map()` and `spark_across()`.
 
 ```{python}
+from pyspark.sql.types import StructType
 def alphabetic_order(index, cols: list, schema: StructType):
     cols.sort()
-    return cols[index]
+    return [cols[index]]
 ```
 
 One other requirement that we haven't covered yet is the return value of your mapping function. Your mapping function must always return a list of strings, which contain the names of the columns that were mapped by the function. If your mapping function does not find any columns during your search, it should return an empty list (i.e. `[]`).
 
-As a first demonstration, let's apply this `alphabetic_order()` function. For that, let's use the DataFrame spark `sales.sales_per_country` as an example. The column list of this DataFrame is shown below:
+As a first demonstration, let's apply this `alphabetic_order()` function in the DataFrame `students` as an example. The column list of this DataFrame is shown below:
 
 ```{python}
-sales = spark.table('sales.sales_per_country')
-print(sales.columns)
+print(students.columns)
 ```
 
-```{python}
-['year', 'month', 'country', 'idstore', 'totalsales']
-```
 
 Now, using the `alphabetic_order()` inside `spark_map()`:
 
 ```{python}
-spark_map(sales, {'fun' = alphabetic_order, 'val' = 1}, F.max)
-```
-
-```
-Selected columns by `spark_map()`: idstore
-
-+--------+
-| idstore|
-+--------+
-|    2300|
-+--------+
+spark_map(students, {'fun': alphabetic_order, 'val': 1}, max)
 ```
 
 
-<!--
-## Be careful when using custom mapping functions
-
-However, it is worth noting that if you try to use in your mapping a function that does not exist (ie a function that has not yet been defined in your session), you will get a `KeyError` as a result. Notice in the example below, where I try to use a function called `some_mapping_function()` with the value `'some_value'` to map the columns. Because `spark_map()` doesn't find any function named `some_mapping_function()` defined in my session, a `KeyError` ends up being raised. So, if you face this error when using `spark_map()`, investigate if you have correctly defined the function you want to use in your mapping.
-
-```{python}
-spark_map(students, {'fun': 'some_mapping_function', 'val': 'some_value'}, F.sum)
-```
-
-```{python}
-KeyError: 'some_mapping_function'
-```
--->
 
 ## If your mapping doesn't find any columns
 
 On the other hand, `spark_map()` will also raise a `KeyError`, in case the function you are using in your mapping doesn't find any columns in your DataFrame. However, in this case, `spark_map()` sends a clear message that no columns were found using the mapping you defined. As an example, we could reproduce this error, when trying to map in the DataFrame `students`, all the columns that start with the *string* `'april'`. A `KeyError` is raised in this case because there is no column in the `students` table whose name starts with the word "april".
 
 ```{python}
-spark_map(students, starts_with('april'), F.sum)
-```
-```{python}
-KeyError: `spark_map()` did not find any column that matches your mapping!
+#| error: true
+spark_map(students, starts_with('april'), sum)
 ```

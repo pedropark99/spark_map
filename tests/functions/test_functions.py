@@ -104,3 +104,8 @@ def test_mapping_are_of_type_error():
     with pytest.raises(KeyError) as info:
         spark_map(stock_prices, are_of_type("long"), count)
 
+def test_mapping_all_of_error():
+    # `stock_prices` have no columns named "a" or "b".
+    # As a consequence, the code below should not find any column:
+    with pytest.raises(KeyError) as info:
+        spark_map(stock_prices, all_of(["a", "b"]), count)
