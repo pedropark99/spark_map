@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "toml"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "spark_map"
-version = "0.2.6"
+version = "0.2.7"
 authors = [
   { name="Pedro Faria", email="pedropark99@gmail.com" }
 ]
@@ -19,7 +19,9 @@ classifiers = [
 ]
 
 dependencies = [
-    "pyspark"
+    "pyspark",
+    "setuptools",
+    "toml"
 ]
 
 [project.urls]

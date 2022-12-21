@@ -1,4 +1,3 @@
-from pypandoc import convert_file
 from setuptools import setup
 import toml
 
