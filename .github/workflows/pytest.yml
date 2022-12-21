@@ -19,5 +19,8 @@ jobs:
       - name: Install dependencies
         run: pip install pytest pyspark
 
+      - name: Check if Spark is installed
+        run: spark-shell --version
+
       - name: Run tests
         run: pytest
