@@ -8,6 +8,11 @@ execute:
 #| echo: false
 import sys
 sys.path.append("../../.")
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+sc.setLogLevel("OFF")
 ```
 
 
@@ -26,11 +31,9 @@ Therefore, `all_of()` is used to define which columns `spark_map()` will apply t
 You must give `all_of()` a list of *strings*. Each *string* represents the name of a column that can be mapped. As an example, the expression `all_of(['sales_france', 'sales_brazil', 'sales_colombia'])` allows columns named `"sales_france"`, `"sales_brazil"` and `"sales_colombia"` to be mapped by `spark_map()`. However, `spark_map()` doesn't necessarily need to find all these columns at once. That is, `all_of()` makes these columns "optional", so `spark_map()` can find all three columns, or only two, or even just one of these columns. See the example below:
 
 ```{python}
-from pyspark.sql import SparkSession
 from pyspark.sql.functions import mean
 from spark_map.functions import spark_map
 from spark_map.mapping import all_of
-spark = SparkSession.builder.getOrCreate()
 
 data = [
   (2022, 1, 12300, 41000, 36981),

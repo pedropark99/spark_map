@@ -8,6 +8,11 @@ execute:
 #| echo: false
 import sys
 sys.path.append("../../.")
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+sc.setLogLevel("OFF")
 ```
 
 
