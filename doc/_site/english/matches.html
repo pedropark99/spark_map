@@ -239,57 +239,84 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="details-and-examples">Details and examples</h2>
 <p>Therefore, <code>matches()</code> is used to define which columns <code>spark_map()</code> will apply the given function to. To use this function, you supply a <em>raw string</em> containing the regular expression you want to use. <strong>It is extremely important</strong> that you provide your expression within a <em>raw string</em> rather than a traditional <em>string</em>, especially if your expression includes special characters like TABs or new lines (<code>'\t'</code> or <code>'\n'</code>). In Python, <em>raw strings</em> are constructed by placing an <code>'r'</code> before the quotes in our <em>string</em>. Therefore, the expression <code>r'raw string'</code> represents a <em>raw string</em>, while <code>'string'</code> represents a traditional <em>string</em>.</p>
 <p>It is worth noting that the regular expression provided will be passed to the <code>re.match()</code> method, and will be applied to the name of each column of your Spark DataFrame. With that in mind, if your regular expression can’t find any column, it’s interesting that you investigate your error through the <code>re.match()</code> method. For example, suppose you have the DataFrame <code>pop</code> below. Suppose also that you want to map all columns that contain the string <code>'male'</code> somewhere. Note that no columns were found by <code>spark_map()</code>.</p>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> matches</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="st">'Brazil'</span>, <span class="dv">74077777</span>, <span class="dv">86581634</span>, <span class="dv">96536269</span>, <span class="dv">74925448</span>, <span class="dv">88208705</span>, <span class="dv">99177368</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  (<span class="st">'Colombia'</span>, <span class="dv">16315306</span>, <span class="dv">19427307</span>, <span class="dv">22159658</span>, <span class="dv">16787263</span>, <span class="dv">20202658</span>, <span class="dv">23063041</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  (<span class="st">'Russia'</span>, <span class="dv">69265950</span>, <span class="dv">68593139</span>, <span class="dv">66249411</span>, <span class="dv">78703457</span>, <span class="dv">78003730</span>, <span class="dv">76600057</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>pop <span class="op">=</span> spark.createDataFrame(</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  data,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  [<span class="st">'country'</span>, <span class="st">'pop_male_1990'</span>, <span class="st">'pop_male_2000'</span>, <span class="st">'pop_male_2010'</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>   <span class="st">'pop_female_1990'</span>, <span class="st">'pop_female_2000'</span>, <span class="st">'pop_female_2010'</span>]</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>spark_map(pop, matches(<span class="vs">r'male'</span>), F.<span class="bu">max</span>).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">KeyError</span>: <span class="st">'`spark_map()` did not found any column that matches your mapping!'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> <span class="bu">max</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> matches</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  (<span class="st">'Brazil'</span>, <span class="dv">74077777</span>, <span class="dv">86581634</span>, <span class="dv">96536269</span>, <span class="dv">74925448</span>, <span class="dv">88208705</span>, <span class="dv">99177368</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  (<span class="st">'Colombia'</span>, <span class="dv">16315306</span>, <span class="dv">19427307</span>, <span class="dv">22159658</span>, <span class="dv">16787263</span>, <span class="dv">20202658</span>, <span class="dv">23063041</span>),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  (<span class="st">'Russia'</span>, <span class="dv">69265950</span>, <span class="dv">68593139</span>, <span class="dv">66249411</span>, <span class="dv">78703457</span>, <span class="dv">78003730</span>, <span class="dv">76600057</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>pop <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  data,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  [<span class="st">'country'</span>, <span class="st">'pop_male_1990'</span>, <span class="st">'pop_male_2000'</span>, <span class="st">'pop_male_2010'</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>   <span class="st">'pop_female_1990'</span>, <span class="st">'pop_female_2000'</span>, <span class="st">'pop_female_2010'</span>]</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>22/12/20 22:31:19 WARN Utils: Your hostname, pedro-dev resolves to a loopback address: 127.0.1.1; using 192.168.0.90 instead (on interface wlp1s0)
+22/12/20 22:31:19 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>22/12/20 22:31:19 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>spark_map(pop, matches(<span class="vs">r'male'</span>), <span class="bu">max</span>).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>KeyError: '`spark_map()` did not found any column that matches your mapping!'</code></pre>
+</div>
 </div>
 <p>To investigate what is going wrong in this case, it is useful to separate the name of a column that should have been found and apply <code>re.match()</code> in isolation to that column. Note below that the result of the expression <code>re.match(r'male', name)</code> is <code>None</code>. This means that the regular expression <code>'male'</code> does not generate a match with the text <code>pop_male_1990</code>.</p>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">'pop_male_1990'</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="vs">r'male'</span>, name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">None</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">'pop_male_1990'</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="vs">r'male'</span>, name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>None</code></pre>
+</div>
 </div>
 <p>By testing various combinations and delving deeper into the problem, you may eventually find that the expression <code>'male'</code> is wrong as it represents an <strong>exact match</strong> with the text <code>'male'</code>. That is, with this expression, <code>re.match()</code> is able to find only the text <code>'male'</code> and nothing else. We can fix this problem by allowing an arbitrary number of characters to be found around the text <code>'male'</code>. For this, we circumvent <code>'male'</code> with the mini-expression <code>'(.+)'</code>, as shown below:</p>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">'pop_male_1990'</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="vs">r'(.+)male(.+)'</span>, name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="st">'pop_male_1990'</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(re.match(<span class="vs">r'(.+)male(.+)'</span>, name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;re.Match object; span=(0, 13), match='pop_male_1990'&gt;</code></pre>
 </div>
-<div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>re.Match <span class="bu">object</span><span class="op">;</span> span<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">13</span>), match<span class="op">=</span><span class="st">'pop_male_1990'</span><span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now that we’ve tested this new regular expression in <code>re.match()</code> we can return to the <code>matches()</code> function. Notice below that this time all the expected columns are found.</p>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>spark_map(pop, matches(<span class="vs">r'(.+)male(.+)'</span>), F.<span class="bu">max</span>).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>spark_map(pop, matches(<span class="vs">r'(.+)male(.+)'</span>), <span class="bu">max</span>).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
 <pre><code>Selected columns by `spark_map()`: pop_male_1990, pop_male_2000, pop_male_2010, pop_female_1990, pop_female_2000, pop_female_2010
-
-+-------------+-------------+-------------+---------------+---------------+---------------+
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 0:&gt;                                                        (0 + 12) / 12]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 0:====&gt;                                                    (1 + 11) / 12]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+-------------+-------------+-------------+---------------+---------------+---------------+
 |pop_male_1990|pop_male_2000|pop_male_2010|pop_female_1990|pop_female_2000|pop_female_2010|
 +-------------+-------------+-------------+---------------+---------------+---------------+
 |     74077777|     86581634|     96536269|       78703457|       88208705|       99177368|
-+-------------+-------------+-------------+---------------+---------------+---------------+</code></pre>
++-------------+-------------+-------------+---------------+---------------+---------------+
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                                </code></pre>
+</div>
+</div>
 
 
 </section>

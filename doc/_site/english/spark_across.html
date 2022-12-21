@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>spark_map - starts_with()</title>
+<title>spark_map - spark_across()</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -210,7 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><code>starts_with()</code></h1>
+<h1 class="title"><code>spark_across()</code></h1>
 </div>
 
 
@@ -227,69 +227,112 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="description" class="level2">
 <h2 class="anchored" data-anchor-id="description">Description</h2>
-<p>Map all columns of your Spark DataFrame whose name starts with a specific text. This function is one of several existing mapping functions (read the article <a href="../english/articles/building-mapping.html"><strong>“Building the mapping”</strong></a>).</p>
+<p>With <code>spark_across()</code> you can easily apply a function over multiple columns of a Spark DataFrame (i.e.&nbsp;<code>DataFrame</code>). In short, <code>spark_across()</code> use the <code>withColumn()</code> DataFrame method to apply your function over the mapped columns. This function is heavily inspired in the <code>dplyr::across()</code> function, from the R package <code>dplyr</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 </section>
 <section id="arguments" class="level2">
 <h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
 <ul>
-<li><code>text</code>: a <em>string</em> containing the text you want to search for;</li>
+<li><code>table</code>: a Spark DataFrame (i.e.&nbsp;<code>pyspark.sql.dataframe.DataFrame</code>);</li>
+<li><code>mapping</code>: the mapping that defines the columns where you want to apply <code>function</code> (read the article <a href="https://github.com/pedropark99/spark_map/blob/main/doc/english/articles/building-mapping.md"><strong>“Building the mapping”</strong></a>);</li>
+<li><code>function</code>: the function you want to apply to each column defined in <code>mapping</code>;</li>
+<li><code>**kwargs</code>: named arguments to be passed to the function defined in <code>function</code>;</li>
 </ul>
 </section>
 <section id="details-and-examples" class="level2">
 <h2 class="anchored" data-anchor-id="details-and-examples">Details and examples</h2>
-<p>Therefore, <code>starts_with()</code> is used to define which columns <code>spark_map()</code> will apply the given function to. This function performs the inverse process of <code>ends_with()</code>, that is, it searches for all columns whose name starts with a specific text. Therefore, with the expression <code>starts_with("Score")</code>, <code>starts_with()</code> will map all columns whose name starts with the text <code>"Score"</code>.</p>
-<p>During the mapping process, an exact <em>match</em> between the searched <em>strings</em> is always used. As a result, an expression like <code>starts_with("Sales")</code> is not able to map columns like <code>"sales_brazil"</code>, <code>"sales_colombia"</code> and <code>"sales_eua"</code>, however it is able to map columns like <code>"Sales_france "</code> and <code>"Sales_russia"</code>. If you need to be more flexible in your mapping, you’ll likely want to use the <code>matches()</code> function instead of <code>starts_with()</code>.</p>
+<p>As an example, consider the <code>students</code> DataFrame below:</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> mean</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> starts_with</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> [</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">12114</span>, <span class="st">'Anne'</span>, <span class="dv">21</span>, <span class="fl">1.56</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="st">'Economics'</span>, <span class="st">'SC'</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">13007</span>, <span class="st">'Adrian'</span>, <span class="dv">23</span>, <span class="fl">1.82</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="st">'Economics'</span>, <span class="st">'SC'</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">10045</span>, <span class="st">'George'</span>, <span class="dv">29</span>, <span class="fl">1.77</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">7</span>, <span class="st">'Law'</span>, <span class="st">'SC'</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">12459</span>, <span class="st">'Adeline'</span>, <span class="dv">26</span>, <span class="fl">1.61</span>, <span class="dv">8</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="st">'Law'</span>, <span class="st">'SC'</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">10190</span>, <span class="st">'Mayla'</span>, <span class="dv">22</span>, <span class="fl">1.67</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="st">'Design'</span>, <span class="st">'AR'</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">11552</span>, <span class="st">'Daniel'</span>, <span class="dv">24</span>, <span class="fl">1.75</span>, <span class="dv">9</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="st">'Design'</span>, <span class="st">'AR'</span>)</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>]</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(data, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'Sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'Sales_russia'</span>])</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>spark_map(sales, starts_with(<span class="st">'Sales'</span>), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> [</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">'StudentID'</span>, <span class="st">'Name'</span>, <span class="st">'Age'</span>, <span class="st">'Height'</span>, <span class="st">'Score1'</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">'Score2'</span>, <span class="st">'Score3'</span>, <span class="st">'Score4'</span>, <span class="st">'Course'</span>, <span class="st">'Department'</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>students <span class="op">=</span> spark.createDataFrame(d, columns)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>students.show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>22/12/20 22:32:14 WARN Utils: Your hostname, pedro-dev resolves to a loopback address: 127.0.1.1; using 192.168.0.90 instead (on interface wlp1s0)
-22/12/20 22:32:14 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address</code></pre>
+<pre><code>22/12/20 22:32:30 WARN Utils: Your hostname, pedro-dev resolves to a loopback address: 127.0.1.1; using 192.168.0.90 instead (on interface wlp1s0)
+22/12/20 22:32:30 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>22/12/20 22:32:15 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Selected columns by `spark_map()`: Sales_france, Sales_russia
-</code></pre>
+<pre><code>22/12/20 22:32:30 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>[Stage 0:&gt;                                                        (0 + 12) / 12]</code></pre>
+<pre><code>[Stage 0:&gt;                                                          (0 + 1) / 1]                                                                                </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>+------------+------------------+
-|Sales_france|      Sales_russia|
-+------------+------------------+
-|     16600.0|33087.333333333336|
-+------------+------------------+
+<pre><code>+---------+-------+---+------+------+------+------+------+---------+----------+
+|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|
++---------+-------+---+------+------+------+------+------+---------+----------+
+|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |
+|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |
+|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |
+|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |
+|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |
+|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |
++---------+-------+---+------+------+------+------+------+---------+----------+
 </code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>                                                                                </code></pre>
+</div>
+<p>Suppose you want to cast all columns of this DataFrame <code>students</code> that starts with the text <code>"Score"</code> to the <code>DoubleType()</code>. The <code>spark_across()</code> function allows you to perform this calculation in an extremely simple and clear way, as shown below:</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_across</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> starts_with</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_number_to_column(col, num <span class="op">=</span> <span class="dv">1</span>):</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> col <span class="op">+</span> num</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>spark_across(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    students,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    starts_with(<span class="st">'Score'</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    add_number_to_column,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    num <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  )<span class="op">\</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  .show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Selected columns by `spark_map()`: Score1, Score2, Score3, Score4
+</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+---------+-------+---+------+------+------+------+------+---------+----------+
+|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|
++---------+-------+---+------+------+------+------+------+---------+----------+
+|12114    |Anne   |21 |1.56  |13    |14    |15    |14    |Economics|SC        |
+|13007    |Adrian |23 |1.82  |11    |11    |13    |12    |Economics|SC        |
+|10045    |George |29 |1.77  |15    |14    |15    |12    |Law      |SC        |
+|12459    |Adeline|26 |1.61  |13    |11    |12    |12    |Law      |SC        |
+|10190    |Mayla  |22 |1.67  |12    |12    |12    |14    |Design   |AR        |
+|11552    |Daniel |24 |1.75  |14    |14    |15    |14    |Design   |AR        |
++---------+-------+---+------+------+------+------+------+---------+----------+
+</code></pre>
 </div>
 </div>
 
 
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><a href="https://dplyr.tidyverse.org/reference/across.html" class="uri">https://dplyr.tidyverse.org/reference/across.html</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

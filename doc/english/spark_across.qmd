@@ -1,8 +1,15 @@
 ---
 title: "`spark_across()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| echo: false
+import sys
+sys.path.append("../../.")
+```
+
 
 
 ## Description
@@ -48,7 +55,7 @@ students.show(truncate = False)
 Suppose you want to cast all columns of this DataFrame `students` that starts with the text `"Score"` to the `DoubleType()`. The `spark_across()` function allows you to perform this calculation in an extremely simple and clear way, as shown below:
 
 ```{python}
-from spark_map.functions import spark_map
+from spark_map.functions import spark_across
 from spark_map.mapping import starts_with
 
 def add_number_to_column(col, num = 1):

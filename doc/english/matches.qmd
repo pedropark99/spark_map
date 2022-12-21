@@ -1,8 +1,15 @@
 ---
 title: "`matches()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| echo: false
+import sys
+sys.path.append("../../.")
+```
+
 
 ## Description
 
@@ -65,6 +72,6 @@ Now that we've tested this new regular expression in `re.match()` we can return 
 
 
 ```{python}
-spark_map(pop, matches(r'(.+)male(.+)'), F.max).show()
+spark_map(pop, matches(r'(.+)male(.+)'), max).show()
 ```
 

@@ -1,8 +1,14 @@
 ---
 title: "`ends_with()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| echo: false
+import sys
+sys.path.append("../../.")
+```
 
 
 ## Description
@@ -21,6 +27,7 @@ During the mapping process, an exact match between the searched *strings* is alw
 
 ```{python}
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import mean
 from spark_map.functions import spark_map
 from spark_map.mapping import ends_with
 spark = SparkSession.builder.getOrCreate()
@@ -33,6 +40,6 @@ data = [
 
 sales = spark.createDataFrame(data, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])
 
-spark_map(sales, ends_with('Sales'), F.mean).show()
+spark_map(sales, ends_with('Sales'), mean).show()
 ```
 

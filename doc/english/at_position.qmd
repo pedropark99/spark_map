@@ -1,8 +1,15 @@
 ---
 title: "`at_position()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| echo: false
+import sys
+sys.path.append("../../.")
+```
+
 
 ## Description
 
@@ -23,6 +30,7 @@ But, the `zero_index` argument is set by default to `False`. Because of this, th
 
 ```{python}
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import mean
 from spark_map.functions import spark_map
 from spark_map.mapping import at_position
 spark = SparkSession.builder.getOrCreate()
@@ -35,7 +43,7 @@ data = [
 
 sales = spark.createDataFrame(data, ['year', 'month', 'france_Sales', 'brazil_sales', 'russia_Sales'])
 
-spark_map(sales, at_position(1, 2, 3, zero_index = True), F.mean).show()
+spark_map(sales, at_position(1, 2, 3, zero_index = True), mean).show()
 ```
 
 

@@ -1,8 +1,15 @@
 ---
 title: "`starts_with()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| echo: false
+import sys
+sys.path.append("../../.")
+```
+
 
 ## Description
 

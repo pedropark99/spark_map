@@ -1,8 +1,15 @@
 ---
 title: "`are_of_type()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| echo: false
+import sys
+sys.path.append("../../.")
+```
+
 
 ## Description
 
@@ -36,6 +43,7 @@ In essence, `are_of_type()` uses your Spark DataFrame schema to determine which 
 
 ```{python}
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import max
 from spark_map.functions import spark_map
 from spark_map.mapping import are_of_type
 spark = SparkSession.builder.getOrCreate()
@@ -48,6 +56,6 @@ data = [
 
 sales = spark.createDataFrame(data, ['date', 'name', 'value'])
 
-spark_map(sales, are_of_type("string"), F.max).show()
+spark_map(sales, are_of_type("string"), max).show()
 ```
 
