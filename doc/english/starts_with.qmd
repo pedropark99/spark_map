@@ -20,6 +20,7 @@ During the mapping process, an exact *match* between the searched *strings* is a
 
 ```{python}
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import mean
 from spark_map.functions import spark_map
 from spark_map.mapping import starts_with
 spark = SparkSession.builder.getOrCreate()
@@ -32,15 +33,6 @@ data = [
 
 sales = spark.createDataFrame(data, ['year', 'month', 'Sales_france', 'sales_brazil', 'Sales_russia'])
 
-spark_map(sales, starts_with('Sales'), F.mean).show()
+spark_map(sales, starts_with('Sales'), mean).show()
 ```
 
-```
-Selected columns by `spark_map()`: Sales_france, Sales_russia
-
-+------------+------------------+
-|Sales_france|      Sales_russia|
-+------------+------------------+
-|     16600.0|33087.333333333336|
-+------------+------------------+
-```
