@@ -1,8 +1,21 @@
 ---
 title: "`are_of_type()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| include: false
+import sys
+sys.path.append("../../.")
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+sc.setLogLevel("OFF")
+```
+
+
 
 ## Description
 
@@ -26,18 +39,17 @@ Therefore, `are_of_type()` is used to define which columns `spark_map()` will ap
 This means that `are_of_type()` accepts only one of the above values. If you provide a *string* that is not included in the above list, a `ValueError` is automatically raised by the function, as shown below:
 
 ```{python}
+#| error: true
 from spark_map.mapping import are_of_type
 are_of_type("str")
 ```
 
-```{python}
-ValueError: You must choose one of the following values: 'string', 'int', 'long', 'double', 'date', 'datetime'
-```
 
 In essence, `are_of_type()` uses your Spark DataFrame schema to determine which columns belong to the data type you have determined. Notice in the example below, that the column named `"date"` is mapped by `spark_map()`, even though this column is clearly a date column. This happens, because Spark is interpreting this column by the type `pyspark.sql.types.StringType()`, not by `pyspark.sql.types.DateType()`.
 
 ```{python}
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import max
 from spark_map.functions import spark_map
 from spark_map.mapping import are_of_type
 spark = SparkSession.builder.getOrCreate()
@@ -50,15 +62,6 @@ data = [
 
 sales = spark.createDataFrame(data, ['date', 'name', 'value'])
 
-spark_map(sales, are_of_type("string"), F.max).show()
+spark_map(sales, are_of_type("string"), max).show()
 ```
 
-```
-Selected columns by `spark_map()`: date, name
-
-+----------+----+
-|      date|name|
-+----------+----+
-|2022-03-12|Luke|
-+----------+----+
-```

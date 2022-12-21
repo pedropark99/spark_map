@@ -1,8 +1,20 @@
 ---
 title: "`matches()`"
 execute:
-  eval: false
+  eval: true
 ---
+
+```{python setup}
+#| include: false
+import sys
+sys.path.append("../../.")
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+sc.setLogLevel("OFF")
+```
+
 
 ## Description
 
@@ -20,6 +32,7 @@ It is worth noting that the regular expression provided will be passed to the `r
 
 ```{python}
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import max
 from spark_map.functions import spark_map
 from spark_map.mapping import matches
 spark = SparkSession.builder.getOrCreate()
@@ -36,21 +49,19 @@ pop = spark.createDataFrame(
   ['country', 'pop_male_1990', 'pop_male_2000', 'pop_male_2010',
    'pop_female_1990', 'pop_female_2000', 'pop_female_2010']
 )
+```
 
-spark_map(pop, matches(r'male'), F.max).show()
-```
 ```{python}
-KeyError: '`spark_map()` did not found any column that matches your mapping!'
+#| error: true
+spark_map(pop, matches(r'male'), max).show()
 ```
+
 
 To investigate what is going wrong in this case, it is useful to separate the name of a column that should have been found and apply `re.match()` in isolation to that column. Note below that the result of the expression `re.match(r'male', name)` is `None`. This means that the regular expression `'male'` does not generate a match with the text `pop_male_1990`.
 
 ```{python}
 name = 'pop_male_1990'
 print(re.match(r'male', name))
-```
-```{python}
-None
 ```
 
 
@@ -61,23 +72,11 @@ By testing various combinations and delving deeper into the problem, you may eve
 name = 'pop_male_1990'
 print(re.match(r'(.+)male(.+)', name))
 ```
-```{python}
-<re.Match object; span=(0, 13), match='pop_male_1990'>
-```
 
 Now that we've tested this new regular expression in `re.match()` we can return to the `matches()` function. Notice below that this time all the expected columns are found.
 
 
 ```{python}
-spark_map(pop, matches(r'(.+)male(.+)'), F.max).show()
+spark_map(pop, matches(r'(.+)male(.+)'), max).show()
 ```
 
-```
-Selected columns by `spark_map()`: pop_male_1990, pop_male_2000, pop_male_2010, pop_female_1990, pop_female_2000, pop_female_2010
-
-+-------------+-------------+-------------+---------------+---------------+---------------+
-|pop_male_1990|pop_male_2000|pop_male_2010|pop_female_1990|pop_female_2000|pop_female_2010|
-+-------------+-------------+-------------+---------------+---------------+---------------+
-|     74077777|     86581634|     96536269|       78703457|       88208705|       99177368|
-+-------------+-------------+-------------+---------------+---------------+---------------+
-```
