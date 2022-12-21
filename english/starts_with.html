@@ -98,10 +98,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -143,8 +143,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="https://github.com/pedropark99/spark_map/issues">
+ <span class="menu-text">Report an issue</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../how-to-build.html">
@@ -184,6 +184,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>  
     </ul>
   </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pedropark99/spark_map"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
@@ -239,29 +246,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="details-and-examples">Details and examples</h2>
 <p>Therefore, <code>starts_with()</code> is used to define which columns <code>spark_map()</code> will apply the given function to. This function performs the inverse process of <code>ends_with()</code>, that is, it searches for all columns whose name starts with a specific text. Therefore, with the expression <code>starts_with("Score")</code>, <code>starts_with()</code> will map all columns whose name starts with the text <code>"Score"</code>.</p>
 <p>During the mapping process, an exact <em>match</em> between the searched <em>strings</em> is always used. As a result, an expression like <code>starts_with("Sales")</code> is not able to map columns like <code>"sales_brazil"</code>, <code>"sales_colombia"</code> and <code>"sales_eua"</code>, however it is able to map columns like <code>"Sales_france "</code> and <code>"Sales_russia"</code>. If you need to be more flexible in your mapping, you’ll likely want to use the <code>matches()</code> function instead of <code>starts_with()</code>.</p>
-<div class="cell" data-execution_count="1">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> starts_with</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(data, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'Sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'Sales_russia'</span>])</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>spark_map(sales, starts_with(<span class="st">'Sales'</span>), F.mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> mean</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> starts_with</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(data, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'Sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'Sales_russia'</span>])</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>spark_map(sales, starts_with(<span class="st">'Sales'</span>), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
 <pre><code>Selected columns by `spark_map()`: Sales_france, Sales_russia
-
-+------------+------------------+
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 0:&gt;                                                        (0 + 12) / 12]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+------------+------------------+
 |Sales_france|      Sales_russia|
 +------------+------------------+
 |     16600.0|33087.333333333336|
-+------------+------------------+</code></pre>
++------------+------------------+
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                                </code></pre>
+</div>
+</div>
 
 
 </section>

@@ -98,10 +98,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -143,8 +143,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="https://github.com/pedropark99/spark_map/issues">
+ <span class="menu-text">Report an issue</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../how-to-build.html">
@@ -184,6 +184,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>  
     </ul>
   </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/pedropark99/spark_map"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
@@ -264,7 +271,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 +-----+------------+------------+
 |  2.0|     16600.0|     24600.0|
 +-----+------------+------------+</code></pre>
-<p>Ao fornecer um índice zero, você sempre deve configurar o argumento <code>zero_index</code> para <code>True</code>. Quando o argumento <code>zero_index</code> está setado para <code>False</code>, <code>at_position()</code> vai automaticamente subtrair 1 de todos os índices. Logo, um índice igual a zero, se torna um índice igual a -1, e índices negativos não são permitidos por <code>at_position()</code>. Veja o exemplo abaixo:</p>
+<p>Ao fornecer um índice zero, você sempre deve configurar o argumento <code>zero_index</code> para <code>True</code>. Pois quando o argumento <code>zero_index</code> está setado para <code>False</code>, <code>at_position()</code> vai automaticamente subtrair 1 de todos os índices, e, como resultado, um índice igual a zero, se torna um índice igual a -1, e índices negativos não são permitidos por <code>at_position()</code>. Veja o exemplo abaixo:</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>at_position(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -291,6 +298,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">ValueError</span>: <span class="st">'You did not provided any index for `at_position()` to search'</span>.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Além disso, é importante você ter cuidado em fornecer um conjunto de índices que esteja dentro do limite de seu DataFrame. Em outras palavras, se você tentar selecionar a décima coluna de um DataFrame que só possui 5 colunas, você vai ter como resultado um <code>IndexError</code> te descrevendo que o seu índice está fora dos limites (<em>index out of bounds</em>):</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>spark_map(sales, at_position(<span class="dv">10</span>), mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
