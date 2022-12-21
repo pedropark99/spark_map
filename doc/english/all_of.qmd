@@ -5,7 +5,7 @@ execute:
 ---
 
 ```{python setup}
-#| echo: false
+#| include: false
 import sys
 sys.path.append("../../.")
 

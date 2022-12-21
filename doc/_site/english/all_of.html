@@ -262,6 +262,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>Selected columns by `spark_map()`: sales_france, sales_brazil
 </code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 0:&gt;                                                        (0 + 12) / 12]</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>+------------+------------+
 |sales_france|sales_brazil|
@@ -270,10 +273,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 +------------+------------+
 </code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                                </code></pre>
+</div>
 </div>
 <p>However, it is worth noting that <code>spark_map()</code> <strong>must find at least one of the columns defined</strong> in <code>all_of()</code>. If it doesn’t, <code>spark_map()</code> will raise a <code>KeyError</code> warning that no column could be found with the mapping you defined.</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>spark_map(sales, all_of([<span class="st">'sales_italy'</span>]), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>spark_map(sales, all_of([<span class="st">'sales_italy'</span>]), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>KeyError: '`spark_map()` did not found any column that matches your mapping!'</code></pre>
 </div>

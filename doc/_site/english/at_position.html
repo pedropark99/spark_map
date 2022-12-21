@@ -258,17 +258,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>spark_map(sales, at_position(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, zero_index <span class="op">=</span> <span class="va">True</span>), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>22/12/20 22:33:17 WARN Utils: Your hostname, pedro-dev resolves to a loopback address: 127.0.1.1; using 192.168.0.90 instead (on interface wlp1s0)
-22/12/20 22:33:17 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>22/12/20 22:33:18 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
 <pre><code>Selected columns by `spark_map()`: month, france_Sales, brazil_sales
 </code></pre>
 </div>
@@ -289,35 +278,35 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 <p>When providing a zero index, you should always set the <code>zero_index</code> argument to <code>True</code>. Because when the <code>zero_index</code> argument is set to <code>False</code>, <code>at_position()</code> will automatically subtract 1 from all indexes, and, as a consequence, an index equal to zero becomes an index equal to -1, and negative indexes are not allowed by <code>at_position()</code>. See the example below:</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>at_position(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>at_position(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>ValueError: One (or more) of the provided indexes are negative! Did you provided a zero index, and not set the `zero_index` argument to True?</code></pre>
 </div>
 </div>
 <p>Furthermore, any duplicated index is automatically eliminated by <code>at_position()</code>. See the example below in which the indexes 1 and 4 are repeated during the call to <code>at_position()</code>, but they are automatically eliminated in the function result.</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>at_position(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>at_position(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>{'fun': 'at_position', 'val': [0, 1, 2, 3, 4]}</code></pre>
 </div>
 </div>
 <p>Furthermore, the indexes given to <code>at_position()</code> must not be inside a list, if you make this mistake, the function will raise a <code>ValueError</code>, as shown below:</p>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>at_position([<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>at_position([<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>ValueError: Did you provided your column indexes inside a list to `at_position()`? You should not encapsulate these indexes inside a list. For example, if you want to select 1° and 3° columns, just do `at_position(1, 3)` instead of `at_position([1, 3])`.</code></pre>
 </div>
 </div>
 <p>Column indexes are a required argument. So, if you don’t provide any index, <code>at_position()</code> will necessarily raise a <code>ValueError</code>, as shown below:</p>
 <div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>at_position(zero_index <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>at_position(zero_index <span class="op">=</span> <span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>ValueError: You provided an empty list as input for `at_position()`. However, this list should not be empty!</code></pre>
 </div>
 </div>
 <p>Furthermore, is important to be careful to select a set of indexes that are inside of your DataFrame boudaries. In other words, if you try to select the 10th column of a DataFrame that have only 5 columns, you will get an <code>IndexError</code>, telling that your index is out of range:</p>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>spark_map(sales, at_position(<span class="dv">10</span>), mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>spark_map(sales, at_position(<span class="dv">10</span>), mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>IndexError: list index out of range</code></pre>
 </div>

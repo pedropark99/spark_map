@@ -4,8 +4,9 @@ execute:
   eval: true
 ---
 
+
 ```{python setup}
-#| echo: false
+#| include: false
 import sys
 sys.path.append("../../.")
 
@@ -14,7 +15,6 @@ spark = SparkSession.builder.getOrCreate()
 sc = spark.sparkContext
 sc.setLogLevel("OFF")
 ```
-
 
 
 ## Description
