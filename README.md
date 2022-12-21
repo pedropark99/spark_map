@@ -1,4 +1,9 @@
 
+
+<!-- badges: start -->
+[![pytest](https://github.com/pedropark99/spark_map/actions/workflows/pytest.yml/badge.svg)][https://github.com/pedropark99/spark_map/actions/workflows/pytest.yml]
+<!-- badges: end -->
+
 # Overview
 
 `spark_map` is a python package that offers some tools to easily apply a function over multiple columns of Apache Spark DataFrames, using `pyspark`. You could say that `spark_map` offers an implementation for the `map()` python function for Spark DataFrames. There are two main functions in the package that performs the heavy work, which are `spark_map()` and `spark_across()`.
