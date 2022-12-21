@@ -58,7 +58,7 @@ aggregates = spark_map(grouped_by_day, starts_with('cards'), sum)
 
 The `spark_map()` function receives three inputs, which are `table` (i.e. the Spark DataFrame you want to use), `mapping` (i.e. a "mapping" that describes which columns you want to apply your function), and `function` (i.e. the function you want to apply to each column in the Spark DataFrame).
 
-In short, the `starts_with('cards')` section tells `spark_map()` that you want to apply the input function on all columns of `grouped_by_day` whose name starts with the text `'cards'`. In other words, all `spark_map()` does is to apply the function you want (in the above example this function is `sum()`) to whatever column it finds in the input DataFrame which fits in the description of your mapping method.
+In short, the `starts_with('cards')` section in the above example tells `spark_map()` that you want to apply the input function on all columns of `grouped_by_day` whose name starts with the text `'cards'`. In other words, all `spark_map()` does is to apply the function you want (in the above example this function is `sum()`) to whatever column it finds in the input DataFrame which fits in the description of your mapping method.
 
 You can use different mapping methods to select the columns of your DataFrame, and the package offers several built-in methods which can be very useful for you, which are available through the `spark_map.mapping` module of the package. You can select columns based on:
 
@@ -68,4 +68,8 @@ You can use different mapping methods to select the columns of your DataFrame, a
 - `starts_with()` and `ends_with()`: its name starting or ending with a particular pattern;
 - `all_of()`: its name being inside a specific list of options;
 
+# Check the documentation for more examples and details
 
+The [website](https://pedropark99.github.io/spark_map) have documentation for all functions of the package. If you have any trouble to understand or to find examples, is a good idea to check the [Function Reference](https://pedropark99.github.io/spark_map/reference-en.html) of the package, to see examples and more details about how each function works.
+
+To understand how the mapping methods works, and how you can create your own mapping method, a good place to start is to read the article [Building the mapping](https://pedropark99.github.io/spark_map/english/articles/building-mapping.html) available at the website of the package.
