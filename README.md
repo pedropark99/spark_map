@@ -1,7 +1,7 @@
 
 
 <!-- badges: start -->
-[![pytest](https://github.com/pedropark99/spark_map/actions/workflows/pytest.yml/badge.svg)][https://github.com/pedropark99/spark_map/actions/workflows/pytest.yml]
+[pytest](https://github.com/pedropark99/spark_map/actions/workflows/pytest.yml/badge.svg)
 <!-- badges: end -->
 
 # Overview
