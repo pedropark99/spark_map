@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.258">
+<meta name="generator" content="quarto-1.2.280">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,9 +70,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+      valueNames: [{ data: ['index'] },{ data: ['categories'] }],
       
-      searchColumns: ["listing-title","listing-author"],
+      searchColumns: [],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -123,36 +123,14 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./how-to-test.html">
  <span class="menu-text">How to test</span></a>
   </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-function-reference" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Function Reference</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-function-reference">    
-        <li>
-    <a class="dropdown-item" href="./reference-en.html">
- <span class="dropdown-text">In english</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="./reference-en.html">
+ <span class="menu-text">Function Reference</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./reference-ptbr.html">
- <span class="dropdown-text">Em português</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="./articles-en.html">
+ <span class="menu-text">Articles</span></a>
   </li>  
-    </ul>
-  </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Articles</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
-        <li>
-    <a class="dropdown-item" href="./articles-en.html">
- <span class="dropdown-text">In english</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./articles-ptbr.html">
- <span class="dropdown-text">Em português</span></a>
-  </li>  
-    </ul>
-  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -200,19 +178,6 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-listing quarto-listing-container-table" id="listing-listing">
 <div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-title-sort" data-direction="asc">
-          Title
-        </option>
-         <option value="listing-author" data-direction="asc">
-          Author
-        </option>
-     </select>
-  </div>
     <div class="input-group input-group-sm quarto-listing-filter">
       <span class="input-group-text"><i class="bi bi-search"></i></span>
       <input type="text" class="search form-control" placeholder="Filter">
@@ -222,64 +187,9 @@ ul.task-list li input[type="checkbox"] {
 <table class="quarto-listing-table table">
 <thead>
 <tr>
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-<th>
-<a class="sort" data-sort="listing-author" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Author</a>
-</th>
 </tr>
 </thead>
 <tbody class="list">
-<tr data-index="0" data-listing-file-modified-sort="1671498276023" data-listing-reading-time-sort="1.555" data-listing-title-sort="`all_of()`" data-listing-filename-sort="all_of.qmd">
-<td class="listing-title">
-<a href="./portuguese/all_of.html" class="title"><code>all_of()</code></a>
-</td>
-<td class="listing-author">
-</td>
-</tr>
-<tr data-index="1" data-listing-file-modified-sort="1671498289714" data-listing-reading-time-sort="1.345" data-listing-title-sort="`are_of_type()`" data-listing-filename-sort="are_of_type.qmd">
-<td class="listing-title">
-<a href="./portuguese/are_of_type.html" class="title"><code>are_of_type()</code></a>
-</td>
-<td class="listing-author">
-</td>
-</tr>
-<tr data-index="2" data-listing-file-modified-sort="1671578297083" data-listing-reading-time-sort="3.15" data-listing-title-sort="`at_position()`" data-listing-filename-sort="at_position.qmd">
-<td class="listing-title">
-<a href="./portuguese/at_position.html" class="title"><code>at_position()</code></a>
-</td>
-<td class="listing-author">
-</td>
-</tr>
-<tr data-index="3" data-listing-file-modified-sort="1671498300506" data-listing-reading-time-sort="1.14" data-listing-title-sort="`ends_with()`" data-listing-filename-sort="ends_with.qmd">
-<td class="listing-title">
-<a href="./portuguese/ends_with.html" class="title"><code>ends_with()</code></a>
-</td>
-<td class="listing-author">
-</td>
-</tr>
-<tr data-index="4" data-listing-file-modified-sort="1671498305858" data-listing-reading-time-sort="2.59" data-listing-title-sort="`matches()`" data-listing-filename-sort="matches.qmd">
-<td class="listing-title">
-<a href="./portuguese/matches.html" class="title"><code>matches()</code></a>
-</td>
-<td class="listing-author">
-</td>
-</tr>
-<tr data-index="5" data-listing-file-modified-sort="1671498320657" data-listing-reading-time-sort="3.955" data-listing-title-sort="`spark_map()`" data-listing-filename-sort="spark_map.qmd">
-<td class="listing-title">
-<a href="./portuguese/spark_map.html" class="title"><code>spark_map()</code></a>
-</td>
-<td class="listing-author">
-</td>
-</tr>
-<tr data-index="6" data-listing-file-modified-sort="1671498331716" data-listing-reading-time-sort="1.16" data-listing-title-sort="`starts_with()`" data-listing-filename-sort="starts_with.qmd">
-<td class="listing-title">
-<a href="./portuguese/starts_with.html" class="title"><code>starts_with()</code></a>
-</td>
-<td class="listing-author">
-</td>
-</tr>
 </tbody>
 
 </table>

@@ -4,3 +4,4 @@ dist
 spark_map/__pycache__
 tests/__pycache__
 .pytest_cache
+_extensions
