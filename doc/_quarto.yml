@@ -12,17 +12,10 @@ website:
       - href: how-to-test.qmd
         text: How to test
       - text: Function Reference
-        menu:
-          - text: In english
-            href: reference-en.qmd
-          - text: Em português
-            href: reference-ptbr.qmd
+        href: reference-en.qmd
       - text: Articles
-        menu:
-          - text: In english
-            href: articles-en.qmd
-          - text: Em português
-            href: articles-ptbr.qmd
+        href: articles-en.qmd
+        
     right: 
       - icon: github
         href: https://github.com/pedropark99/spark_map

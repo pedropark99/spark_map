@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.258">
+<meta name="generator" content="quarto-1.2.280">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -154,36 +154,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="nav-link" href="./how-to-test.html">
  <span class="menu-text">How to test</span></a>
   </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-function-reference" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Function Reference</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-function-reference">    
-        <li>
-    <a class="dropdown-item" href="./reference-en.html">
- <span class="dropdown-text">In english</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="./reference-en.html">
+ <span class="menu-text">Function Reference</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./reference-ptbr.html">
- <span class="dropdown-text">Em português</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="./articles-en.html">
+ <span class="menu-text">Articles</span></a>
   </li>  
-    </ul>
-  </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Articles</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
-        <li>
-    <a class="dropdown-item" href="./articles-en.html">
- <span class="dropdown-text">In english</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./articles-ptbr.html">
- <span class="dropdown-text">Em português</span></a>
-  </li>  
-    </ul>
-  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -235,77 +213,55 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p><code>spark_map</code> is a python package that offers some tools to apply a function over multiple columns of Apache Spark DataFrames, using <code>pyspark</code>. You could say that <code>spark_map</code> offers an implemmentation for the <code>map()</code> python function for Spark DataFrames. There are two main functions in the package that performs the heavy work, which are <code>spark_map()</code> and <code>spark_across</code>.</p>
-<p>Both of these functions perform the same work, which is to apply a function over a set of columns of a Spark DataFrame. But they differ in the method they use to apply this function. While <code>spark_map()</code> uses the <code>agg()</code> method of Spark DataFrame’s to apply the function, <code>spark_across()</code> uses the <code>withColumn()</code> method to do so.</p>
-<p>This means that you will mainly use <code>spark_map()</code> when you want to calculate <strong>aggregates</strong>. Is worthy pointing out that <code>spark_map()</code> works perfectly with grouped DataFrames as well (i.e.&nbsp;<code>GroupedData</code>). In the other hand, you will use <code>spark_across()</code> when you want to just transform the values of multiple colums at once by applying the same function over them.</p>
+<p><code>spark_map</code> is a python package that offers some tools to easily apply a function over multiple columns of Apache Spark DataFrames, using <code>pyspark</code>. You could say that <code>spark_map</code> offers an implementation for the <code>map()</code> python function for Spark DataFrames. There are two main functions in the package that performs the heavy work, which are <code>spark_map()</code> and <code>spark_across()</code>.</p>
+<p>Both of these functions perform the same work, which is to apply a function over multiple columns of a Spark DataFrame. But they differ in the method they use to apply this function. <code>spark_map()</code> uses the <code>agg()</code> method of Spark DataFrame’s to apply the function, and <code>spark_across()</code> uses the <code>withColumn()</code> method to do so.</p>
+<p>This means that you will mainly use <code>spark_map()</code> when you want to calculate aggregates of each column. Is worthy pointing out that <code>spark_map()</code> works perfectly with grouped DataFrames as well (i.e.&nbsp;<code>GroupedData</code>). In the other hand, you will use <code>spark_across()</code> when you want to just transform the values of multiple colums at once by applying the same function over them.</p>
 </section>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
 <p>To get the latest version of <code>spark_map</code> at PyPI, use:</p>
-<pre><code>pip install spark_map</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install spark-map</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="documentation" class="level2">
 <h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
-<p>The full documentation for <code>spark_map</code> package is available at this website. To access it, just use the <code>Function Reference</code> and <code>Articles</code> menus located at the top navigation bar of this page. All documentation is available both in <a href="./reference-en.html">english</a> and in <a href="./reference-ptbr.html">portuguese</a> languages.</p>
+<p>The full documentation for <code>spark_map</code> package is available at this website. To access it, just use the <code>Function Reference</code> and <code>Articles</code> menus located at the top navigation bar of this page.</p>
 </section>
 <section id="a-simple-example-of-use" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-example-of-use">A simple example of use</h2>
 <p>As an example, consider the <code>students</code> DataFrame below:</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> [</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">12114</span>, <span class="st">'Anne'</span>, <span class="dv">21</span>, <span class="fl">1.56</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="st">'Economics'</span>, <span class="st">'SC'</span>),</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">13007</span>, <span class="st">'Adrian'</span>, <span class="dv">23</span>, <span class="fl">1.82</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="st">'Economics'</span>, <span class="st">'SC'</span>),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">10045</span>, <span class="st">'George'</span>, <span class="dv">29</span>, <span class="fl">1.77</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">7</span>, <span class="st">'Law'</span>, <span class="st">'SC'</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">12459</span>, <span class="st">'Adeline'</span>, <span class="dv">26</span>, <span class="fl">1.61</span>, <span class="dv">8</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="st">'Law'</span>, <span class="st">'SC'</span>),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">10190</span>, <span class="st">'Mayla'</span>, <span class="dv">22</span>, <span class="fl">1.67</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="st">'Design'</span>, <span class="st">'AR'</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">11552</span>, <span class="st">'Daniel'</span>, <span class="dv">24</span>, <span class="fl">1.75</span>, <span class="dv">9</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="st">'Design'</span>, <span class="st">'AR'</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> [</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">'StudentID'</span>, <span class="st">'Name'</span>, <span class="st">'Age'</span>, <span class="st">'Height'</span>, <span class="st">'Score1'</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">'Score2'</span>, <span class="st">'Score3'</span>, <span class="st">'Score4'</span>, <span class="st">'Course'</span>, <span class="st">'Department'</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>students <span class="op">=</span> spark.createDataFrame(d, columns)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>students.show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> [</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">12114</span>, <span class="st">'Anne'</span>, <span class="dv">21</span>, <span class="fl">1.56</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="st">'Economics'</span>, <span class="st">'SC'</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">13007</span>, <span class="st">'Adrian'</span>, <span class="dv">23</span>, <span class="fl">1.82</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="st">'Economics'</span>, <span class="st">'SC'</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">10045</span>, <span class="st">'George'</span>, <span class="dv">29</span>, <span class="fl">1.77</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">7</span>, <span class="st">'Law'</span>, <span class="st">'SC'</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">12459</span>, <span class="st">'Adeline'</span>, <span class="dv">26</span>, <span class="fl">1.61</span>, <span class="dv">8</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="st">'Law'</span>, <span class="st">'SC'</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">10190</span>, <span class="st">'Mayla'</span>, <span class="dv">22</span>, <span class="fl">1.67</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="st">'Design'</span>, <span class="st">'AR'</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">11552</span>, <span class="st">'Daniel'</span>, <span class="dv">24</span>, <span class="fl">1.75</span>, <span class="dv">9</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">9</span>, <span class="st">'Design'</span>, <span class="st">'AR'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> [</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">'StudentID'</span>, <span class="st">'Name'</span>, <span class="st">'Age'</span>, <span class="st">'Height'</span>, <span class="st">'Score1'</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">'Score2'</span>, <span class="st">'Score3'</span>, <span class="st">'Score4'</span>, <span class="st">'Course'</span>, <span class="st">'Department'</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>students <span class="op">=</span> spark.createDataFrame(d, columns)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>students.show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<pre><code>+---------+-------+---+------+------+------+------+------+---------+----------+
-|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|
-+---------+-------+---+------+------+------+------+------+---------+----------+
-|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |
-|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |
-|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |
-|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |
-|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |
-|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |
-+---------+-------+---+------+------+------+------+------+---------+----------+</code></pre>
 <p>Suppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The <code>spark_map()</code> function allows you to perform this calculation in an extremely simple and clear way, as shown below:</p>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> mean</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map <span class="im">import</span> spark_map, at_position</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>spark_map(students, at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), mean).show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> mean</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map <span class="im">import</span> spark_map, at_position</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>spark_map(students, at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), mean).show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<pre><code>Selected columns by `spark_map()`: Age, Height, Score1
-
-+------------------+------------------+------+
-|Age               |Height            |Score1|
-+------------------+------------------+------+
-|24.166666666666668|1.6966666666666665|8.0   |
-+------------------+------------------+------+</code></pre>
 <p>If you want your calculation to be applied by group, just provide the grouped table to <code>spark_map()</code>. For example, suppose you wanted to calculate the same averages as in the example above, but within each department:</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>by_department <span class="op">=</span> students.groupBy(<span class="st">'Department'</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>spark_map(by_department, at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>by_department <span class="op">=</span> students.groupBy(<span class="st">'Department'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>spark_map(by_department, at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<pre><code>Selected columns by `spark_map()`: Age, Height, Score1
-
-+----------+-----+------------------+------+
-|Department|  Age|            Height|Score1|
-+----------+-----+------------------+------+
-|        SC|24.75|1.6900000000000002|   8.0|
-|        AR| 23.0|              1.71|   8.0|
-+----------+-----+------------------+------+</code></pre>
 
 
 </section>
