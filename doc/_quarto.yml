@@ -22,7 +22,7 @@ website:
 
 format:
   html:
-    theme: solar
+    theme: default
     css: styles.css
     toc: true
 
