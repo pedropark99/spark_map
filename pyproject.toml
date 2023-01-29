@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spark_map"
-version = "0.2.7"
+version = "0.2.75"
 authors = [
   { name="Pedro Faria", email="pedropark99@gmail.com" }
 ]
@@ -18,12 +18,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-dependencies = [
-    "pyspark",
-    "setuptools",
-    "toml"
-]
-
 [project.urls]
 Homepage = "https://pedropark99.github.io/spark_map/"
 Repo = "https://github.com/pedropark99/spark_map"
@@ -34,3 +28,7 @@ Issues = "https://github.com/pedropark99/spark_map/issues"
 pythonpath = [
   "."
 ]
+
+
+[tool.setuptools]
+py-modules = []
