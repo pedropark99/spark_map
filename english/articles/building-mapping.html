@@ -253,7 +253,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[Stage 0:&gt;                                                        (0 + 12) / 12]</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>[Stage 0:====&gt;                                                    (1 + 11) / 12]                                                                                </code></pre>
+<pre><code>[Stage 0:====&gt;                                                    (1 + 11) / 12]</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>+------+------+------+------+
@@ -263,10 +263,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 +------+------+------+------+
 </code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                                </code></pre>
+</div>
 </div>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> matches</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>spark_map(students, matches(<span class="st">"(.+)[0-9]$"</span>), <span class="bu">sum</span>).show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> matches</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>spark_map(students, matches(<span class="st">"(.+)[0-9]$"</span>), <span class="bu">sum</span>).show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Selected columns by `spark_map()`: Score1, Score2, Score3, Score4
 </code></pre>
@@ -284,15 +287,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="the-mapping-class">The <code>Mapping</code> class</h2>
 <p>Basically, the mapping is just a small description containing the algorithm that should be used to find the columns and the value that will be passed on to this algorithm. As an example, the result of the expression <code>at_position(3, 4, 5)</code> is a small <code>dict</code>, containing two elements (<code>fun</code> and <code>val</code>). The <code>fun</code> element defines the method/algorithm to be used to find the columns, and the <code>val</code> element stores the value that will be passed to this method/algorithm.</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> at_position</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> at_position</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>{'fun': 'at_position', 'val': [2, 3, 4]}</code></pre>
 </div>
 </div>
 <p>As another example, the result of the expression <code>matches('^Score')</code> is quite similar. However, unlike the previous example that uses a method called <code>at_position</code>, this time, the method/algorithm to be used is called <code>matches</code>, and <code>'^Score'</code> is the value that will be passed to this method.</p>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>matches(<span class="st">'^Score'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>matches(<span class="st">'^Score'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>{'fun': 'matches', 'val': '^Score'}</code></pre>
 </div>
@@ -308,22 +311,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Therefore, the <code>value</code> argument of every mapping function will always receive as input the value you passed to the <code>val</code> item of the initial <code>dict</code>. Now, the other two arguments, <code>cols</code> and <code>schema</code>, they will be automatically filled by <code>spark_map()</code> or <code>spark_across()</code>. In other words, <code>spark_map()</code> or <code>spark_across()</code> will automatically collect the values of these arguments for you.</p>
 <p>As an example, the <code>alphabetic_order()</code> function below maps the column that is in a specific position in the alphabetical order. This <code>alphabetic_order()</code> function only uses the <code>index</code> and <code>cols</code> arguments, even though it receives three arguments. In other words, the <code>schema</code> argument is just there to satisfy the conditions of <code>spark_map()</code> and <code>spark_across()</code>.</p>
 <div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> StructType</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> alphabetic_order(index, cols: <span class="bu">list</span>, schema: StructType):</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    cols.sort()</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [cols[index]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.types <span class="im">import</span> StructType</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> alphabetic_order(index, cols: <span class="bu">list</span>, schema: StructType):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    cols.sort()</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [cols[index]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>One other requirement that we haven’t covered yet is the return value of your mapping function. Your mapping function must always return a list of strings, which contain the names of the columns that were mapped by the function. If your mapping function does not find any columns during your search, it should return an empty list (i.e.&nbsp;<code>[]</code>).</p>
 <p>As a first demonstration, let’s apply this <code>alphabetic_order()</code> function in the DataFrame <code>students</code> as an example. The column list of this DataFrame is shown below:</p>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(students.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(students.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['StudentID', 'Name', 'Age', 'Heigth', 'Score1', 'Score2', 'Score3', 'Score4', 'Course', 'Department']</code></pre>
 </div>
 </div>
 <p>Now, using the <code>alphabetic_order()</code> inside <code>spark_map()</code>:</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>spark_map(students, {<span class="st">'fun'</span>: alphabetic_order, <span class="st">'val'</span>: <span class="dv">1</span>}, <span class="bu">max</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>spark_map(students, {<span class="st">'fun'</span>: alphabetic_order, <span class="st">'val'</span>: <span class="dv">1</span>}, <span class="bu">max</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Selected columns by `spark_map()`: Course
 </code></pre>
@@ -337,7 +340,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="if-your-mapping-doesnt-find-any-columns">If your mapping doesn’t find any columns</h2>
 <p>On the other hand, <code>spark_map()</code> will also raise a <code>KeyError</code>, in case the function you are using in your mapping doesn’t find any columns in your DataFrame. However, in this case, <code>spark_map()</code> sends a clear message that no columns were found using the mapping you defined. As an example, we could reproduce this error, when trying to map in the DataFrame <code>students</code>, all the columns that start with the <em>string</em> <code>'april'</code>. A <code>KeyError</code> is raised in this case because there is no column in the <code>students</code> table whose name starts with the word “april”.</p>
 <div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>spark_map(students, starts_with(<span class="st">'april'</span>), <span class="bu">sum</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>spark_map(students, starts_with(<span class="st">'april'</span>), <span class="bu">sum</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>KeyError: '`spark_map()` did not found any column that matches your mapping!'</code></pre>
 </div>
