@@ -37,4 +37,5 @@ pythonpath = [
 
 
 [tool.setuptools]
-py-modules = []
+packages = ["spark_map"]
+package-dir = {"" = "src"}
