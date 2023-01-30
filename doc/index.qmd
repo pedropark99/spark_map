@@ -63,7 +63,8 @@ Suppose you want to calculate the average of the third, fourth and fifth columns
 
 ```{python}
 from pyspark.sql.functions import mean
-from spark_map import spark_map, at_position
+from spark_map.functions import spark_map
+from spark_map.mapping import at_position
 
 spark_map(students, at_position(3, 4, 5), mean).show(truncate = False)
 ```
