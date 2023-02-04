@@ -232,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="a-simple-example-of-use" class="level2">
 <h2 class="anchored" data-anchor-id="a-simple-example-of-use">A simple example of use</h2>
 <p>As an example, consider the <code>students</code> DataFrame below:</p>
-<div class="cell" data-execution_count="1">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -252,18 +252,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>students <span class="op">=</span> spark.createDataFrame(d, columns)</span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>students.show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+---------+-------+---+------+------+------+------+------+---------+----------+
+|StudentID|Name   |Age|Height|Score1|Score2|Score3|Score4|Course   |Department|
++---------+-------+---+------+------+------+------+------+---------+----------+
+|12114    |Anne   |21 |1.56  |8     |9     |10    |9     |Economics|SC        |
+|13007    |Adrian |23 |1.82  |6     |6     |8     |7     |Economics|SC        |
+|10045    |George |29 |1.77  |10    |9     |10    |7     |Law      |SC        |
+|12459    |Adeline|26 |1.61  |8     |6     |7     |7     |Law      |SC        |
+|10190    |Mayla  |22 |1.67  |7     |7     |7     |9     |Design   |AR        |
+|11552    |Daniel |24 |1.75  |9     |9     |10    |9     |Design   |AR        |
++---------+-------+---+------+------+------+------+------+---------+----------+
+</code></pre>
+</div>
 </div>
 <p>Suppose you want to calculate the average of the third, fourth and fifth columns of this DataFrame students. The <code>spark_map()</code> function allows you to perform this calculation in an extremely simple and clear way, as shown below:</p>
-<div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> mean</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map <span class="im">import</span> spark_map, at_position</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>spark_map(students, at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), mean).show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> mean</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> at_position</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>spark_map(students, at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), mean).show(truncate <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Selected columns by `spark_map()`: Age, Height, Score1
+</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+------------------+------------------+------+
+|Age               |Height            |Score1|
++------------------+------------------+------+
+|24.166666666666668|1.6966666666666665|8.0   |
++------------------+------------------+------+
+</code></pre>
+</div>
 </div>
 <p>If you want your calculation to be applied by group, just provide the grouped table to <code>spark_map()</code>. For example, suppose you wanted to calculate the same averages as in the example above, but within each department:</p>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>by_department <span class="op">=</span> students.groupBy(<span class="st">'Department'</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>spark_map(by_department, at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>by_department <span class="op">=</span> students.groupBy(<span class="st">'Department'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>spark_map(by_department, at_position(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Selected columns by `spark_map()`: Age, Height, Score1
+</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+----------+-----+------------------+------+
+|Department|  Age|            Height|Score1|
++----------+-----+------------------+------+
+|        SC|24.75|1.6900000000000002|   8.0|
+|        AR| 23.0|              1.71|   8.0|
++----------+-----+------------------+------+
+</code></pre>
+</div>
 </div>
 
 

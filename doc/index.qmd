@@ -1,7 +1,7 @@
 ---
 title: "Introducing `spark_map`"
 execute: 
-  eval: false
+  eval: true
 ---
 
 
@@ -34,6 +34,15 @@ The full documentation for `spark_map` package is available at this website. To 
 ## A simple example of use
 
 As an example, consider the `students` DataFrame below:
+
+```{python}
+#| include: false
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+sc.setLogLevel("OFF")
+```
+
 
 ```{python}
 from pyspark.sql import SparkSession
