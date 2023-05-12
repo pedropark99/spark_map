@@ -12,6 +12,7 @@ description = "Pyspark implementation of `map()` function for spark DataFrames"
 readme = "README.md"
 requires-python = ">=3.7"
 license = { file = "LICENSE.txt" }
+keywords = ['spark', 'pyspark', 'map']
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

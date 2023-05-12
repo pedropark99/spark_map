@@ -1,4 +1,5 @@
 import re
+from typing import List
 from pyspark.sql.types import StructType
 from pyspark.sql.types import (
     StringType
@@ -21,7 +22,7 @@ from spark_map.utils import (
 
 
     
-def all_of(list_cols: list[str]):
+def all_of(list_cols: List[str]):
     __check_list_input(list_cols, str, "all_of()")
     return {'fun': 'all_of', 'val': list_cols}
     
@@ -30,7 +31,7 @@ def matches(regex: str):
     return {'fun': "matches", 'val': regex} 
 
   
-def at_position(*indexes: list[int], zero_index: bool = False):
+def at_position(*indexes: List[int], zero_index: bool = False):
     __check_list_input(indexes, int, "at_position()")
 
     if zero_index == False:
@@ -70,7 +71,7 @@ def are_of_type(arg_type: str):
 
 
 
-def __map_columns(mapping: dict, cols: list[str], schema: StructType):
+def __map_columns(mapping: dict, cols: List[str], schema: StructType):
     mapping_function = mapping['fun']
     mapping_value = mapping['val']
     if __is_string(mapping_function):
@@ -102,15 +103,15 @@ class Mapping:
     
     
   
-    def all_of(self, list_cols: list[str], cols: list[str], schema: StructType):
+    def all_of(self, list_cols: List[str], cols: List[str], schema: StructType):
         selected_cols = [col for col in list_cols if col in cols]
         self.mapped_cols = selected_cols
 
-    def at_position(self, indexes: list[int], cols: list[str], schema: StructType):
+    def at_position(self, indexes: List[int], cols: List[str], schema: StructType):
         selected_cols = [cols[i] for i in indexes]
         self.mapped_cols = selected_cols
 
-    def ends_with(self, text: str, cols: list[str], schema: StructType):
+    def ends_with(self, text: str, cols: List[str], schema: StructType):
         selected_cols = list()
         for col in cols:
             if col.endswith(text):
@@ -118,7 +119,7 @@ class Mapping:
 
         self.mapped_cols = selected_cols
 
-    def starts_with(self, text: str, cols: list[str], schema: StructType):
+    def starts_with(self, text: str, cols: List[str], schema: StructType):
         selected_cols = list()
         for col in cols:
             if col.startswith(text):
@@ -127,13 +128,13 @@ class Mapping:
         self.mapped_cols = selected_cols
 
 
-    def matches(self, regex: str, cols: list[str], schema: StructType):
+    def matches(self, regex: str, cols: List[str], schema: StructType):
         regex = re.compile(regex)
         selected_cols = [col for col in cols if re.match(regex, col)]
         self.mapped_cols = selected_cols
 
 
-    def are_of_type(self, str_type: str, cols: list[str], schema: StructType):
+    def are_of_type(self, str_type: str, cols: List[str], schema: StructType):
         valid_types = {
             'int' : IntegerType(), 'double' : DoubleType(), 
             'string' : StringType(), 'date' : DateType(),
