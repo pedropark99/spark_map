@@ -2,10 +2,9 @@
 requires = ["setuptools>=61.0", "toml"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "spark_map"
-version = "0.2.77"
+version = "0.2.78"
 authors = [
   { name="Pedro Faria", email="pedropark99@gmail.com" }
 ]
@@ -13,7 +12,6 @@ description = "Pyspark implementation of `map()` function for spark DataFrames"
 readme = "README.md"
 requires-python = ">=3.7"
 license = { file = "LICENSE.txt" }
-keywords = ['spark', 'pyspark', 'map']
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -34,7 +32,7 @@ Issues = "https://github.com/pedropark99/spark_map/issues"
 
 [tool.pytest.ini_options]
 pythonpath = [
-  "."
+  "./src"
 ]
 
 
