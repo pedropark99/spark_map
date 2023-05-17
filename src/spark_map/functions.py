@@ -1,6 +1,6 @@
 from pyspark.sql.functions import column
 from pyspark.sql import DataFrame, GroupedData
-from typing import Callable
+from typing import Callable, List
 from spark_map.mapping import __map_columns
 
 
@@ -79,6 +79,6 @@ def __is_spark_grouped_data(x):
     return isinstance(x, GroupedData)
 
 
-def __report_mapped_columns(mapping: list[str]):
+def __report_mapped_columns(mapping: List[str]):
     message = f"Selected columns by `spark_map()`: {', '.join(mapping)}\n"
     print(message)
