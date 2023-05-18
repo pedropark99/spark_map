@@ -1,5 +1,6 @@
 ---
 title: "`all_of()`"
+draft: true
 execute:
   eval: true
 ---
@@ -18,44 +19,6 @@ sc.setLogLevel("OFF")
 
 ## Description
 
-Map all columns of your Spark DataFrame whose name is included in a string list. This function is one of several existing mapping functions (read the article [**"Building the mapping"**](articles/building-mapping.qmd)).
+This function is **deprecated** in favour of better naming conventions, and you should use the [`any_of()` function](./any_of.qmd) instead.
 
-## Arguments
-
-- `list_cols`: a list of *strings* containing the names of the columns you want to map;
-
-## Details and examples
-
-Therefore, `all_of()` is used to define which columns `spark_map()` will apply the given function to. You can use this function, when you want to allow a set of columns to be mapped, but for some reason you don't know in advance if all these columns (or a part of them) will be available in your Spark DataFrame.
-
-You must give `all_of()` a list of *strings*. Each *string* represents the name of a column that can be mapped. As an example, the expression `all_of(['sales_france', 'sales_brazil', 'sales_colombia'])` allows columns named `"sales_france"`, `"sales_brazil"` and `"sales_colombia"` to be mapped by `spark_map()`. However, `spark_map()` doesn't necessarily need to find all these columns at once. That is, `all_of()` makes these columns "optional", so `spark_map()` can find all three columns, or only two, or even just one of these columns. See the example below:
-
-```{python}
-from pyspark.sql.functions import mean
-from spark_map.functions import spark_map
-from spark_map.mapping import all_of
-
-data = [
-  (2022, 1, 12300, 41000, 36981),
-  (2022, 2, 19120, 21300, 31000),
-  (2022, 3, 18380, 11500, 31281)
-]
-
-sales = spark.createDataFrame(data, ['year', 'month', 'sales_france', 'sales_brazil', 'sales_russia'])
-
-spark_map(
-    sales,
-    all_of(['sales_france', 'sales_brazil', 'sales_colombia']),
-    mean
-  )\
-  .show()
-```
-
-
-
-However, it is worth noting that `spark_map()` **must find at least one of the columns defined** in `all_of()`. If it doesn't, `spark_map()` will raise a `KeyError` warning that no column could be found with the mapping you defined.
-
-```{python}
-#| error: true
-spark_map(sales, all_of(['sales_italy']), mean).show()
-```
+<img src = "http://badges.github.io/stability-badges/dist/deprecated.svg" alt="Deprecated"/>

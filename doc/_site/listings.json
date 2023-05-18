@@ -2,7 +2,7 @@
   {
     "listing": "/reference-en.html",
     "items": [
-      "/english/all_of.html",
+      "/english/any_of.html",
       "/english/are_of_type.html",
       "/english/at_position.html",
       "/english/ends_with.html",
@@ -11,10 +11,6 @@
       "/english/spark_map.html",
       "/english/starts_with.html"
     ]
-  },
-  {
-    "listing": "/reference-ptbr.html",
-    "items": []
   },
   {
     "listing": "/articles-en.html",

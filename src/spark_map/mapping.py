@@ -29,7 +29,7 @@ def any_of(list_cols: List[str]):
 
 def all_of(list_cols: List[str]):
     message = "The function `all_of()` is deprecated in favour of better naming conventions, and you should use the `any_of()` function instead."
-    warn(message, DeprecationWarning, stacklevel = 1)
+    warn(message, DeprecationWarning, stacklevel = 0)
     return any_of(list_cols)
     
 def matches(regex: str):

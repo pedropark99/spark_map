@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>spark_map - all_of()</title>
+<title>spark_map - any_of()</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -124,6 +158,8 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description">Description</a></li>
+  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#details-and-examples" id="toc-details-and-examples" class="nav-link" data-scroll-target="#details-and-examples">Details and examples</a></li>
   </ul>
 </nav>
     </div>
@@ -132,7 +168,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><code>all_of()</code></h1>
+<h1 class="title"><code>any_of()</code></h1>
 </div>
 
 
@@ -149,8 +185,58 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="description" class="level2">
 <h2 class="anchored" data-anchor-id="description">Description</h2>
-<p>This function is <strong>deprecated</strong> in favour of better naming conventions, and you should use the <a href="../english/any_of.html"><code>any_of()</code> function</a> instead.</p>
-<p><img src="http://badges.github.io/stability-badges/dist/deprecated.svg" alt="Deprecated"></p>
+<p>Map all columns of your Spark DataFrame whose name is included in a string list. This function is one of several existing mapping functions (read the article <a href="../english/articles/building-mapping.html"><strong>“Building the mapping”</strong></a>).</p>
+</section>
+<section id="arguments" class="level2">
+<h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
+<ul>
+<li><code>list_cols</code>: a list of <em>strings</em> containing the names of the columns you want to map;</li>
+</ul>
+</section>
+<section id="details-and-examples" class="level2">
+<h2 class="anchored" data-anchor-id="details-and-examples">Details and examples</h2>
+<p>Therefore, <code>any_of()</code> is used to define which columns <code>spark_map()</code> will apply the given function to. You can use this function, when you want to allow a set of columns to be mapped, but for some reason you don’t know in advance if all these columns (or a part of them) will be available in your Spark DataFrame.</p>
+<p>You must give <code>any_of()</code> a list of <em>strings</em>. Each <em>string</em> represents the name of a column that can be mapped. As an example, the expression <code>any_of(['sales_france', 'sales_brazil', 'sales_colombia'])</code> allows columns named <code>"sales_france"</code>, <code>"sales_brazil"</code> and <code>"sales_colombia"</code> to be mapped by <code>spark_map()</code>. However, <code>spark_map()</code> doesn’t necessarily need to find all these columns at once. That is, <code>any_of()</code> makes these columns “optional”, so <code>spark_map()</code> can find all three columns, or only two, or even just one of these columns. See the example below:</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql.functions <span class="im">import</span> mean</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.functions <span class="im">import</span> spark_map</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> spark_map.mapping <span class="im">import</span> any_of</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> [</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">1</span>, <span class="dv">12300</span>, <span class="dv">41000</span>, <span class="dv">36981</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">2</span>, <span class="dv">19120</span>, <span class="dv">21300</span>, <span class="dv">31000</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">2022</span>, <span class="dv">3</span>, <span class="dv">18380</span>, <span class="dv">11500</span>, <span class="dv">31281</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>sales <span class="op">=</span> spark.createDataFrame(data, [<span class="st">'year'</span>, <span class="st">'month'</span>, <span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_russia'</span>])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>spark_map(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    sales,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    any_of([<span class="st">'sales_france'</span>, <span class="st">'sales_brazil'</span>, <span class="st">'sales_colombia'</span>]),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    mean</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  )<span class="op">\</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  .show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Selected columns by `spark_map()`: sales_france, sales_brazil
+
++------------+------------+
+|sales_france|sales_brazil|
++------------+------------+
+|     16600.0|     24600.0|
++------------+------------+
+</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[Stage 0:&gt;                                                        (0 + 12) / 12]                                                                                </code></pre>
+</div>
+</div>
+<p>However, it is worth noting that <code>spark_map()</code> <strong>must find at least one of the columns defined</strong> in <code>any_of()</code>. If it doesn’t, <code>spark_map()</code> will raise a <code>KeyError</code> warning that no column could be found with the mapping you defined.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>spark_map(sales, any_of([<span class="st">'sales_italy'</span>]), mean).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>KeyError: '`spark_map()` did not found any column that matches your mapping!'</code></pre>
+</div>
+</div>
 
 
 </section>

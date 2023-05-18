@@ -1,0 +1,61 @@
+---
+title: "`any_of()`"
+execute:
+  eval: true
+---
+
+```{python setup}
+#| include: false
+import sys
+sys.path.append("../../.")
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+sc = spark.sparkContext
+sc.setLogLevel("OFF")
+```
+
+
+## Description
+
+Map all columns of your Spark DataFrame whose name is included in a string list. This function is one of several existing mapping functions (read the article [**"Building the mapping"**](articles/building-mapping.qmd)).
+
+## Arguments
+
+- `list_cols`: a list of *strings* containing the names of the columns you want to map;
+
+## Details and examples
+
+Therefore, `any_of()` is used to define which columns `spark_map()` will apply the given function to. You can use this function, when you want to allow a set of columns to be mapped, but for some reason you don't know in advance if all these columns (or a part of them) will be available in your Spark DataFrame.
+
+You must give `any_of()` a list of *strings*. Each *string* represents the name of a column that can be mapped. As an example, the expression `any_of(['sales_france', 'sales_brazil', 'sales_colombia'])` allows columns named `"sales_france"`, `"sales_brazil"` and `"sales_colombia"` to be mapped by `spark_map()`. However, `spark_map()` doesn't necessarily need to find all these columns at once. That is, `any_of()` makes these columns "optional", so `spark_map()` can find all three columns, or only two, or even just one of these columns. See the example below:
+
+```{python}
+from pyspark.sql.functions import mean
+from spark_map.functions import spark_map
+from spark_map.mapping import any_of
+
+data = [
+  (2022, 1, 12300, 41000, 36981),
+  (2022, 2, 19120, 21300, 31000),
+  (2022, 3, 18380, 11500, 31281)
+]
+
+sales = spark.createDataFrame(data, ['year', 'month', 'sales_france', 'sales_brazil', 'sales_russia'])
+
+spark_map(
+    sales,
+    any_of(['sales_france', 'sales_brazil', 'sales_colombia']),
+    mean
+  )\
+  .show()
+```
+
+
+
+However, it is worth noting that `spark_map()` **must find at least one of the columns defined** in `any_of()`. If it doesn't, `spark_map()` will raise a `KeyError` warning that no column could be found with the mapping you defined.
+
+```{python}
+#| error: true
+spark_map(sales, any_of(['sales_italy']), mean).show()
+```
