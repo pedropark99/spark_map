@@ -1,5 +1,6 @@
 import re
 from typing import List
+from warnings import warn
 from pyspark.sql.types import StructType
 from pyspark.sql.types import (
     StringType
@@ -22,9 +23,14 @@ from spark_map.utils import (
 
 
     
+def any_of(list_cols: List[str]):
+    __check_list_input(list_cols, str, "any_of()")
+    return {'fun': 'any_of', 'val': list_cols}
+
 def all_of(list_cols: List[str]):
-    __check_list_input(list_cols, str, "all_of()")
-    return {'fun': 'all_of', 'val': list_cols}
+    message = "The function `all_of()` is deprecated in favour of better naming conventions, and you should use the `any_of()` function instead."
+    warn(message, DeprecationWarning, stacklevel = 1)
+    return any_of(list_cols)
     
 def matches(regex: str):
     __check_string_input(regex, "matches()")
@@ -101,9 +107,9 @@ class Mapping:
     def __init__(self):
         self.mapped_cols = []
     
-    
+
   
-    def all_of(self, list_cols: List[str], cols: List[str], schema: StructType):
+    def any_of(self, list_cols: List[str], cols: List[str], schema: StructType):
         selected_cols = [col for col in list_cols if col in cols]
         self.mapped_cols = selected_cols
 
@@ -148,4 +154,10 @@ class Mapping:
                 selected_cols.append(name)
 
         self.mapped_cols = selected_cols
+
+
+    def all_of(self, list_cols: List[str], cols: List[str], schema: StructType):
+        message = "The function `all_of()` is deprecated in favour of better naming conventions, and you should use the `any_of()` function instead."
+        warn(message, DeprecationWarning, stacklevel = 2)
+        return self.any_of(list_cols, cols, schema)
 
